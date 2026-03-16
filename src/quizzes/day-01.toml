@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What fundamental task defines a language model?"
+prompt.distractors = [
+  "Classifying text into predefined semantic categories using learned feature representations",
+  "Translating input sequences between languages using parallel corpus alignment",
+  "Extracting named entities and their relationships from unstructured document collections"
+]
+answer.answer = "Assigning probabilities to sequences of tokens by predicting the next token"
+context = "At its core, a language model estimates P(next token | previous tokens). Everything else — translation, question answering, code generation — emerges from this single objective."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the primary limitation that made n-gram models impractical beyond n=5?"
+prompt.distractors = [
+  "N-gram models require labeled training data, which is expensive to produce at scale",
+  "N-gram models cannot represent word order, losing all syntactic information in the text",
+  "N-gram models need separate smoothing parameters for each language and domain"
+]
+answer.answer = "The number of possible n-grams grows exponentially with n, leaving most entries at zero"
+context = "With a vocabulary of 170,000 words, a 5-gram model would need to store probabilities for 170,000^5 entries. Even trillion-token corpora leave most of these at zero — the sparsity problem."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Bengio's 2003 neural language model solve the sparsity problem that plagued n-gram models?"
+prompt.distractors = [
+  "It used a recurrent architecture that maintained a hidden state across the full input sequence",
+  "It applied sophisticated smoothing algorithms that redistributed probability to unseen n-grams",
+  "It stored compressed hash representations of all n-grams encountered during the training phase"
+]
+answer.answer = "It mapped words to learned continuous vectors so similar words shared similar representations"
+context = "By representing words as points in a continuous vector space, the model could generalize: even unseen word combinations got reasonable probabilities because similar words had similar embeddings."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did LSTM language models fail to scale efficiently to very large training datasets?"
+prompt.distractors = [
+  "LSTM cells require quadratic memory relative to sequence length due to attention computations",
+  "LSTM gradient updates require full backpropagation through every layer for each training batch",
+  "LSTM architectures cannot handle variable-length input sequences without fixed-size padding"
+]
+answer.answer = "LSTMs process tokens sequentially, preventing parallelization across the sequence dimension"
+context = "To compute the hidden state at position 500, an LSTM must first compute states at positions 1–499. This sequential dependency means GPUs sit idle waiting, unlike Transformers which process all positions simultaneously."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What does a perplexity of 10 mean for a language model?"
+prompt.distractors = [
+  "The model correctly predicts the exact next token 10% of the time on the evaluation dataset",
+  "The model's cross-entropy loss is exactly 10 bits per token averaged across the test corpus",
+  "The model requires 10 candidate tokens to be generated before finding the right continuation"
+]
+answer.answer = "On average, the model is as uncertain as choosing uniformly among 10 equally likely tokens"
+context = "Perplexity = 2^(cross-entropy). A perplexity of 10 means the model's uncertainty is equivalent to a uniform distribution over 10 options at each prediction step. Lower perplexity = better predictions."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the 2017 paper that introduced the Transformer architecture?"
+answer.answer = "Attention Is All You Need"
+answer.alternatives = ["attention is all you need"]
+context = "Published by Vaswani et al. at Google, 'Attention Is All You Need' introduced self-attention as a replacement for recurrence, enabling massive parallelization and launching the modern LLM era."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does next-token prediction require deep knowledge, despite being a seemingly simple objective?"
+prompt.distractors = [
+  "Models are explicitly trained on structured knowledge bases alongside the raw text prediction task",
+  "The softmax output layer forces the model to rank all tokens, requiring encyclopedic vocabulary coverage",
+  "Backpropagation through deep networks automatically extracts and stores factual knowledge in weights"
+]
+answer.answer = "Accurately predicting text about a domain requires implicitly learning the concepts of that domain"
+context = "To predict the next word in a physics discussion, the model must learn physics. The prediction objective is shallow, but the knowledge needed to minimize loss is deep — this is the compression hypothesis."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the OpenAI scaling laws (Kaplan et al., 2020) demonstrate about language model performance?"
+prompt.distractors = [
+  "Model performance improves in sudden phase transitions at specific parameter count thresholds",
+  "Training data quality matters exponentially more than quantity beyond a critical dataset size",
+  "Architecture innovations contribute more to performance gains than simply increasing model size"
+]
+answer.answer = "Loss decreases as a smooth power law with increases in parameters, data, and compute budget"
+context = "Kaplan et al. found remarkably clean power-law relationships between loss and scale across many orders of magnitude. This predictability enabled labs to forecast large model performance before committing to expensive training runs."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "Who proposed modeling English as a statistical process in his 1948 paper on information theory?"
+answer.answer = "Claude Shannon"
+answer.alternatives = ["Shannon", "claude shannon"]
+context = "In 'A Mathematical Theory of Communication' (1948), Claude Shannon showed that language could be modeled as a statistical process by observing how letters and words follow each other — the conceptual ancestor of all language models."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does temperature affect token sampling in a language model?"
+prompt.distractors = [
+  "Higher temperature increases the model's confidence by sharpening the probability distribution peaks",
+  "Lower temperature randomizes the output by flattening probabilities across unlikely token candidates",
+  "Temperature scales the learning rate during inference to adaptively refine the output distribution"
+]
+answer.answer = "Higher temperature flattens the distribution, making less likely tokens more probable in sampling"
+context = "At temperature 0, the model always picks the most probable token (greedy). At temperature >1, the softmax distribution flattens, boosting unlikely tokens. This is why creative tasks use higher temperature and factual tasks use lower."
