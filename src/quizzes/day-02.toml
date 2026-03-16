@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the core problem with one-hot word representations that motivated the development of word embeddings?"
+prompt.distractors = [
+  "One-hot vectors require supervised labels for each word, making unsupervised training impossible",
+  "One-hot vectors cannot represent words with more than one syllable due to fixed encoding lengths",
+  "One-hot vectors consume too much disk storage because each entry requires a 64-bit floating point value"
+]
+answer.answer = "One-hot vectors treat every word as equidistant from every other word, encoding no similarity information"
+context = "In one-hot representation, 'cat' and 'dog' are exactly as far apart as 'cat' and 'thermonuclear.' This means the model cannot generalize from one word to semantically related words."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What training shortcut made Word2Vec practical to train on billions of tokens?"
+prompt.distractors = [
+  "Gradient checkpointing, which trades compute for memory by recomputing intermediate activations during backpropagation",
+  "Mixed-precision training, which uses 16-bit floats for forward passes and 32-bit floats only for weight updates",
+  "Teacher forcing, which feeds ground-truth tokens during training instead of the model's own predictions"
+]
+answer.answer = "Negative sampling, which replaces the full softmax over the vocabulary with a few binary classification decisions"
+context = "Instead of computing probabilities over all 100,000+ vocabulary words, negative sampling trains the model to distinguish real (word, context) pairs from 5-15 randomly sampled fake pairs. This reduces computation by orders of magnitude."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the famous analogy 'king − man + woman ≈ queen,' what does this result reveal about the embedding space?"
+prompt.distractors = [
+  "The embedding space stores explicit taxonomic hierarchies where hypernym-hyponym relations form tree structures",
+  "The embedding space assigns unique orthogonal dimensions to each semantic category like gender, royalty, and age",
+  "The embedding space clusters words by syntactic part-of-speech, with nouns, verbs, and adjectives in separate regions"
+]
+answer.answer = "Consistent semantic relationships between word pairs are encoded as consistent directional vectors throughout the space"
+context = "The gender direction (man→woman) is approximately the same vector as (king→queen) or (uncle→aunt). These parallelogram relationships emerge purely from co-occurrence statistics, revealing linear structure in meaning."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does GloVe's training objective differ from Word2Vec's approach?"
+prompt.distractors = [
+  "GloVe uses a recurrent neural network to sequentially process text, while Word2Vec uses a feedforward architecture",
+  "GloVe trains on individual sentences independently, while Word2Vec considers document-level co-occurrence statistics",
+  "GloVe optimizes a cross-entropy loss over context word predictions, while Word2Vec minimizes reconstruction error"
+]
+answer.answer = "GloVe factorizes the global word-word co-occurrence matrix so dot products approximate log co-occurrence counts"
+context = "GloVe's objective is wᵢ · wⱼ + bᵢ + bⱼ ≈ log(Xᵢⱼ), a weighted least-squares regression on the co-occurrence matrix. Word2Vec instead learns by predicting words from context (or context from words) using local training windows."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "Who stated the distributional hypothesis as 'You shall know a word by the company it keeps'?"
+answer.answer = "Firth"
+answer.alternatives = ["J.R. Firth", "John Rupert Firth", "JR Firth"]
+context = "British linguist J.R. Firth articulated this principle in 1957. It became the theoretical foundation for all distributional semantics, including Word2Vec and GloVe."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do word embeddings typically use around 300 dimensions rather than 50 or 10,000?"
+prompt.distractors = [
+  "Hardware memory constraints on 2013-era GPUs limited embedding tables to exactly 300 columns per word vector",
+  "Information-theoretic analysis proves that natural language has exactly 300 bits of entropy per word on average",
+  "The Word2Vec authors chose 300 to match the number of principal components found in hand-crafted linguistic features"
+]
+answer.answer = "Performance improves steeply up to ~300 dimensions then plateaus, matching the intrinsic dimensionality of word meaning"
+context = "Empirically, analogy accuracy plateaus around 300 dimensions. This aligns with random matrix theory analysis showing the co-occurrence matrix has genuine semantic structure in roughly 200-400 dimensions, with noise dominating above that."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What advantage does FastText's character n-gram approach provide over Word2Vec for morphologically rich languages?"
+prompt.distractors = [
+  "Character n-grams allow the model to process input text without any tokenization or vocabulary definition step",
+  "Character n-grams enable the model to learn syntax-specific embeddings that separate noun forms from verb forms",
+  "Character n-grams reduce the total parameter count by sharing weights across words with common suffixes only"
+]
+answer.answer = "Morphologically related words automatically share character n-gram representations and unseen words get reasonable vectors"
+context = "FastText breaks words into character n-grams (e.g., 'unhappiness' → '<un', 'unh', 'nha', ...). Words sharing substrings share embeddings, and new words can be represented by summing their n-gram vectors. This improved Turkish word similarity by 15-20% over Word2Vec."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What fundamental limitation of static word embeddings like Word2Vec and GloVe motivated the shift to contextualized representations?"
+prompt.distractors = [
+  "Static embeddings cannot represent words shorter than three characters because they require minimum n-gram coverage",
+  "Static embeddings lose all word order information since they assign fixed vectors regardless of sentence position",
+  "Static embeddings are limited to a fixed vocabulary size and cannot incorporate new words after initial training"
+]
+answer.answer = "Each word receives exactly one vector regardless of context, so polysemous words like 'bank' blend all their meanings"
+context = "About 7.8% of common English words are significantly polysemous, and these tend to be the most frequent. 'Bank' gets one vector averaging its river and financial meanings. Contextualized models like ELMo and BERT solved this by generating different representations based on surrounding context."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the approximate size of GPT-3's embedding layer in parameters?"
+answer.answer = "618 million"
+answer.alternatives = ["618M", "~618 million", "618 million parameters"]
+context = "GPT-3 maps 50,257 token IDs to 12,288-dimensional vectors, totaling about 618 million parameters — roughly equal to the entire BERT-Large model — just for the initial embedding lookup."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Bolukbasi et al.'s 2016 paper documented what significant issue with word embeddings trained on Google News data?"
+prompt.distractors = [
+  "Embeddings trained on news data performed poorly on scientific and technical vocabulary due to domain mismatch",
+  "The embeddings exhibited temporal drift, with word meanings shifting significantly between different news periods",
+  "News corpus embeddings had systematically lower accuracy on word analogy tasks compared to literary corpora"
+]
+answer.answer = "The embeddings encoded societal stereotypes, associating professions like 'programmer' with men and 'homemaker' with women"
+context = "The paper 'Man is to Computer Programmer as Woman is to Homemaker?' showed that Word2Vec embeddings faithfully reproduced gender biases from training data, raising serious concerns about using embeddings in systems like hiring tools."
