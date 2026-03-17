@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did GPT-2 introduce byte-level BPE instead of the original character-level BPE from Sennrich et al.?"
+prompt.distractors = [
+  "Byte-level BPE produces more semantically coherent subword units because bytes align better with morphological boundaries than Unicode codepoints",
+  "Byte-level BPE enables faster training convergence because the base vocabulary of 256 symbols creates shorter merge sequences than Unicode's thousands of characters",
+  "Byte-level BPE allows the model to learn cross-lingual transfer patterns by representing all scripts in a shared 256-symbol space during pre-tokenization"
+]
+answer.answer = "Byte-level BPE guarantees that any text can be represented without <UNK> tokens because every possible input is reducible to a sequence of 256 bytes"
+context = "The key insight of byte-level BPE is completeness: since all digital text is ultimately bytes, starting from the 256 byte values means no input can ever be unrepresentable. Character-level BPE could encounter rare Unicode codepoints not in the initial vocabulary."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "GPT-4's cl100k tokenizer has ~100K tokens while GPT-4o's o200k has ~200K. What is the primary engineering motivation for this increase?"
+prompt.distractors = [
+  "Larger vocabularies allow the model to store more factual knowledge in the embedding matrix, reducing hallucination rates on knowledge-intensive benchmarks",
+  "Larger vocabularies reduce the dimensionality requirements of the embedding space, enabling the same model capacity with fewer total parameters",
+  "Larger vocabularies improve the model's ability to generalize to unseen text by providing more diverse subword patterns for the attention mechanism"
+]
+answer.answer = "Larger vocabularies compress text into fewer tokens, reducing sequence length and directly cutting inference cost and expanding effective context capacity"
+context = "With more vocabulary entries, common substrings get merged into single tokens more aggressively. A sentence that takes 15 tokens with 50K vocab might take 10 with 200K. Since inference cost scales with sequence length and API pricing is per-token, this is a direct economic optimization."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does the Unigram tokenization algorithm (used in SentencePiece) differ from BPE in how it constructs its vocabulary?"
+prompt.distractors = [
+  "Unigram starts with individual characters and merges pairs that maximize mutual information rather than raw frequency, producing more semantically coherent tokens",
+  "Unigram uses a neural language model to score candidate merges during vocabulary construction, while BPE relies on simple frequency-based pair counting",
+  "Unigram randomly samples subword segmentations during training for regularization, while BPE always produces a single deterministic segmentation per input"
+]
+answer.answer = "Unigram starts with a large initial vocabulary and iteratively removes tokens that least decrease the training corpus likelihood, pruning top-down to the target size"
+context = "BPE builds bottom-up (start small, merge to grow), while Unigram works top-down (start large, prune to shrink). Unigram begins with millions of candidate substrings and removes those whose loss least affects the overall likelihood of the data under a unigram language model."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do LLMs struggle with tasks like counting letters in a word (e.g., 'How many r's in strawberry?')?"
+prompt.distractors = [
+  "The attention mechanism cannot attend to sub-token character positions because positional encodings are assigned at the token level, not the character level",
+  "The model's feed-forward layers store word-level knowledge patterns and cannot decompose stored representations back into constituent characters",
+  "The training data rarely contains explicit character-counting examples, so the model lacks the fine-tuning signal needed for character-level reasoning"
+]
+answer.answer = "The tokenizer merges characters into opaque subword tokens like 'straw'+'berry', so the model never sees individual letters and must implicitly reason about character composition"
+context = "When 'strawberry' is tokenized as ['straw', 'berry'], the model processes two abstract symbols. It has no direct access to the individual characters within each token — it must somehow learn the internal character structure of tokens, which is unreliable."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Llama 3 quadrupled its vocabulary from 32K to 128K tokens compared to Llama 2. What was a key consequence of this change?"
+prompt.distractors = [
+  "It reduced the total parameter count by enabling more aggressive weight sharing between the embedding layer and the Transformer's attention projections",
+  "It eliminated the need for SentencePiece pre-tokenization by making the byte-level vocabulary large enough to cover all common subword patterns directly",
+  "It enabled the model to perform zero-shot translation between any language pair by assigning dedicated token ranges to each of the world's major scripts"
+]
+answer.answer = "It improved multilingual and code performance significantly, contributing to Llama 3 8B outperforming the much larger Llama 2 70B on many benchmarks"
+context = "The 4x vocabulary expansion meant more efficient tokenization of non-English languages and code. This was one of several factors (along with better training data and techniques) that let the much smaller Llama 3 8B surpass Llama 2 70B on many tasks."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What was the original domain of Byte Pair Encoding (BPE) before it was adapted for NLP tokenization?"
+answer.answer = "data compression"
+answer.alternatives = ["compression", "text compression"]
+context = "Philip Gage published BPE in 1994 in C Users Journal as a data compression algorithm. It was adapted for NLP tokenization by Sennrich, Haddow, and Birch in their 2016 paper on neural machine translation."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does tokenization create economic inequity for non-English language users of LLM APIs?"
+prompt.distractors = [
+  "Non-English text requires additional preprocessing steps that consume GPU cycles before tokenization, increasing the per-request computational overhead",
+  "API providers charge higher per-token rates for non-English text because the model's attention patterns are less efficient for underrepresented scripts",
+  "Non-English text produces more special tokens and boundary markers that inflate the total token count without carrying semantic information"
+]
+answer.answer = "BPE trained on English-heavy corpora fragments non-English text into more tokens per unit of meaning, so the same content costs 2-10x more tokens and uses more context window"
+context = "Since BPE merges reflect corpus frequency, and English dominates training data (40-60%), English subwords get aggressively merged into large tokens while other languages remain fragmented. Research showed some languages have 5-10x worse token-to-character ratios than English."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What distinguishes SentencePiece's approach to text processing from OpenAI's tiktoken-based BPE?"
+prompt.distractors = [
+  "SentencePiece uses a neural network to learn optimal split points, while tiktoken uses deterministic regex-based rules for all segmentation decisions",
+  "SentencePiece processes text at the byte level exclusively, while tiktoken operates on Unicode codepoints and falls back to bytes only for unknown characters",
+  "SentencePiece applies language-specific morphological rules before BPE merging, while tiktoken uses a single universal regex pattern for all languages"
+]
+answer.answer = "SentencePiece treats input as a raw character stream with no pre-tokenization, encoding spaces as visible ▁ symbols, while tiktoken uses regex-based pre-tokenization to split text into chunks before applying BPE"
+context = "The key philosophical difference: tiktoken assumes text has word-like units (using regex to find them before BPE), while SentencePiece makes no such assumption, treating everything — including spaces — as part of the learnable segmentation. This makes SentencePiece more language-agnostic."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the approximate size of Llama 3's embedding matrix in parameters, given its vocabulary of 128,256 tokens and hidden dimension of 16,384?"
+answer.answer = "2.1 billion"
+answer.alternatives = ["2 billion", "~2 billion", "2.1B", "2B"]
+context = "128,256 × 16,384 = approximately 2.1 billion parameters for the input embedding matrix alone. This is why vocabulary size has real parameter costs — though for a 405B parameter model, it's still less than 1% of total parameters."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do rare tokens in an LLM's vocabulary tend to have poorly learned embeddings?"
+prompt.distractors = [
+  "Rare tokens are assigned smaller embedding vectors during initialization to prevent them from dominating gradient updates during early training epochs",
+  "The BPE merge algorithm assigns lower-quality byte sequences to rare tokens because they are formed from later, less statistically significant pair merges",
+  "Rare tokens are excluded from the model's attention computations during pre-training to save compute, receiving only feed-forward layer updates"
+]
+answer.answer = "Embedding learning is sparse — only tokens present in a training batch receive gradient updates, so rare tokens get proportionally fewer updates across the entire training run"
+context = "Unlike dense layers that update on every batch, the embedding matrix is a lookup table where only the rows for tokens in the current batch receive gradients. A token appearing in 0.001% of data gets ~0.001% as many updates as common tokens, leading to undertrained representations."
