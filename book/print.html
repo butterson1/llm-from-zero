@@ -718,6 +718,100 @@ Predict: <code>mat</code> (or <code>couch</code>, <code>floor</code>, etc.)</p>
 <div style="margin-top: 2em;">
 <p><a href="quizzes/day-06.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Take the Day 6 Quiz →</a></p>
 </div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="day-7-scaling-laws--why-bigger-models-are-smarter"><a class="header" href="#day-7-scaling-laws--why-bigger-models-are-smarter">Day 7: Scaling Laws — Why Bigger Models Are Smarter</a></h1>
+<p><em>You've spent a week learning about the machinery: tokenizers, attention, Transformers, pre-training objectives. Now we confront the most profound empirical discovery in modern AI — that the performance of language models follows precise, predictable mathematical laws as you scale them up. Not vague trends. Actual power laws with known exponents. This single insight has shaped hundreds of billions of dollars in investment decisions, driven the construction of supercomputer-scale GPU clusters, and sparked a race where the question isn't whether bigger models work better, but exactly how much compute, data, and parameters you should allocate to get the most intelligence per dollar.</em></p>
+<hr />
+<h2 id="the-discovery-that-changed-everything"><a class="header" href="#the-discovery-that-changed-everything">The Discovery That Changed Everything</a></h2>
+<p>In January 2020, a team of researchers at Johns Hopkins and OpenAI — Jared Kaplan, Sam McCandlish, Tom Henighan, Tom Brown, Benjamin Chess, Rewon Child, and others — published a paper called "Scaling Laws for Neural Language Models" that would reshape the entire field. Their finding was stunning in its simplicity: if you plot the cross-entropy loss of a language model against the number of parameters, the amount of training data, or the amount of compute used, you get remarkably clean straight lines on a log-log plot.</p>
+<p>Straight lines on a log-log plot mean <strong>power laws</strong>. The loss L follows equations like:</p>
+<p><strong>L(N) ∝ N^(−0.076)</strong> for parameters<br />
+<strong>L(D) ∝ D^(−0.095)</strong> for dataset size<br />
+<strong>L(C) ∝ C^(−0.050)</strong> for compute budget</p>
+<p>These exponents are small, which means you need order-of-magnitude increases in scale to get noticeable improvements. But the lines are remarkably smooth — spanning over <strong>seven orders of magnitude</strong> in compute. There's no cliff, no plateau, no magic threshold. Just a steady, predictable march downward.</p>
+<p>Think about how unusual this is. In most engineering disciplines, you hit diminishing returns fast. A car engine twice as big doesn't go twice as fast. A building twice as tall doesn't house twice as many people. But language models? Double the compute, and you get a perfectly predictable drop in loss. Every single time.</p>
+<h2 id="what-loss-actually-means-in-practice"><a class="header" href="#what-loss-actually-means-in-practice">What "Loss" Actually Means in Practice</a></h2>
+<p>Before we go further, let's be precise about what's improving. Cross-entropy loss measures how well the model predicts the next token. A loss of 3.0 means the model is roughly as uncertain as if it were choosing among 20 equally likely tokens (e^3 ≈ 20). A loss of 2.0 narrows that to about 7 options. A loss of 1.5 means roughly 4.5 options.</p>
+<p>These sound like small numerical changes, but they correspond to qualitatively different behaviors. A model at loss 3.0 produces garbled, barely coherent text. At 2.5, it's grammatically correct but factually unreliable. At 2.0, it starts exhibiting what we'd call "knowledge" — it can complete factual statements, follow instructions, and write passable prose. At 1.5, you're in the territory of models that can write legal briefs, debug code, and explain quantum mechanics.</p>
+<p>The Kaplan scaling laws showed that these capability thresholds aren't random — they're milestones on a smooth curve that you can predict before training even begins. If you know your compute budget, you can estimate the final loss. And from the loss, you can roughly predict what the model will and won't be capable of.</p>
+<h2 id="the-kaplan-recipe-parameters-over-data"><a class="header" href="#the-kaplan-recipe-parameters-over-data">The Kaplan Recipe: Parameters Over Data</a></h2>
+<p>The original Kaplan et al. paper drew a specific practical conclusion that would guide OpenAI's strategy for years: <strong>when you have a fixed compute budget, you should prioritize making the model bigger rather than training it on more data</strong>.</p>
+<p>Their analysis suggested that if you 10× your compute, you should roughly 5.5× your parameters but only 1.8× your data. The optimal model is undertrained — it hasn't seen enough data to fully converge — but it's big. This led to a philosophy of "make the model as large as possible and don't worry too much about training it to convergence."</p>
+<p>This is exactly what OpenAI did with GPT-3. Released in June 2020 — just months after Kaplan's paper — GPT-3 had <strong>175 billion parameters</strong> trained on roughly <strong>300 billion tokens</strong>. By modern standards, that's a severely undertrained model (a ratio of less than 2 tokens per parameter). But it was enormous for its time, and it worked spectacularly. GPT-3 demonstrated few-shot learning, code generation, and creative writing at a level nobody had seen before.</p>
+<p>The Kaplan recipe seemed vindicated. Scale parameters. Scale fast. Don't look back.</p>
+<h2 id="chinchilla-the-plot-twist"><a class="header" href="#chinchilla-the-plot-twist">Chinchilla: The Plot Twist</a></h2>
+<p>Two years later, a team at DeepMind dropped a bombshell. Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, and colleagues published "Training Compute-Optimal Language Models" in March 2022 — the paper universally known as <strong>Chinchilla</strong>.</p>
+<p>They ran over 400 training experiments, systematically varying model sizes from 70 million to 16 billion parameters and dataset sizes from 5 billion to 500 billion tokens. Their conclusion directly contradicted Kaplan: <strong>parameters and data should be scaled equally</strong>. If you 10× your compute, you should 3.16× both your parameters and your training data (since 3.16 × 3.16 ≈ 10).</p>
+<p>The Chinchilla-optimal ratio works out to roughly <strong>20 tokens per parameter</strong>. A 70B parameter model should see about 1.4 trillion tokens. A 7B model should see about 140 billion.</p>
+<p>To prove their point, they trained Chinchilla: a 70 billion parameter model on 1.4 trillion tokens. Despite being 4× smaller than the 280B parameter Gopher (DeepMind's previous flagship), Chinchilla matched or beat Gopher on virtually every benchmark. Same compute budget, radically different allocation — and the smaller, better-trained model won.</p>
+<p>This was a wake-up call. It meant GPT-3 was, in Chinchilla terms, <strong>roughly 5-7× too large for its data</strong>. It should have been a ~30B model trained on more tokens. Billions of dollars of compute across the industry had been allocated suboptimally.</p>
+<h2 id="why-did-kaplan-get-it-wrong"><a class="header" href="#why-did-kaplan-get-it-wrong">Why Did Kaplan Get It Wrong?</a></h2>
+<p>The disagreement between Kaplan and Chinchilla isn't about the fundamental existence of scaling laws — both agree that performance follows power laws. The discrepancy comes down to methodology.</p>
+<p>Kaplan et al. estimated the optimal allocation by training each model with a <strong>fixed learning rate schedule</strong> that didn't adjust based on the training duration. Their smaller models were trained for proportionally more steps, but without adjusting the learning rate cooldown, those models hadn't fully converged. This made data look less valuable than it actually was — the models were "trained" on more data but not actually learning from it efficiently because the learning rate was still too high.</p>
+<p>Chinchilla used a cosine learning rate schedule that was properly tuned for each run length. With this fix, data became much more valuable, and the optimal balance shifted dramatically toward more data and fewer parameters.</p>
+<p>It's a cautionary tale about how a seemingly minor experimental design choice — learning rate scheduling — can lead to conclusions that reshape an entire industry's capital allocation. One might argue this is the most expensive hyperparameter bug in history.</p>
+<h2 id="the-chinchilla-tax-and-the-inference-revolution"><a class="header" href="#the-chinchilla-tax-and-the-inference-revolution">The Chinchilla Tax and the Inference Revolution</a></h2>
+<p>But there's a deeper reason the industry didn't immediately adopt Chinchilla-optimal training, and it has to do with the economics of deployment.</p>
+<p>Training a model is a one-time cost. Inference — actually running the model to serve user queries — is an ongoing expense that scales with every API call. And inference cost is dominated by <strong>parameter count</strong>, not training data. A 70B model costs roughly 10× more per query than a 7B model, regardless of how well either was trained.</p>
+<p>This creates what practitioners call the <strong>Chinchilla tax</strong> problem, or more precisely, the "overtrain for inference" strategy. If you're going to serve billions of queries, it can be cheaper overall to train a smaller model for much longer than Chinchilla recommends, accepting a slightly higher loss in exchange for dramatically cheaper inference.</p>
+<p>This is exactly what Meta did with <strong>LLaMA</strong> (February 2023). LLaMA-7B was trained on <strong>1 trillion tokens</strong> — about 7× the Chinchilla-optimal amount. LLaMA-13B saw the same 1T tokens, giving it a ratio of ~77 tokens per parameter, nearly 4× the Chinchilla recommendation. The result? LLaMA-13B matched GPT-3 (175B) on most benchmarks despite being 13× smaller.</p>
+<p>Meta had found a practical loophole: you can trade extra training compute (a one-time cost) for a permanently cheaper model to deploy. The same insight drove Mistral-7B, Phi-2, and the entire class of "small models trained on massive data" that dominated 2023-2024.</p>
+<h2 id="beyond-chinchilla-the-frontier-in-2025-2026"><a class="header" href="#beyond-chinchilla-the-frontier-in-2025-2026">Beyond Chinchilla: The Frontier in 2025-2026</a></h2>
+<p>The original scaling laws described a world of compute-optimal training. But the frontier has moved far beyond that simple picture.</p>
+<p><strong>DeepSeek's scaling work</strong> showed that the laws hold even more cleanly than expected at extreme scale when you account for architecture choices like Mixture of Experts. DeepSeek-V2 (2024) demonstrated that MoE models follow their own scaling curves where you scale <em>active</em> parameters and total parameters independently — and MoE scales more efficiently because only a fraction of parameters are used per token.</p>
+<p><strong>Llama 3</strong> (April 2024) pushed the overtrained regime even further. The 8B model was trained on <strong>15 trillion tokens</strong> — nearly 2,000 tokens per parameter, roughly 100× the Chinchilla ratio. Meta reported that the loss was <em>still decreasing</em> when they stopped training, suggesting that even 15T tokens hadn't saturated what an 8B model could learn. This demolished any notion that small models have a fixed "capacity" that more data can't overcome.</p>
+<p><strong>Epoch AI's analysis</strong> (2025) estimated that frontier labs were hitting a different kind of wall: not a scaling law plateau, but a <strong>data wall</strong>. The total amount of high-quality text on the internet is roughly 10-15 trillion tokens. Models like GPT-4 and Claude 3 were trained on substantial fractions of all publicly available text. You can't scale data 10× if the data doesn't exist.</p>
+<p>This has driven multiple responses: synthetic data generation (using models to create training data for other models), multi-epoch training (seeing the same data multiple times, which works but with diminishing returns — typically losing ~0.1 nats after 4 epochs), and multimodal training (adding images, video, audio, and code to the data diet).</p>
+<h2 id="the-surprising-math-of-emergence"><a class="header" href="#the-surprising-math-of-emergence">The Surprising Math of Emergence</a></h2>
+<p>Here's perhaps the most counterintuitive implication of scaling laws: <strong>smooth loss curves produce discontinuous capabilities</strong>.</p>
+<p>Loss decreases gradually — there's no sudden jump at any particular scale. But specific capabilities appear to "emerge" at specific scales. A model at 10B parameters can't do multi-step arithmetic. At 100B, it suddenly can. A model at 50B can't reliably follow complex instructions. At 200B, it does so consistently.</p>
+<p>How does this work? The answer lies in how loss connects to task performance. Imagine a task that requires the model to get 10 consecutive token predictions right. If each token has a 90% chance of being correct, the probability of getting all 10 right is 0.9^10 ≈ 35%. At 95% per token, it's 0.95^10 ≈ 60%. At 99%, it's 0.99^10 ≈ 90%.</p>
+<p>That smooth improvement in per-token accuracy (90% → 95% → 99%) maps onto a loss reduction of just 0.15 nats. But the task success rate jumps from 35% to 90%. The scaling law is smooth; the benchmark is not. Emergence isn't magic — it's a <strong>phase transition</strong> driven by the nonlinear relationship between per-token accuracy and multi-step task completion.</p>
+<p>This insight, formalized by researchers at Stanford and elsewhere, resolved one of the biggest debates in the field. Emergence is real in the sense that capabilities truly do appear at scale. But it's not mysterious — it's a predictable consequence of smooth underlying improvement hitting task-specific thresholds.</p>
+<h2 id="what-100-million-buys-you-and-why-it-matters"><a class="header" href="#what-100-million-buys-you-and-why-it-matters">What $100 Million Buys You (and Why It Matters)</a></h2>
+<p>Scaling laws turn AI into an exercise in capital allocation. Here's the rough math as of early 2026:</p>
+<ul>
+<li><strong>Training an 8B model on 1T tokens:</strong> ~$2-3 million (on H100 clusters)</li>
+<li><strong>Training a 70B model on 2T tokens:</strong> ~$20-30 million</li>
+<li><strong>Training a 400B+ frontier model on 10T+ tokens:</strong> ~$100-300 million</li>
+<li><strong>GPT-4 training cost (estimated):</strong> ~$100 million (2023 dollars)</li>
+<li><strong>Llama 3 405B:</strong> Meta used ~30,000 H100 GPUs for months, estimated $50-100M+</li>
+</ul>
+<p>The scaling laws tell you exactly what you get for that money. Doubling your compute budget reduces loss by about 3.4% (using the C^(−0.050) exponent). That doesn't sound like much, but that 3.4% might be the difference between a model that can and can't reliably write working code, or between one that hallucinates 30% of the time versus 20%.</p>
+<p>This is why the GPU arms race is so intense. NVIDIA's H100s cost $25,000-40,000 each. A frontier training cluster needs 10,000-50,000 of them. The total cost including networking (InfiniBand at $400B+ for large clusters), power, cooling, and engineering staff means a single training run is a nine-figure bet. And the scaling laws give labs enough confidence to make that bet — because the returns are predictable.</p>
+<h2 id="the-limits-of-scaling"><a class="header" href="#the-limits-of-scaling">The Limits of Scaling</a></h2>
+<p>Are scaling laws eternal? Almost certainly not.</p>
+<p>Several potential ceilings loom:</p>
+<ol>
+<li>
+<p><strong>Data exhaustion</strong>: As mentioned, we're running low on high-quality training text. Synthetic data helps but introduces distributional biases.</p>
+</li>
+<li>
+<p><strong>Hardware limits</strong>: Even with NVIDIA's B200 and GB300 chips, you eventually hit power grid constraints. A 100,000-GPU cluster draws 50-150 megawatts — enough to power a small city.</p>
+</li>
+<li>
+<p><strong>Diminishing economic returns</strong>: Halving the loss might cost 100× the compute. At some point, the marginal improvement per dollar spent isn't worth it for commercial applications.</p>
+</li>
+<li>
+<p><strong>Irreducible entropy</strong>: Language itself has a floor of unpredictability. Shannon estimated English text has about 1.0-1.5 bits per character of entropy. No model can predict better than the inherent randomness in language. Current frontier models are approaching this theoretical floor on clean text.</p>
+</li>
+<li>
+<p><strong>Benchmark saturation</strong>: On many standard benchmarks (MMLU, HellaSwag, ARC), frontier models already score 90%+. The remaining errors are often ambiguous questions rather than model failures.</p>
+</li>
+</ol>
+<p>But here's the thing: every time someone has predicted the end of scaling, they've been wrong. The field keeps finding new dimensions to scale along — more data types, better data quality, architectural improvements that shift the scaling curves, and now <strong>test-time compute scaling</strong> (spending more computation during inference rather than training).</p>
+<h2 id="the-philosophical-weight"><a class="header" href="#the-philosophical-weight">The Philosophical Weight</a></h2>
+<p>Scaling laws have an almost unsettling implication: intelligence, or at least the kind of intelligence we measure with language benchmarks, might be a <strong>commodity</strong>. Not a mystical property that requires breakthrough algorithmic insight, but something you can buy with enough GPUs and data.</p>
+<p>This is philosophically heavy. It suggests that the difference between a model that can barely string together grammatical sentences and one that can pass the bar exam is "just" a few orders of magnitude of compute. Not a different architecture. Not a different training procedure. Just... more.</p>
+<p>Whether this generalizes to real understanding, reasoning, or consciousness is a different question entirely — one we'll grapple with later in this course. But the empirical fact stands: smooth scaling produces qualitatively different capabilities. And that's enough to make scaling laws the most important empirical finding in modern AI.</p>
+<hr />
+<h2 id="whats-coming-tomorrow"><a class="header" href="#whats-coming-tomorrow">What's Coming Tomorrow</a></h2>
+<p>You now know <em>that</em> bigger models are smarter, and roughly <em>how</em> to allocate compute for maximum intelligence per dollar. But we've been talking about scaling in the abstract — parameters, tokens, FLOPs. Tomorrow, we pull back the curtain on <strong>the actual training stack</strong>: the GPUs, the clusters, the networking, the data pipelines, and the staggering engineering required to keep thousands of accelerators working in concert. What does $100 million of training infrastructure actually look like? How do you keep 50,000 GPUs synchronized? And what happens when one of them fails mid-training? Welcome to Week 2.</p>
+<hr />
+<div style="margin-top: 2rem; padding: 1.5rem; background: #1a1a2e; border-radius: 8px; border: 1px solid #16213e;">
+<h3 id="-test-your-understanding"><a class="header" href="#-test-your-understanding">📝 Test Your Understanding</a></h3>
+<p>Ready to check what you've learned? Take the interactive quiz:</p>
+<p><a href="quizzes/day-07.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: #e94560; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 0.5rem;">Take the Day 7 Quiz →</a></p>
+</div>
 
                     </main>
 

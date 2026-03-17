@@ -7,3 +7,4 @@
 - [Day 4: The Transformer Architecture — Encoder, Decoder, and Why It Changed Everything](./day-04.md)
 - [Day 5: Tokenization — BPE, SentencePiece, and Why "Token" ≠ "Word"](./day-05.md)
 - [Day 6: Pre-training — How Models Learn Language from the Internet](./day-06.md)
+- [Day 7: Scaling Laws — Why Bigger Models Are Smarter](./day-07.md)

@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "The Kaplan et al. (2020) scaling laws found that language model loss follows power laws. What was the exponent for compute (L ∝ C^α)?"
+prompt.distractors = [
+  "α ≈ −0.076, meaning loss decreases slowly and each 10× increase in compute yields about a 17% loss reduction, consistent with the parameter scaling exponent",
+  "α ≈ −0.095, meaning loss decreases at the same rate as the data scaling exponent, reflecting that compute scales linearly with dataset size in practice",
+  "α ≈ −0.120, meaning loss decreases relatively quickly with compute, which is why even modest increases in training budget produce noticeable capability gains"
+]
+answer.answer = "α ≈ −0.050, meaning loss decreases slowly with compute and requires roughly a 10× increase in compute budget to achieve about an 11% reduction in loss"
+context = "The compute scaling exponent of −0.050 is the smallest of the three scaling exponents (parameters at −0.076, data at −0.095), meaning compute is the 'least efficient' axis to scale — but since compute encompasses both parameters and data, the individual axes can be optimized within a fixed compute budget."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key methodological difference that caused the Chinchilla paper to reach different conclusions than Kaplan et al. about optimal compute allocation?"
+prompt.distractors = [
+  "Chinchilla used a larger range of model sizes spanning 70M to 16B parameters, while Kaplan only tested models up to 1.5B, missing scaling behavior that only appears at larger scales",
+  "Chinchilla evaluated on downstream benchmarks rather than pure cross-entropy loss, revealing that task performance scales differently than raw perplexity with model size",
+  "Chinchilla trained all models on identical data mixtures with controlled quality filtering, eliminating data distribution confounds that affected Kaplan's heterogeneous training sets"
+]
+answer.answer = "Chinchilla used a cosine learning rate schedule properly tuned for each run length, while Kaplan used a fixed schedule that prevented smaller models from fully converging on longer runs"
+context = "Kaplan's fixed learning rate schedule meant that models trained on more data didn't get the proper learning rate cooldown, making data look less valuable than it actually is. When Chinchilla corrected this with per-run cosine schedules, data became much more important, shifting the optimal ratio from parameter-heavy to balanced."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "The Chinchilla-optimal training ratio is approximately 20 tokens per parameter. LLaMA-13B was trained on 1 trillion tokens. How does this compare to the Chinchilla recommendation, and why did Meta choose this?"
+prompt.distractors = [
+  "It's about 4× the Chinchilla-optimal amount, and Meta chose this because their experiments showed the Chinchilla ratio was wrong for decoder-only architectures using RoPE positional embeddings",
+  "It's about 4× the Chinchilla-optimal amount, and Meta chose this because training on more diverse data improved generalization even though loss on the training distribution plateaued",
+  "It's about 4× the Chinchilla-optimal amount, and Meta chose this because they were optimizing for few-shot performance rather than perplexity, which has a different scaling curve"
+]
+answer.answer = "It's about 4× the Chinchilla-optimal amount, and Meta chose this because overtraining a smaller model trades one-time extra training compute for permanently cheaper inference costs per query"
+context = "Chinchilla optimizes for the lowest loss given a fixed compute budget, but doesn't account for inference costs. Since inference cost scales with parameter count and is paid per query, a smaller model that's overtrained can be much cheaper to deploy at scale — even if the training itself was compute-suboptimal."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the approximate Chinchilla-optimal ratio of training tokens per parameter?"
+answer.answer = "20"
+answer.alternatives = ["20 tokens per parameter", "~20", "about 20", "roughly 20"]
+context = "The Chinchilla paper established that the optimal compute allocation trains on approximately 20 tokens per parameter. This means a 70B model should see ~1.4T tokens, and a 7B model should see ~140B tokens."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How do smooth scaling law curves produce seemingly 'emergent' capabilities that appear suddenly at specific model scales?"
+prompt.distractors = [
+  "The capabilities aren't truly sudden — they appear gradual when measured with continuous metrics like log-likelihood, but traditional benchmarks use binary thresholds that create artificial discontinuities in reporting",
+  "Large models undergo internal phase transitions in their weight distributions at critical parameter counts, analogous to physical phase transitions, causing qualitative jumps in representational capacity",
+  "Emergent capabilities result from the sudden alignment of multiple independently scaling sub-circuits within the network, which only co-activate productively above certain parameter thresholds"
+]
+answer.answer = "Multi-step tasks require getting many consecutive token predictions right, so small per-token accuracy gains from smooth loss reduction translate into large jumps in task completion probability through compounding"
+context = "If a task requires 10 correct predictions in sequence, going from 90% to 99% per-token accuracy (a smooth change of just 0.15 nats) improves task success from 35% to 90%. The scaling law is smooth; the nonlinear mapping from per-token accuracy to multi-step task success creates the appearance of sudden emergence."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is data exhaustion considered a major potential limit to scaling, and approximately how much high-quality text exists on the public internet?"
+prompt.distractors = [
+  "There are roughly 100-150 trillion tokens available, but most are in languages other than English, creating a multilingual bottleneck that limits effective training data for English-dominant benchmarks",
+  "There are roughly 50-80 trillion tokens available, but copyright restrictions and licensing concerns prevent labs from legally using more than about 10% of publicly accessible text for model training",
+  "There are roughly 1-5 trillion tokens available, but the real constraint is computational — processing more data requires proportionally more training steps, making wall-clock time the binding limit"
+]
+answer.answer = "There are roughly 10-15 trillion tokens of high-quality text available, and frontier models are already trained on substantial fractions of it, making further 10× data scaling physically impossible without synthetic generation"
+context = "Epoch AI estimated publicly available high-quality text at roughly 10-15 trillion tokens. Models like GPT-4 and Llama 3 already use large fractions of this. Since scaling laws require order-of-magnitude increases in data, the internet simply doesn't have enough quality text — driving interest in synthetic data, multimodal training, and multi-epoch strategies."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Llama 3's 8B model was trained on 15 trillion tokens. What key finding did this extreme overtraining reveal about small model capacity?"
+prompt.distractors = [
+  "The model's loss plateaued after 8 trillion tokens and the remaining 7 trillion tokens only improved performance on code and mathematical tasks, suggesting domain-specific capacity limits",
+  "The model achieved parity with Llama 2 70B across all benchmarks, proving that extreme overtraining can fully close the gap between models that differ by nearly 10× in parameter count",
+  "The model showed signs of memorization after 10 trillion tokens, with training loss continuing to decrease but validation loss diverging, indicating classic overfitting at extreme data scales"
+]
+answer.answer = "The loss was still decreasing when training stopped at 15 trillion tokens, suggesting that even at ~2000 tokens per parameter the model hadn't saturated and could have continued learning from more data"
+context = "Meta reported that Llama 3 8B's loss curves hadn't plateaued at 15T tokens — roughly 100× the Chinchilla-optimal ratio. This challenged the idea that small models have a fixed learning capacity and showed that the relationship between model size and data is more flexible than the Chinchilla ratio suggests."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the approximate estimated training cost for GPT-4, and how much does doubling a compute budget reduce loss according to the scaling laws?"
+prompt.distractors = [
+  "GPT-4 cost roughly $500 million to train, and doubling compute reduces loss by approximately 7%, making each doubling a marginal but measurable improvement at frontier scale",
+  "GPT-4 cost roughly $20 million to train, and doubling compute reduces loss by approximately 10%, which is why relatively modest budgets can produce competitive frontier models",
+  "GPT-4 cost roughly $100 million to train, and doubling compute reduces loss by approximately 1.5%, which means frontier improvements require massive 10-100× compute increases per generation"
+]
+answer.answer = "GPT-4 cost roughly $100 million to train, and doubling compute reduces loss by approximately 3.4%, which may sound small but can represent the difference between passing and failing complex reasoning tasks"
+context = "Using the compute scaling exponent of −0.050, doubling compute gives a factor of 2^0.050 ≈ 3.4% loss reduction. GPT-4's training cost has been estimated at ~$100M in 2023 dollars. These seemingly small loss reductions matter because of the nonlinear mapping between loss and task performance — a 3.4% loss reduction can push accuracy past critical thresholds."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What was the name of the 70B-parameter DeepMind model that matched or beat their larger 280B-parameter Gopher, demonstrating that compute-optimal training outperforms parameter-maximizing?"
+answer.answer = "Chinchilla"
+answer.alternatives = ["chinchilla"]
+context = "Chinchilla (70B parameters, 1.4T tokens) matched or exceeded the 280B-parameter Gopher on virtually every benchmark despite being 4× smaller. It used the same compute budget but allocated it according to the Chinchilla-optimal ratio of ~20 tokens per parameter, proving that Gopher was significantly undertrained."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Shannon estimated English text has about 1.0-1.5 bits per character of entropy. Why does this represent a fundamental limit for language model scaling?"
+prompt.distractors = [
+  "Because models can only represent information up to the precision of their floating-point weights, and 1.0-1.5 bits per character exceeds the effective precision of bfloat16 arithmetic at scale",
+  "Because the entropy sets a minimum on the perplexity achievable during evaluation, and benchmark scores are directly derived from perplexity, creating a ceiling on measurable progress",
+  "Because training loss below this entropy level would require the model to memorize specific training examples rather than learning general patterns, causing catastrophic overfitting"
+]
+answer.answer = "Because this entropy represents the inherent unpredictability in language itself — no model, no matter how large, can predict better than the randomness in human word choices, setting a floor on achievable loss"
+context = "Shannon entropy measures the true information content of language. When a human writes, their word choices contain genuine randomness that even a perfect predictor cannot eliminate. As frontier models approach this floor on clean, well-edited text, further scaling yields diminishing returns — the remaining 'loss' isn't model error, it's the irreducible uncertainty of language."
