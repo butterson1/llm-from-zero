@@ -1,0 +1,107 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What are the two fundamentally different roles played by self-attention and feed-forward layers in a Transformer block?"
+prompt.distractors = [
+  "Self-attention handles input preprocessing and normalization, while feed-forward layers perform the core sequence-to-sequence transformation",
+  "Self-attention learns position-dependent patterns and word order, while feed-forward layers learn position-independent global statistics",
+  "Self-attention compresses the sequence into a fixed-length representation, while feed-forward layers expand it back to the full sequence length"
+]
+answer.answer = "Self-attention handles communication between tokens by computing contextual relationships, while feed-forward layers perform per-token computation and store learned knowledge"
+context = "Research by Geva et al. (2021) showed that attention layers let tokens share information (communication), while FFN layers act as key-value memories that store and retrieve factual knowledge (computation). The FFN holds roughly two-thirds of a Transformer's parameters, consistent with its role as the model's knowledge store."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why are residual connections essential for training deep Transformers?"
+prompt.distractors = [
+  "They double the effective width of each layer by concatenating the input with the sub-layer output, increasing representational capacity",
+  "They enforce weight sharing between adjacent layers by constraining the sub-layer to learn only incremental modifications to its input",
+  "They reduce the total parameter count by allowing multiple layers to reuse the same input representation without separate weight matrices"
+]
+answer.answer = "They create a direct gradient path from output to input that bypasses intermediate layers, preventing vanishing gradients in deep networks"
+context = "Without residual connections, gradients must flow through every weight matrix during backpropagation, often shrinking to near-zero in deep networks. Residual connections (x + SubLayer(x)) provide a gradient highway — a direct additive path that guarantees gradient flow regardless of how the intermediate layers behave."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the purpose of the causal mask in the decoder's self-attention?"
+prompt.distractors = [
+  "It prevents the decoder from attending to padding tokens that were added to make variable-length sequences fit a fixed batch dimension",
+  "It forces each attention head to specialize on a different subset of positions, ensuring diverse attention patterns across heads",
+  "It limits the decoder's receptive field to a local window of nearby tokens, reducing the quadratic computational cost of full attention"
+]
+answer.answer = "It prevents each position from attending to future tokens, ensuring the model can't cheat by seeing the answer during training while enabling parallel computation"
+context = "The causal mask sets attention scores to -∞ for all positions after the current one, making them zero after softmax. This maintains the autoregressive property (position t only sees 1 through t) while allowing all positions to be computed in parallel during training — a 512× speedup over sequential processing for a 512-token sequence."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did decoder-only architectures (like GPT) win over encoder-decoder Transformers for general-purpose AI?"
+prompt.distractors = [
+  "Decoder-only models have fundamentally lower computational cost per token because they eliminate the quadratic attention over the encoder's input",
+  "Decoder-only models can process bidirectional context, giving them a richer understanding of input text compared to the encoder-decoder split",
+  "Decoder-only models are specifically designed for multi-turn conversations, which encoder-decoder architectures cannot handle efficiently"
+]
+answer.answer = "They offer architectural simplicity, a natural self-supervised objective (next-token prediction on raw text), and empirically smoother scaling properties"
+context = "Decoder-only models need just one stack instead of two, can pre-train on raw text without parallel corpora via causal language modeling, and showed clean scaling curves in DeepMind's Chinchilla experiments. Generation also turned out to be the more general problem — a model that generates well can also classify, translate, and reason."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the difference between Pre-LN and Post-LN Transformer configurations, and why does it matter?"
+prompt.distractors = [
+  "Pre-LN normalizes only the query and key vectors before attention, while Post-LN normalizes all three of queries, keys, and values after attention",
+  "Pre-LN applies normalization to the input embeddings once at the start, while Post-LN applies it at the final output layer before the softmax",
+  "Pre-LN uses batch normalization before each sub-layer, while Post-LN uses layer normalization after each sub-layer"
+]
+answer.answer = "Pre-LN applies layer normalization before each sub-layer (inside the residual path), while Post-LN applies it after the residual addition, and Pre-LN provides more stable training for deep models"
+context = "The original Transformer used Post-LN: LayerNorm(x + SubLayer(x)). Xiong et al. (2020) showed Pre-LN: x + SubLayer(LayerNorm(x)) is more stable because the residual gradient path is completely unimpeded by normalization. Most modern Transformers (GPT-3 onward) use Pre-LN."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What fraction of a Transformer block's parameters are typically in the feed-forward layers?"
+answer.answer = "two-thirds"
+answer.alternatives = ["2/3", "two thirds", "⅔", "about two-thirds", "roughly two-thirds"]
+context = "In the base Transformer, the FFN has ~2.1M parameters per block (512×2048 + 2048×512) while self-attention has ~1.05M (four 512×512 projections). This roughly 2:1 ratio (~two-thirds in FFN) has remained stable even at GPT-3 scale (175B parameters)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does cross-attention in the decoder differ from self-attention?"
+prompt.distractors = [
+  "Cross-attention uses additive scoring instead of dot-product scoring, making it more expressive but computationally expensive for long sequences",
+  "Cross-attention operates without a causal mask, allowing bidirectional information flow between the source and target sequences",
+  "Cross-attention uses a fixed, non-learned attention pattern determined by positional encodings rather than content-based matching"
+]
+answer.answer = "In cross-attention, the decoder generates query vectors from its own states, but the key and value vectors come from the encoder's output representations"
+context = "Cross-attention connects the decoder to the encoder: queries come from the decoder (what am I looking for in the source?), while keys and values come from the encoder (what's available in the source sentence?). This is the mechanism by which the decoder accesses the input during generation."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does the original Transformer use a warmup learning rate schedule during training?"
+prompt.distractors = [
+  "To gradually increase the effective batch size by processing more tokens as the model's memory requirements decrease during training",
+  "To align the learning rate with the decreasing loss magnitude, ensuring weight updates remain proportional to the current error",
+  "To allow the positional encodings to stabilize before the attention layers begin learning complex long-range dependencies"
+]
+answer.answer = "To prevent the model from making destructively large weight updates early in training when the loss landscape is poorly understood and gradients are noisy"
+context = "The Transformer uses a learning rate that linearly increases for 4,000 warmup steps, then decays proportionally to the inverse square root of the step. Starting with a high learning rate when the model hasn't learned anything yet causes wild, unhelpful parameter oscillations. Warmup lets the optimizer explore gently first."
+
+# Review question from Day 3
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the original 'Attention Is All You Need' paper, what dimensions did each attention head operate in for the base Transformer model?"
+prompt.distractors = [
+  "128 dimensions per head, with 4 heads splitting the 512-dimensional model space into equal subspaces",
+  "512 dimensions per head, with each head operating on the full model dimensionality independently",
+  "32 dimensions per head, with 16 heads to capture a wider diversity of attention patterns"
+]
+answer.answer = "64 dimensions per head, with 8 heads splitting the 512-dimensional model space into equal subspaces"
+context = "The base Transformer uses d_model=512 with h=8 heads, giving each head d_k = d_v = 512/8 = 64 dimensions. The big model uses d_model=1024 with 16 heads, maintaining 64 dimensions per head. Multi-head attention achieves specialization at essentially the same computational cost as single-head attention."
+
+# Review question from Day 2
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What mathematical property of Word2Vec embeddings demonstrated that they capture semantic relationships as geometric structure?"
+prompt.distractors = [
+  "Semantically similar words form tight clusters with low cosine distance, while unrelated words are uniformly distributed across the embedding space",
+  "Words with similar syntactic roles (all nouns, all verbs) occupy parallel hyperplanes in the embedding space, separated by learned grammatical offsets",
+  "The L2 norm of each word vector correlates with the word's frequency in the training corpus, encoding statistical importance as geometric magnitude"
+]
+answer.answer = "Vector arithmetic captures analogies: subtracting and adding word vectors (e.g., king - man + woman ≈ queen) produces semantically correct results"
+context = "Mikolov et al. showed that Word2Vec embeddings encode semantic relationships as consistent vector offsets. The direction from 'man' to 'woman' is approximately the same as from 'king' to 'queen', meaning gender is represented as a geometric direction in the embedding space. This was one of the first demonstrations that neural networks learn interpretable structure."
