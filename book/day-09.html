@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 9: Data — CommonCrawl, The Pile, and the Dirty Secret of Training Data - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-9-data--commoncrawl-the-pile-and-the-dirty-secret-of-training-data"><a class="header" href="#day-9-data--commoncrawl-the-pile-and-the-dirty-secret-of-training-data">Day 9: Data — CommonCrawl, The Pile, and the Dirty Secret of Training Data</a></h1>
+<p><em>Yesterday you saw the machine room: the H100s, the InfiniBand fabric, the 20-megawatt power draw, the 3 a.m. checkpoint recoveries. Today we look at what all that hardware is actually chewing on. This is where large language models stop looking like pure mathematics and start looking like industrial agriculture. The model is the combine harvester. The internet is the field. And the strange truth of modern AI is that the harvest matters at least as much as the machine.</em></p>
+<hr />
+<h2 id="the-model-learns-the-world-by-eating-its-text-exhaust"><a class="header" href="#the-model-learns-the-world-by-eating-its-text-exhaust">The Model Learns the World by Eating Its Text Exhaust</a></h2>
+<p>A language model is often described as “trained on the internet,” which is like saying a human is raised on “food.” Technically true, almost useless. The real story is not just how much data goes in, but what kinds of text, in what proportions, after what filtering, with what duplicates removed, and with which legal and cultural blind spots baked in.</p>
+<p>This matters because pretraining is not database lookup. A model does not store a neat card catalog of facts. It compresses statistical regularities from its corpus into billions of parameters. In effect, the training set becomes the model’s sensory world. If the corpus overrepresents Reddit arguments, SEO sludge, boilerplate legal templates, Python code, or fan fiction, the model internalizes that ecology. Its “common sense” is really a weighted average of what its dataset looked like.</p>
+<p>That is why frontier labs guard data pipelines so fiercely. Architecture papers get published. Dataset recipes usually do not. The industry has learned a painful lesson: once you have a competent transformer, the biggest gains often come not from radically new math, but from better data mixtures, better deduplication, better filtering, better curricula.</p>
+<p>The counterintuitive fact is this: <strong>more data is often worse data</strong>. If you pour trillions of low-quality tokens into a model, you are not just adding noise. You are spending scarce compute teaching the model the wrong statistical habits.</p>
+<h2 id="common-crawl-the-ocean-everything-starts-from"><a class="header" href="#common-crawl-the-ocean-everything-starts-from">Common Crawl: The Ocean Everything Starts From</a></h2>
+<p>Most open web-scale text corpora begin with <strong>Common Crawl</strong>, a nonprofit that has been crawling the public web since 2008. Every month it captures billions of pages. A single recent crawl, from April 2024, contained roughly <strong>2.7 billion web pages</strong> and about <strong>386 TiB of uncompressed HTML</strong>. That is not a dataset in the sense researchers want; it is raw ore.</p>
+<p>Raw Common Crawl is a mess. HTML boilerplate overwhelms actual prose. Navigation menus repeat on every page. There is spam, scams, machine-translated junk, AI-generated sludge, and endless duplicates. Many pages are half code, half CSS, half broken Unicode. Some are empty shells with one paragraph and forty tracking scripts. If you trained directly on it, your model would become weird in exactly the way you would expect from learning language from pop-ups and cookie banners.</p>
+<p>So the modern data pipeline begins with extraction. Strip HTML. Identify the main text. Detect language. Remove boilerplate. Throw away pages with too little alphabetic content, too much repetition, too many suspicious tokens, or too many stop-word anomalies. Then deduplicate.</p>
+<p>Deduplication is one of the least glamorous and most consequential steps in the entire field. Exact dedup removes byte-identical copies. Near-dedup, often with <strong>MinHash</strong> or locality-sensitive hashing, removes pages that are not identical but are effectively the same article mirrored across a thousand sites. Why does this matter? Because duplicates act like the model’s equivalent of hearing the same rumor 500 times. They distort the estimated distribution, encourage memorization, and contaminate evaluations when benchmark questions appear verbatim in training.</p>
+<p>The data problem, in other words, is not finding text. It is finding text worth compressing.</p>
+<h2 id="c4-webtext-and-the-first-generation-of-cleaned-web-corpora"><a class="header" href="#c4-webtext-and-the-first-generation-of-cleaned-web-corpora">C4, WebText, and the First Generation of “Cleaned Web” Corpora</a></h2>
+<p>Two influential early recipes show how the field learned to turn web junk into model food.</p>
+<p>OpenAI’s <strong>WebText</strong>, used for GPT-2 in 2019, was built from roughly <strong>45 million outbound links from Reddit posts with at least 3 karma</strong>. That sounds almost laughably ad hoc, and in a sense it was. But it captured an important intuition: use human attention as a quality filter. If lots of Reddit users thought a page was interesting enough to upvote, it might be better than a random web page. WebText was never fully released, but its design shaped many later datasets.</p>
+<p>Google’s <strong>C4</strong> — the Colossal Clean Crawled Corpus — was the dataset behind T5. It was derived from a single Common Crawl snapshot and ended up around <strong>156 billion to 172 billion GPT-2 tokens</strong>, depending on counting scheme. C4’s cleaning rules became famous: remove non-English pages, strip boilerplate, filter “bad words,” discard documents with weird punctuation ratios, and so on.</p>
+<p>And here the field hit one of its first big sociotechnical potholes. In 2021, researchers at the Allen Institute, the University of Washington, and the Distributed AI Research Institute audited C4 in <em>Documenting Large Webtext Corpora</em>. They showed that blocklists meant to filter toxic content also disproportionately removed text about marginalized groups and text written in minority dialects. A cleaning rule that sounds sensible at 2 a.m. in a Jupyter notebook — “drop pages containing slurs” — can silently erase reclaimed language, queer discourse, and discussions of racism. A supposedly neutral filter becomes a cultural editor.</p>
+<p>That was a warning shot for the entire field. Every dataset is also a theory of what counts as “good language.”</p>
+<h2 id="the-pile-curated-diversity-as-an-engineering-strategy"><a class="header" href="#the-pile-curated-diversity-as-an-engineering-strategy">The Pile: Curated Diversity as an Engineering Strategy</a></h2>
+<p>If Common Crawl is raw ocean water, <strong>The Pile</strong> was an attempt to bottle a mineral-balanced blend. Released by EleutherAI in 2020, The Pile combined <strong>22 components</strong> into an <strong>825 GiB</strong> English-language corpus. Its ingredients included PubMed papers, arXiv, GitHub, Stack Exchange, Project Gutenberg, OpenSubtitles, patents, Wikipedia, and a large controversial component called <strong>Books3</strong>.</p>
+<p>The important idea behind The Pile was not just size. It was <strong>mixture design</strong>. Web text gives breadth, but curated domains give depth. Scientific papers teach technical syntax and citation style. Code teaches formal structure. Books teach long-range narrative. Q&amp;A sites teach instructional explanation. Patents teach procedural language and obscure terminology. Mixing domains helps models generalize because language is not one thing; it is many overlapping registers.</p>
+<p>This turns out to matter enormously. A model trained only on clean encyclopedic prose becomes stiff and brittle. A model trained only on raw web sludge becomes fluent but unreliable. The art is in the blend.</p>
+<p>The Pile also helped open science by giving researchers something rare: a public large-scale corpus they could actually train on and inspect. That mattered because for years, top labs were publishing model breakthroughs built on private datasets that nobody else could reproduce. The Pile did not close that gap, but it narrowed it.</p>
+<p>It also exposed the next big problem.</p>
+<h2 id="the-dirty-secret-some-of-the-best-data-is-legally-and-ethically-radioactive"><a class="header" href="#the-dirty-secret-some-of-the-best-data-is-legally-and-ethically-radioactive">The Dirty Secret: Some of the Best Data Is Legally and Ethically Radioactive</a></h2>
+<p>One reason frontier model training data is so secretive is that some of the highest-value text on Earth sits in legal gray zones.</p>
+<p>Take <strong>Books3</strong>, a roughly <strong>37 GB</strong> corpus of pirated books folded into The Pile. Books are incredibly valuable training material. They contain coherent long-form structure, polished editing, rare vocabulary, and sustained argument across hundreds of pages — exactly the kind of distribution that makes models better at long-range coherence. But many of those books were copyrighted. That fact has now rippled outward into lawsuits against Meta, OpenAI, Anthropic, and others.</p>
+<p>The code world hit a parallel controversy. <strong>The Stack</strong>, assembled by Hugging Face and the BigCode collaboration, contained <strong>more than 6 TB of permissively licensed source code</strong> across <strong>358 programming languages</strong>. BigCode built opt-out mechanisms and license tracking precisely because the legal status of code training data was impossible to ignore after the Copilot lawsuits.</p>
+<p>This is the real dirty secret of training data: the web contains immense amounts of useful text, but usefulness and legitimacy are not the same thing. The highest-signal corpora are often the ones with the most complicated copyright, consent, or provenance story.</p>
+<p>The public picture is therefore oddly inverted. Labs say “trained on publicly available data,” which sounds transparent but often isn’t. “Publicly available” does not mean public domain. It may simply mean reachable by a crawler.</p>
+<h2 id="refinedweb-fineweb-and-the-rise-of-data-centric-llm-science"><a class="header" href="#refinedweb-fineweb-and-the-rise-of-data-centric-llm-science">RefinedWeb, FineWeb, and the Rise of Data-Centric LLM Science</a></h2>
+<p>Around 2023, researchers started proving something surprisingly radical: with good enough filtering, <strong>web data alone</strong> could beat hand-curated corpora.</p>
+<p>The strongest early statement came from the <strong>RefinedWeb</strong> work behind Falcon, led by researchers at the Technology Innovation Institute in Abu Dhabi. Their paper argued that after aggressive filtering and deduplication, Common Crawl still yielded about <strong>5 trillion tokens</strong> of high-quality text. They publicly released a <strong>500–600 billion token</strong> subset and showed that small models trained on it could outperform peers trained on mixtures including books and Wikipedia.</p>
+<p>That result cut against years of intuition. Many people assumed curated sources were inherently superior. RefinedWeb suggested that the web was not too small or too dirty; we just had not learned how to refine it well enough.</p>
+<p>Then came <strong>FineWeb</strong> from Hugging Face in 2024, using <strong>96 Common Crawl snapshots</strong> and constructing an openly available corpus at roughly <strong>15 trillion tokens</strong> scale. FineWeb-Edu went a step further by training classifiers to identify educationally dense text — an attempt to predict not just whether a page is clean, but whether it teaches something.</p>
+<p>At the same time, <strong>Dolma</strong> from Ai2 released <strong>3 trillion tokens</strong> spanning web text, academic papers, code, books, and encyclopedic sources as the corpus behind OLMo. And <strong>DataComp-LM</strong>, a benchmark effort involving researchers from MIT, Stanford, MosaicML, and others, published a standardized candidate pool of roughly <strong>240 trillion tokens</strong> extracted from Common Crawl so researchers could systematically compare filtering recipes. One striking DCLM result: a <strong>7B model trained on 280B carefully selected tokens</strong> could beat <strong>Llama 2 7B</strong> on MMLU while using about <strong>7× less compute</strong>.</p>
+<p>That is a profound shift. For years the field was architecture-centric. DCLM and related work made it clear that data curation can buy you what looks like algorithmic progress.</p>
+<p>In other words: if compute is money, data quality is exchange rate.</p>
+<h2 id="why-dedup-filtering-and-mixture-design-change-model-behavior"><a class="header" href="#why-dedup-filtering-and-mixture-design-change-model-behavior">Why Dedup, Filtering, and Mixture Design Change Model Behavior</a></h2>
+<p>Think of training as sculpting a probability distribution. Every token nudges the shape a little. If you repeat boilerplate millions of times, you flatten the sculpture in one direction. If you mix in books, code, and science papers, you carve out other dimensions.</p>
+<p>Three levers matter most.</p>
+<h3 id="1-deduplication"><a class="header" href="#1-deduplication">1. Deduplication</a></h3>
+<p>Without dedup, the web lies about consensus. Syndicated AP stories, mirrored blog posts, scraped copies, GitHub forks, and templated SEO pages appear far more often than their informational value warrants. Near-deduplication reduces memorization and improves benchmark hygiene. It also changes style: models become less obsessed with cliché phrasings because they are not hammered by the same sentence thousands of times.</p>
+<h3 id="2-quality-filtering"><a class="header" href="#2-quality-filtering">2. Quality Filtering</a></h3>
+<p>Heuristics such as punctuation ratios, perplexity scoring, language ID, line repetition, and classifier-based scoring try to separate “human-useful” text from garbage. Increasingly, labs use <strong>small quality models</strong> to score documents before a bigger model ever sees them. One elegant irony of modern LLM training is that we now use language models to decide which text future language models deserve to read.</p>
+<h3 id="3-mixture-weighting"><a class="header" href="#3-mixture-weighting">3. Mixture Weighting</a></h3>
+<p>A corpus is not just a pile; it is a recipe. Meta said <strong>Llama 3</strong> was trained on roughly <strong>15 trillion tokens</strong>, with <strong>over 5% non-English data</strong> across about <strong>30 languages</strong> and <strong>4× more code than Llama 2</strong>. Those mixture choices are not cosmetic. More code improves reasoning over formal syntax and tool use. More multilingual data broadens coverage but competes with English capacity. Higher-quality domains late in training can produce a kind of curriculum effect, where the model first absorbs broad patterns and then sharpens on denser text.</p>
+<p>This is why data scientists at frontier labs are not just janitors. They are de facto cognitive dieticians.</p>
+<h2 id="contamination-synthetic-sludge-and-the-coming-data-wall"><a class="header" href="#contamination-synthetic-sludge-and-the-coming-data-wall">Contamination, Synthetic Sludge, and the Coming Data Wall</a></h2>
+<p>Training data has another problem: we are running out of uncontaminated internet.</p>
+<p>Benchmarks leak into training sets. Model-generated text is now flooding the web. SEO farms use AI to create pages whose purpose is not to inform humans but to attract search traffic. That means future models risk learning from the low-grade outputs of previous models — like an ecosystem where every predator starts eating processed versions of its own waste.</p>
+<p>Researchers sometimes call this <strong>model collapse</strong>, though the catastrophic versions are probably overstated for real-world mixtures. Still, the danger is real enough that labs aggressively filter suspected synthetic text and maintain high-trust sources. Human-written books, vetted code repositories, academic corpora, and licensed media become more valuable precisely because the open web is becoming less reliable.</p>
+<p>This is the deeper reason proprietary data deals matter. Reddit sold API access. News publishers signed licensing agreements. Stack Overflow cut arrangements. Shutterstock, Axel Springer, the Financial Times, Vox Media — these deals are not just about legal safety. They are about securing clean, fresh, high-signal text in a web increasingly polluted by AI exhaust.</p>
+<p>The data wall may be the next scaling wall.</p>
+<h2 id="why-the-best-labs-became-obsessed-with-provenance"><a class="header" href="#why-the-best-labs-became-obsessed-with-provenance">Why the Best Labs Became Obsessed With Provenance</a></h2>
+<p>A frontier training corpus today is closer to a supply chain than a dataset. Labs track provenance, licensing, deduplication lineage, opt-out lists, benchmark overlap, domain weights, and post-hoc audits. They do this partly for ethics, partly for lawsuits, partly for public relations — but also because provenance is technically useful.</p>
+<p>If a model starts regurgitating a copyrighted paragraph, you want to know which source likely taught it that paragraph. If safety evals show odd behavior in one language or domain, you want to trace its diet. If performance on biomedical QA jumps after changing your PubMed weight, that is not magic; it is mixture science.</p>
+<p>The modern LLM stack therefore has an unglamorous core truth: the future of AI may hinge less on discovering a new transformer block than on building better data refineries.</p>
+<hr />
+<p>The first generation of LLM discourse treated data as fuel. The emerging view is that data is more like upbringing. Two models with similar parameter counts and compute budgets can become noticeably different “minds” if one is raised on deduplicated educational text and the other on a swamp of scraped repetition.</p>
+<p>That is why the biggest labs spend millions not merely collecting text, but arguing over it. Which sources are worth licensing? How hard should you filter? How do you preserve minority voices without amplifying abuse? When does code help language? When does multilingual coverage dilute depth? These are not side questions. They are central design decisions about what kind of intelligence you are manufacturing.</p>
+<p>And once you have that giant pretrained model — fed, filtered, deduplicated, and statistically shaped — the next question becomes obvious: how do you adapt it to a specific task without paying frontier-training costs all over again?</p>
+<p><em>Tomorrow we move from pretraining corpora to the next great trick of the modern LLM era: <strong>fine-tuning and transfer learning</strong> — how a general-purpose foundation model becomes a coder, a chat assistant, a legal summarizer, or a medical helper with surprisingly little additional data.</em></p>
+<hr />
+<div style="margin-top: 2em; padding: 1.5em; background: #1a1a2e; border-radius: 8px; border: 1px solid #16213e;">
+<h2 id="-quiz--day-9"><a class="header" href="#-quiz--day-9">📝 Quiz — Day 9</a></h2>
+<p>Test your understanding of today's lesson.</p>
+<p><a href="quizzes/day-09.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Take the Day 9 Quiz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-08.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-10.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-08.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-10.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In Jason Yosinski's 2014 transfer learning experiment with CNNs, what key finding enabled the modern fine-tuning paradigm?"
+prompt.distractors = [
+    "Later layers learned universal features that transferred across tasks while early layers specialized for specific datasets",
+    "All layers contributed equally to transfer, making it necessary to retrain every layer for new tasks to work properly",
+    "Freezing any layers during transfer caused catastrophic interference that degraded performance on both old and new tasks"
+]
+answer.answer = "Early layers learned nearly universal features like edge detectors that transferred well, while later layers specialized for specific tasks"
+context = "Yosinski showed that early CNN layers learn universal low-level features (edges, textures) that transfer across tasks, while later layers specialize. This meant you could freeze early layers and retrain only the top, drastically reducing training costs."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "The InstructGPT paper demonstrated a surprising result about model size vs. fine-tuning. What was it?"
+prompt.distractors = [
+    "A 175B fine-tuned model was preferred 10× more often than a 1.3B fine-tuned model on all evaluation benchmarks",
+    "Fine-tuning any model below 13B parameters produced no measurable improvement over the pretrained baseline model",
+    "A 6B InstructGPT model matched the raw 175B GPT-3 but could not surpass it regardless of fine-tuning data volume"
+]
+answer.answer = "A 1.3B parameter InstructGPT model was preferred by human evaluators over the raw 175B GPT-3 base model"
+context = "This was a landmark finding: a model 135× smaller beat the giant simply by being fine-tuned to follow instructions. It proved that fine-tuning quality matters more than raw model scale for practical usefulness."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does LoRA (Low-Rank Adaptation) reduce the cost of fine-tuning a large language model?"
+prompt.distractors = [
+    "It prunes 99% of the model's attention heads during training and restores them afterward using saved activation checkpoints",
+    "It quantizes all model weights to 2-bit precision during the forward pass and uses full precision only for gradient computation",
+    "It trains only the embedding layer and the final output projection while keeping all transformer blocks completely frozen"
+]
+answer.answer = "It freezes the original weights and adds small low-rank matrix pairs (BA) that capture weight updates in a compressed subspace"
+context = "LoRA's key insight is that fine-tuning weight updates are low-rank — they occupy a tiny subspace. By decomposing updates into small matrices B and A (typically rank 8-64), LoRA trains only 0.01-0.1% of parameters while matching full fine-tuning performance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the LIMA paper (2023) demonstrate about the relationship between fine-tuning data quantity and quality?"
+prompt.distractors = [
+    "Models fine-tuned on 1 million diverse but unfiltered examples consistently outperformed those tuned on any smaller curated set",
+    "Data quality mattered for small models but large models above 30B parameters were robust to noise in fine-tuning datasets",
+    "Mixing high-quality and low-quality examples in a 1:10 ratio produced the best results through implicit curriculum learning"
+]
+answer.answer = "Just 1,000 carefully curated examples produced a model competitive with GPT-3.5, proving quality dominates quantity for SFT"
+context = "LIMA fine-tuned Llama 65B on only 1,000 hand-picked examples and produced a model preferred over DaVinci003 43% of the time. This proved that for supervised fine-tuning, a few excellent examples beat millions of mediocre ones."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the 2023 technique by Tim Dettmers that combines LoRA with 4-bit quantization of frozen base weights, enabling fine-tuning of 65B models on a single 48GB GPU?"
+answer.answer = "QLoRA"
+answer.alternatives = ["qlora", "QLORA"]
+context = "QLoRA combined LoRA's low-rank adapter approach with 4-bit NormalFloat quantization of the frozen base model, reducing memory from hundreds of GB to about 33 GB and democratizing fine-tuning of large models."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is 'catastrophic forgetting' in the context of fine-tuning language models?"
+prompt.distractors = [
+    "The model's tokenizer loses its vocabulary mappings when weights are modified, requiring complete re-initialization of embeddings",
+    "Training data from the fine-tuning phase overwrites the model's checkpoint files, making pretraining data unrecoverable",
+    "The optimizer's momentum terms from pretraining interfere with fine-tuning gradients, causing training loss to diverge rapidly"
+]
+answer.answer = "The pretrained knowledge is destroyed when fine-tuning with too high a learning rate or too much data, degrading general capabilities"
+context = "Catastrophic forgetting occurs when fine-tuning overwrites the representations learned during pretraining. ULMFiT addressed this with gradual unfreezing and discriminative learning rates. It remains a core challenge in continual learning."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "According to Anthropic's research on what fine-tuning changes inside a model, which parts of the network are most modified during instruction tuning?"
+prompt.distractors = [
+    "The embedding layer and positional encodings are heavily modified while all transformer blocks remain essentially unchanged",
+    "The early feed-forward layers and first few attention heads change the most as they relearn low-level linguistic features",
+    "All layers change equally because gradient flow distributes updates uniformly across the full depth of the transformer"
+]
+answer.answer = "The attention heads' output projections and later feed-forward layers change most, while early layers encoding low-level features barely change"
+context = "This finding mirrors Yosinski's vision result: shallow layers learn universal features and remain stable, while deeper layers near the output specialize during fine-tuning. It explains why techniques like LoRA can be so efficient."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the 'alignment tax' in the context of fine-tuning language models?"
+prompt.distractors = [
+    "The additional compute cost required to run safety classifiers alongside the model at inference time for content filtering",
+    "The licensing fee that frontier labs charge when other companies use their alignment datasets to fine-tune open models",
+    "The extra training time needed to generate synthetic preference data before the RLHF stage of model alignment can begin"
+]
+answer.answer = "The performance degradation on general benchmarks that results from fine-tuning a model for specific aligned behaviors"
+context = "The alignment tax refers to the tradeoff between task-specific or safety-aligned behavior and general capability. InstructGPT showed modest drops on some academic benchmarks after RLHF, and early ChatGPT was worse than base GPT-3.5 at some pure language modeling tasks."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What was the name of the 2021 Google paper that fine-tuned a 137B model on 62 NLP datasets phrased as instructions, showing that instruction tuning transfers to unseen tasks?"
+answer.answer = "FLAN"
+answer.alternatives = ["flan", "Flan", "Fine-tuned Language Net"]
+context = "FLAN (Fine-tuned Language Net) by Jason Wei et al. demonstrated that instruction tuning on diverse tasks teaches the meta-skill of instruction following, enabling the model to perform well on tasks it was never explicitly fine-tuned on."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "A rank-16 LoRA adapter for a 70B parameter model contains approximately how many trainable parameters, and how does this compare to a notable earlier model?"
+prompt.distractors = [
+    "About 1 billion parameters, roughly the size of GPT-2 Large, showing LoRA still requires substantial parameter budgets",
+    "About 10 million parameters, roughly the size of the original Word2Vec model, making it trivially small for any hardware",
+    "About 500 million parameters, roughly the size of GPT-2 XL, which is still a significant fraction of the base model"
+]
+answer.answer = "About 100 million parameters, roughly the size of the original BERT model, showing how low-dimensional the skill subspace is"
+context = "This striking comparison illustrates that the entire specialization needed to adapt a 70B model fits in a package the size of a 2018-era language model. The 'skill' subspace is remarkably low-dimensional relative to the full parameter space."

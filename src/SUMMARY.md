@@ -9,3 +9,5 @@
 - [Day 6: Pre-training — How Models Learn Language from the Internet](./day-06.md)
 - [Day 7: Scaling Laws — Why Bigger Models Are Smarter](./day-07.md)
 - [Day 8: The Training Stack — GPUs, Clusters, Data Pipelines, and What $100M Buys You](./day-08.md)
+- [Day 9: Data — CommonCrawl, The Pile, and the Dirty Secret of Training Data](./day-09.md)
+- [Day 10: Fine-Tuning & Transfer Learning — Adapting a Foundation Model](./day-10.md)
