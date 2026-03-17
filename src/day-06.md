@@ -1,0 +1,143 @@
+# Day 6: Pre-training — How Models Learn Language from the Internet
+
+*You now understand the architecture — Transformers, attention, tokenization. But architecture is just the skeleton. The thing that makes a large language model actually useful is pre-training: the process by which a randomly initialized pile of floating-point numbers gets exposed to hundreds of billions of tokens of text and somehow emerges knowing how to write poetry, debug Python, and explain quantum mechanics. How does that work? And why do two fundamentally different approaches — masked language modeling and causal language modeling — produce such radically different kinds of intelligence?*
+
+---
+
+## The Miracle That Shouldn't Work
+
+Let's start with what pre-training actually is, stripped of all mysticism: you take a neural network with random weights, you show it enormous amounts of text, and you ask it to predict missing or upcoming words. That's it. No one labels the data with "this is a fact about chemistry" or "this sentence is grammatically correct." No one curates lesson plans or organizes knowledge by subject. You just pour in the internet and let gradient descent do its thing.
+
+The result? GPT-4 can pass the bar exam (90th percentile). BERT revolutionized every NLP benchmark when it landed in 2018. PaLM 2 can translate between 100+ languages. All from the same basic recipe: predict text, update weights, repeat.
+
+This is genuinely bizarre if you think about it. Predicting the next word in a sentence seems like a trivial, almost mechanical task — something autocomplete on your phone does badly. How does scaling this up produce something that appears to *reason*?
+
+The answer lies in a subtle insight first articulated clearly by Alec Radford and Ilya Sutskever at OpenAI around 2018: **to predict the next word well enough, across a diverse enough corpus, a model must build internal representations of the world the text describes.** If the training data contains thousands of passages about orbital mechanics, the model can't just memorize surface patterns — it has to develop something like a compressed understanding of gravity, velocity, and elliptical orbits to consistently predict the right next token in novel contexts about space.
+
+Whether this constitutes "real understanding" is a philosophical debate. What's not debatable is that it works.
+
+## Two Philosophies of Prediction
+
+Pre-training comes in two major flavors, and understanding the difference is key to understanding why BERT and GPT are so different despite sharing the same underlying Transformer architecture.
+
+### Masked Language Modeling: Fill in the Blank
+
+In 2018, Google researchers Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova introduced BERT (Bidirectional Encoder Representations from Transformers). Their core idea was elegant: take a sentence, randomly mask out 15% of the tokens, and train the model to predict what's missing.
+
+Given: `The cat sat on the [MASK] and purred loudly`
+
+The model must predict that `[MASK]` is probably "mat" or "couch" or "bed." To do this, it can look at *all* the surrounding context — both left ("The cat sat on the") and right ("and purred loudly"). This bidirectional context is BERT's superpower for understanding language.
+
+But the details matter. BERT doesn't actually mask all 15% of selected tokens. In a clever design choice, of the tokens chosen for prediction:
+- 80% are replaced with `[MASK]`
+- 10% are replaced with a random token
+- 10% are left unchanged
+
+Why this seemingly odd mix? Pure masking creates a train-test mismatch: during fine-tuning, the model never sees `[MASK]` tokens, so it's being asked to work with inputs it wasn't trained on. The random replacement forces the model to maintain good representations for *every* position (since any position might be corrupted), and the unchanged tokens teach it that not everything is suspicious.
+
+BERT-base has 110 million parameters and was trained on roughly 3.3 billion tokens (the BooksCorpus plus English Wikipedia). BERT-large scales to 340 million parameters. Training BERT-base took 4 days on 16 TPU chips — a pittance by today's standards. Google's total compute cost was probably under $10,000 at 2018 cloud prices.
+
+The training also included a second objective: **next sentence prediction (NSP)**. Given two sentences, predict whether sentence B actually follows sentence A in the source document, or is a random sentence. The idea was to teach the model about inter-sentence relationships. Later research (RoBERTa, 2019) showed that NSP actually *hurt* performance — it was too easy a task and diluted the training signal. RoBERTa dropped NSP, trained on 10x more data (160GB of text), used dynamic masking (different masks each epoch), and beat BERT on every benchmark.
+
+### Causal Language Modeling: Predict What Comes Next
+
+GPT takes the opposite approach. Instead of seeing the whole sentence and filling in blanks, the model sees text left-to-right and predicts the next token at every position. This is **causal** (or **autoregressive**) language modeling — the model can only attend to tokens that came before the current position.
+
+Given: `The cat sat on the`
+Predict: `mat` (or `couch`, `floor`, etc.)
+
+But it's not just predicting one next token — it predicts at *every position simultaneously* during training. Given a sequence of *n* tokens, the model produces *n - 1* predictions (predict token 2 from token 1, predict token 3 from tokens 1-2, etc.). This is computationally efficient: one forward pass through a sequence gives you many training signals.
+
+The original GPT (June 2018, two months before BERT) had 117 million parameters and was trained on BookCorpus — roughly 985 million tokens. GPT-2 (February 2019) scaled to 1.5 billion parameters and was trained on WebText, a 40GB dataset of web pages linked from Reddit posts with at least 3 karma (a clever quality filter). GPT-3 (May 2020) exploded to 175 billion parameters trained on 300 billion tokens, costing an estimated $4.6 million in compute. GPT-4 (March 2023), while its exact size remains undisclosed, is estimated to be a mixture-of-experts model with over 1 trillion parameters, trained on roughly 13 trillion tokens at a cost exceeding $100 million.
+
+The key limitation of causal LM is that the model can only look backward. When predicting the missing word in "The ___ chased the mouse," a causal model processing left-to-right hasn't yet seen "chased the mouse" — so it has less information to work with than BERT, which sees the whole sentence. This makes causal models inherently weaker at *understanding* tasks where bidirectional context matters.
+
+So why did causal LM win?
+
+## Why GPT Won and BERT Didn't
+
+This is one of the most important strategic divergences in AI history, and the answer is deceptively simple: **generation is harder to do but more useful than classification.**
+
+BERT excels at understanding: sentiment analysis, question answering, named entity recognition, natural language inference. For the period from 2018 to roughly 2022, BERT and its descendants (RoBERTa, ALBERT, DeBERTa, ELECTRA) dominated NLP benchmarks. If you needed to classify text, extract information, or match queries to documents, BERT-family models were the answer.
+
+But BERT can't write. Its architecture sees text bidirectionally, which means it can't generate text autoregressively — it doesn't have a natural way to produce one token after another. You can coax it into generation tasks (and models like T5 use an encoder-decoder structure that bridges this gap), but pure encoder-only models are fundamentally about *analyzing* existing text, not creating new text.
+
+GPT, by contrast, is a natural text generator. And it turned out that generating text — chatbots, writing assistants, code completion, translation — is what consumers and businesses actually want to pay for. ChatGPT's launch in November 2022 reached 100 million users in two months. You can't build ChatGPT with BERT.
+
+There's a deeper technical reason too. **Causal language models get better at understanding as they scale, but masked language models don't get better at generation no matter how big they get.** This is because autoregressive training at massive scale forces the model to learn such detailed predictive models of language that understanding becomes a byproduct. GPT-4 can do sentiment analysis just fine — you just ask it in natural language. But no version of BERT, however large, can write a coherent essay.
+
+This is why the field converged on decoder-only Transformers (GPT-3, PaLM, Chinchilla, LLaMA, Claude, Gemini) for frontier models, while BERT-family models settled into a niche role as efficient, specialized tools for classification and retrieval.
+
+## The Encoder-Decoder Middle Ground
+
+There is a third path. Google's T5 (Text-to-Text Transfer Transformer, 2019) reframed *every* NLP task as text-to-text: classification becomes "classify: [input]" → "positive", translation becomes "translate English to French: [input]" → "[output]". T5 uses the full encoder-decoder Transformer architecture — the encoder processes the input bidirectionally (like BERT), and the decoder generates output autoregressively (like GPT).
+
+T5 was trained with a variant of masked language modeling called **span corruption**: instead of masking individual tokens, it masks contiguous spans of text and replaces each span with a sentinel token. The model must then generate the missing spans. This is more challenging than single-token masking and teaches the model about longer-range dependencies.
+
+T5-11B (11 billion parameters) was trained on the Colossal Clean Crawled Corpus (C4), roughly 750GB of cleaned English web text — about 156 billion tokens. It achieved state-of-the-art results on numerous benchmarks at its release.
+
+Google later scaled this approach to PaLM (540 billion parameters), though PaLM switched to a decoder-only, causal LM approach — further evidence that the field was converging on autoregressive training even at Google, where BERT and T5 were born.
+
+## What Actually Happens During Pre-training
+
+Let's zoom into the mechanics. Pre-training a large language model involves several stages, and each one is its own engineering nightmare.
+
+### Step 1: Data Preparation
+
+Before any gradients flow, you need data. Modern frontier models train on datasets measured in trillions of tokens. LLaMA 3 (April 2024) was trained on over 15 trillion tokens. These datasets are assembled from web crawls (Common Crawl provides petabytes of raw HTML), books, academic papers, code repositories (GitHub, Stack Overflow), and curated sources like Wikipedia.
+
+The raw data goes through extensive filtering: deduplication (exact and near-duplicate removal), language identification, quality filtering (using classifiers trained to distinguish "high-quality" from "low-quality" text), removal of personally identifiable information, and content filtering. The Dolma dataset (used for OLMo) published detailed documentation of this process — their pipeline reduced 5.4 trillion tokens to 3 trillion after cleaning.
+
+Data mixing ratios matter enormously. LLaMA 1 used roughly 67% web data, 15% code, 4.5% Wikipedia, 4.5% books, and smaller portions of ArXiv and Stack Exchange. Getting these ratios wrong can cripple a model: too much code and it writes everything like a programmer; too little and it can't code; too much Wikipedia and it sounds like an encyclopedia.
+
+### Step 2: Weight Initialization
+
+The model's parameters are initialized randomly — typically drawn from a truncated normal distribution with carefully chosen standard deviations. The initialization scheme matters: too large and the gradients explode; too small and they vanish. GPT-style models often use a variance that scales as 1/√(n) where n is the layer dimension, with an additional 1/√(2N) scaling for residual connections (where N is the number of layers).
+
+At this point, the model produces complete gibberish. Its predictions are essentially uniform across the entire vocabulary — every token is equally likely. The cross-entropy loss is approximately log(V), where V is the vocabulary size. For a 100,000-token vocabulary, that's about 11.5 nats.
+
+### Step 3: Training Loop
+
+Training processes the data in batches. Modern LLMs use massive batch sizes: GPT-3 used a batch size of 3.2 million tokens (dynamic, starting smaller and increasing). LLaMA 2 used a batch size of 4 million tokens. Each batch requires a forward pass (compute predictions), a loss computation (how wrong were the predictions), and a backward pass (compute gradients for every parameter).
+
+The optimizer is almost always AdamW — Adam with decoupled weight decay. Learning rate follows a schedule: linear warmup for the first ~2,000 steps (to avoid early instability), then cosine decay down to about 10% of the peak learning rate. Typical peak learning rates are around 3 × 10⁻⁴ for large models, 1 × 10⁻⁴ for very large ones.
+
+Training LLaMA 2 70B took approximately 1.7 million GPU-hours on A100 80GB GPUs. At roughly $2/GPU-hour (2023 cloud prices), that's about $3.4 million in compute — and this doesn't count the failed runs, hyperparameter searches, and engineering costs.
+
+### Step 4: Loss Goes Down, Intelligence Goes Up
+
+As training progresses, the loss decreases smoothly in a remarkably predictable power-law curve. A model at 10 billion tokens might have a loss of 3.5; at 100 billion tokens, 2.8; at 1 trillion, 2.3. This predictability is what enables scaling laws — you can forecast the performance of a 10x larger training run from smaller experiments.
+
+But the capabilities that emerge from this smooth loss decrease are anything but smooth. At some point, a model trained purely on next-token prediction starts being able to do arithmetic. Then multi-step reasoning. Then code generation. Then translating between languages it was never explicitly taught to translate. The loss curve gives no hint of when these abilities will appear — they seem to switch on abruptly at certain scales.
+
+Here's the counterintuitive fact that still surprises researchers: **a model that's only ever been trained to predict the next token can pass medical licensing exams, write legal contracts, and solve competition math problems.** No one designed it to do these things. No one labeled training data as "medical knowledge" or "legal reasoning." The model learned internal structure sufficient for these tasks purely from the statistical pressure of predicting text well.
+
+## The Cost of Forgetting Nothing
+
+Pre-training has an unusual property: the model sees each piece of training data very few times. GPT-3 made roughly one pass through its training data. LLaMA trained for 1-2 epochs on most data. This is fundamentally different from how humans learn — we re-read, practice, and reinforce. Yet these models achieve remarkable retention.
+
+The flip side is that everything the model learns during pre-training is baked into its weights permanently. It can't selectively forget outdated information, can't update its knowledge after training, and can't distinguish between reliable and unreliable sources it was trained on. If the training data says the president of the United States is Joe Biden (because the data was collected in 2023), the model will confidently assert this even in 2026. This is the knowledge cutoff problem, and it's a fundamental limitation of the pre-training paradigm.
+
+It's also why pre-training is just the beginning. The raw pre-trained model is a strange creature — it can complete any text pattern, but it doesn't know how to be *helpful*. Ask it a question, and it might complete your question with another question, or continue writing as if it's a Wikipedia article. Turning this pattern-completion engine into a useful assistant requires the next steps in the pipeline: fine-tuning and alignment — which is where we're headed next.
+
+---
+
+## Key Takeaways
+
+- **Masked LM (BERT)** sees text bidirectionally and predicts masked tokens — great for understanding, can't generate
+- **Causal LM (GPT)** sees text left-to-right and predicts the next token — generates naturally, and understanding emerges at scale
+- **Causal LM won** because generation is what users want and understanding comes free at scale
+- **Pre-training data** is measured in trillions of tokens, assembled from web crawls, books, code, and curated sources
+- **The training loop** uses AdamW optimization with learning rate warmup and cosine decay, processing millions of tokens per batch
+- **Emergent capabilities** — reasoning, translation, code — appear spontaneously from the statistical pressure of next-token prediction
+- **Knowledge is frozen** after pre-training, creating the cutoff problem that RAG and fine-tuning attempt to solve
+
+---
+
+*Tomorrow: **Scaling Laws** — why does throwing more data and compute at the problem keep working? The Kaplan and Chinchilla papers revealed precise mathematical relationships between model size, data, and performance. We'll explore why these power laws hold, what they predict for future models, and whether there's a ceiling nobody has found yet.*
+
+<div style="margin-top: 2em;">
+
+<a href="quizzes/day-06.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Take the Day 6 Quiz →</a>
+
+</div>
