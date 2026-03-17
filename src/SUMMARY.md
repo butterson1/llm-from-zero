@@ -8,3 +8,4 @@
 - [Day 5: Tokenization — BPE, SentencePiece, and Why "Token" ≠ "Word"](./day-05.md)
 - [Day 6: Pre-training — How Models Learn Language from the Internet](./day-06.md)
 - [Day 7: Scaling Laws — Why Bigger Models Are Smarter](./day-07.md)
+- [Day 8: The Training Stack — GPUs, Clusters, Data Pipelines, and What $100M Buys You](./day-08.md)

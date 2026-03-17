@@ -1,0 +1,145 @@
+# Day 8: The Training Stack — GPUs, Clusters, Data Pipelines, and What $100M Buys You
+
+*Yesterday you learned that language model performance follows clean power laws — spend 10× more compute, get a predictable drop in loss. Today we ask the obvious follow-up question: what does "spending compute" actually mean in practice? What are the physical machines, the software stacks, the engineering nightmares, and the sheer dollar figures behind training a frontier model? The answer involves thousands of GPUs connected by exotic networking hardware, months of continuous operation, and failure rates that would make a NASA engineer weep.*
+
+---
+
+## The GPU: Where Intelligence Gets Forged
+
+Every large language model alive today was born on NVIDIA GPUs. Not CPUs, not TPUs (with the notable exception of Google's models), not custom ASICs. NVIDIA's dominance in AI training is one of the most lopsided monopolies in modern technology, and understanding the GPU is the first step to understanding the training stack.
+
+A modern NVIDIA H100 GPU — the workhorse of 2024-2025 frontier training — contains 80 billion transistors packed onto a die roughly the size of a playing card. It has 80 GB of HBM3 (High Bandwidth Memory) that can shuttle data at 3.35 terabytes per second, and it can perform roughly 990 teraflops of BF16 (bfloat16) matrix multiplication per second. For context, a single H100 can multiply two 1024×1024 matrices in about 2 microseconds — a computation that would take a human with a calculator several lifetimes.
+
+But the raw number that matters most for LLM training isn't peak flops. It's **memory bandwidth**. During training, the GPU constantly reads model weights, computes gradients, and writes updated weights back to memory. The model weights for a 70-billion-parameter model in BF16 take up about 140 GB — nearly twice the memory of a single H100. This fundamental tension between model size and GPU memory capacity drives almost every architectural decision in the training stack.
+
+The latest generation, the NVIDIA B200 (Blackwell), pushes to 192 GB of HBM3e at 8 TB/s bandwidth and roughly 2.25 petaflops of FP4 computation. A single Blackwell GPU costs somewhere around $30,000–$40,000, though the sticker price is almost irrelevant — availability is so constrained that cloud pricing tells the real story. As of early 2026, renting an H100 on the spot market costs roughly $2–3 per GPU-hour, while Blackwell B200s command $5–8 per GPU-hour.
+
+Google's alternative, the TPU (Tensor Processing Unit), deserves mention because it's what powers Gemini. TPU v5p chips are interconnected in "pods" of up to 8,960 chips, connected by Google's custom ICI (Inter-Chip Interconnect) at 4.8 Tbps per chip. Google doesn't sell TPUs outright — you rent them through Google Cloud — but internally, Google has deployed tens of thousands of TPUs for Gemini training. The TPU's advantage isn't raw performance per chip but the tightly integrated networking and software stack that Google controls end-to-end.
+
+## From One GPU to Tens of Thousands: The Parallelism Problem
+
+Here's the uncomfortable truth about training large models: a single GPU, no matter how powerful, is comically inadequate. Training LLaMA 3 405B required an estimated 30.8 million GPU-hours on H100s. If you ran that on a single GPU, it would take about 3,500 years. To finish in a few months, you need thousands of GPUs working in concert. Meta used approximately 16,384 H100 GPUs for LLaMA 3 405B. OpenAI is rumored to have used 20,000+ H100s for GPT-4, and their next-generation Stargate cluster reportedly targets over 100,000 GPUs.
+
+Getting thousands of GPUs to cooperate on a single computation is among the hardest distributed systems problems ever solved. There are three primary strategies, and modern training runs use all three simultaneously:
+
+### Data Parallelism
+
+The simplest idea: give every GPU a copy of the entire model, but feed each GPU a different mini-batch of data. Each GPU computes gradients on its slice of data, then all GPUs average their gradients together before updating the weights. If you have 1,000 GPUs, you process 1,000 mini-batches simultaneously, effectively multiplying your throughput by 1,000.
+
+The catch is that gradient averaging requires **all-reduce** communication — every GPU must share its gradients with every other GPU. For a 70B-parameter model in BF16, that's 140 GB of gradient data that must be transmitted and averaged across thousands of machines. The standard algorithm, ring all-reduce, passes data around a logical ring of GPUs, requiring each GPU to send and receive roughly 2 × 140 GB of data. At InfiniBand speeds of 400 Gbps (about 50 GB/s), this takes several seconds — time during which the GPUs sit idle waiting.
+
+### Tensor Parallelism
+
+When a model's layers are too large for a single GPU's memory, you split individual layers across multiple GPUs. A single attention head's weight matrix might be sliced column-wise across 8 GPUs, each computing a portion of the output. This is called tensor parallelism (or sometimes model parallelism), and it was pioneered by NVIDIA's Megatron-LM framework.
+
+Tensor parallelism is extremely communication-intensive — every layer requires all-reduce operations between GPUs because each GPU holds only a partial result. This works well only when GPUs are connected by the fastest possible links. Inside an NVIDIA DGX H100 server, 8 GPUs are connected via NVLink at 900 GB/s bidirectional bandwidth — roughly 18× faster than the network connection between servers. This is why tensor parallelism is typically confined to GPUs within a single node (8 GPUs), while other parallelism strategies handle the inter-node dimension.
+
+### Pipeline Parallelism
+
+Instead of splitting layers horizontally across GPUs, pipeline parallelism assigns entire layers to different GPUs vertically. GPU 0 handles layers 1-10, GPU 1 handles layers 11-20, and so on. Data flows through the pipeline like an assembly line.
+
+The problem is the "pipeline bubble" — GPU 0 finishes its work and passes results to GPU 1, then sits idle while GPU 1 computes. PipeDream (Microsoft, 2019) and later Megatron-LM solved this with **micro-batching**: split each mini-batch into smaller micro-batches, so GPU 0 can start processing the next micro-batch while GPU 1 works on the first. Interleaved scheduling can reduce the pipeline bubble to under 5% of total time, but it requires careful tuning of the number of micro-batches versus pipeline stages.
+
+### The Three-Dimensional Grid
+
+In practice, a training run like LLaMA 3 405B uses all three strategies simultaneously. Imagine a 3D grid: 8 GPUs within a node use **tensor parallelism**, 16 pipeline stages spread across 16 nodes use **pipeline parallelism**, and 128 such pipeline replicas use **data parallelism**. That's 8 × 16 × 128 = 16,384 GPUs, which is roughly what Meta used.
+
+Configuring this 3D grid correctly is part engineering, part black art. The optimal configuration depends on the model architecture, the cluster's network topology, and the relative speeds of NVLink (intra-node), InfiniBand (inter-node), and Ethernet (inter-rack). Getting it wrong can halve your effective throughput.
+
+## The Network: InfiniBand, RoCE, and Why Bandwidth Is Everything
+
+If the GPU is the brain, the network is the nervous system — and in large-scale training, the network is often the bottleneck. The dominant networking technology for AI training clusters is **InfiniBand**, specifically NVIDIA's Quantum-2 switches providing 400 Gbps per port (with Quantum-3 pushing to 800 Gbps).
+
+A training cluster's network typically has a **fat-tree** topology: GPUs connect to leaf switches, leaf switches connect to spine switches, and spine switches provide full bisection bandwidth — meaning any GPU can communicate with any other GPU at the same rate, regardless of physical location. Building a full fat-tree for 16,000 GPUs requires thousands of switches and hundreds of kilometers of fiber optic cable. NVIDIA's SuperPOD reference architecture for 32 DGX H100 nodes (256 GPUs) uses 18 Quantum-2 switches and costs upward of $15 million.
+
+The alternative to InfiniBand is **RoCE** (RDMA over Converged Ethernet), which uses standard Ethernet hardware but implements the same Remote Direct Memory Access (RDMA) protocol. RoCE is cheaper — Ethernet switches cost a fraction of InfiniBand — but historically suffered from congestion issues at scale. Companies like Broadcom and Arista have poured enormous resources into making RoCE competitive, and Meta's Grand Teton cluster for LLaMA 3 used a combination of RoCE v2 for backend training and Ethernet for frontend management.
+
+Here's a number that makes the network challenge visceral: during LLaMA 3 405B training, Meta reported that the cluster processed approximately **380 tokens per GPU per second**. Across 16,384 GPUs, that's about 6.2 million tokens per second, or roughly 540 billion tokens per day. The training run consumed approximately 15.6 trillion tokens. At that rate, training took about 29 days of continuous operation — not counting restarts, debugging, and infrastructure failures.
+
+## Failure Is Not an Exception — It's the Norm
+
+This brings us to perhaps the most underappreciated aspect of large-scale training: **things break constantly**. When you're running 16,384 GPUs for weeks on end, failures are not rare events — they're statistical certainties.
+
+Meta's paper on LLaMA 3 infrastructure is remarkably candid about this. During the 54-day pre-training run for LLaMA 3 405B, they experienced **419 unexpected job interruptions**. That's roughly 8 crashes per day. Of these, 148 were caused by confirmed hardware issues: 78 GPU failures, 17 host-level issues, and 53 other problems including network switches, cables, and storage systems.
+
+Each failure triggers a **checkpoint recovery** cycle. Training periodically saves the entire model state (weights, optimizer states, learning rate schedules) to persistent storage — a checkpoint. When a failure occurs, the failed GPU or node is replaced, and training resumes from the last checkpoint. Checkpointing for a 405B model saves roughly 3-4 TB of data (weights + Adam optimizer states at 18 bytes per parameter). At 16,384 GPUs, writing this to storage takes several minutes, during which all GPUs pause training.
+
+Meta reduced checkpoint time to about 2 minutes using a two-phase approach: first, each GPU writes to local NVMe SSD (fast), then the data is asynchronously replicated to a distributed filesystem (slower, but non-blocking). Without this optimization, checkpointing could consume 5-10% of total training time.
+
+Google's TPU infrastructure has a similar challenge but a different solution. TPU pods are connected in a torus topology, and Google's training framework (Jax + Pathways) can transparently re-route computation around failed chips without restarting the entire job. This "graceful degradation" approach is one of TPU's genuine advantages at scale.
+
+## The Software Stack: CUDA, PyTorch, and the Frameworks That Matter
+
+The software that orchestrates all this hardware is equally complex. The stack, from bottom to top:
+
+**CUDA** is NVIDIA's parallel computing platform, and it's the real moat protecting NVIDIA's monopoly. CUDA provides the low-level kernels (matrix multiplication, attention computation, activation functions) that PyTorch calls. Every AI researcher in the world writes code that ultimately compiles to CUDA kernels. Competitors like AMD's ROCm and Intel's OneAPI exist but have struggled with compatibility and performance.
+
+**PyTorch** is the dominant training framework, used by Meta, Anthropic, and most of the field (Google prefers JAX). PyTorch's `torch.distributed` module handles data parallelism, while NVIDIA's **NCCL** (NVIDIA Collective Communications Library) implements the actual GPU-to-GPU communication patterns (all-reduce, all-gather, reduce-scatter).
+
+**Megatron-LM** (NVIDIA) and **DeepSpeed** (Microsoft) sit on top of PyTorch, implementing tensor parallelism, pipeline parallelism, and advanced memory optimizations. DeepSpeed's ZeRO (Zero Redundancy Optimizer) is particularly important: it partitions optimizer states, gradients, and even model weights across GPUs in a data-parallel group, dramatically reducing per-GPU memory usage. ZeRO Stage 3 can train a 100B parameter model on GPUs that could individually hold only 1B parameters — but at the cost of increased communication.
+
+**Mixed-precision training** is universal. Models train in BF16 (bfloat16, a 16-bit format with 8 exponent bits and 7 mantissa bits), which halves memory usage compared to FP32 while maintaining sufficient dynamic range for stable gradients. Critical accumulations (like gradient averaging) are done in FP32 to prevent numerical drift. The H100's Tensor Cores are specifically designed for BF16 matrix multiplication, achieving 2× the throughput of FP32.
+
+## The Data Pipeline: Feeding the Beast
+
+While GPUs get all the attention, the data pipeline is equally critical — and equally complex. Training a model on 15 trillion tokens requires reading roughly 30-60 TB of tokenized text (depending on vocabulary size and storage format). This data must be shuffled, batched, and delivered to GPUs fast enough that no GPU ever waits for data.
+
+The typical pipeline: raw text lives on a distributed filesystem (GPFS, Lustre, or cloud storage like S3). A preprocessing step tokenizes the text, concatenates documents with separator tokens, and packs them into sequences of the model's context length. These are stored as memory-mapped binary files that can be randomly accessed without loading the entire dataset into RAM.
+
+Data loading uses multiple CPU worker processes per GPU, prefetching the next several batches into GPU memory while the current batch is being processed. If the data pipeline can't keep up, you see "data starvation" — GPUs finishing their computation and then waiting idly for the next batch. For large clusters, this requires careful NFS tuning, RAID configurations, and sometimes dedicated storage networks separate from the training network.
+
+The shuffling strategy matters more than you'd think. If documents from the same source appear consecutively, the model can temporarily overfit to that source's style, causing loss spikes. Most teams pre-shuffle the data at the document level, then do a second shuffle at the sequence level. Some (like LLaMA 3) use **domain-weighted sampling**, dynamically adjusting the proportion of code, web text, books, and academic papers throughout training based on annealing schedules that prioritize higher-quality data toward the end.
+
+## What $100 Million Actually Buys You
+
+Let's make this concrete. In 2025, training a frontier model from scratch requires roughly:
+
+**Hardware lease:** 16,000 H100 GPUs at ~$2.50/GPU-hour for 3 months = **$87 million** in compute alone. If you're building your own cluster (as Meta, Google, and xAI do), the capital expenditure for 16,000 H100s is approximately $500–600 million, but amortized over multiple training runs and years of service.
+
+**Networking:** A full InfiniBand fat-tree for 16,000 GPUs costs $50-100 million. Power delivery and cooling for a 30+ megawatt cluster adds another $20-50 million in infrastructure.
+
+**Data:** The raw data is mostly free (CommonCrawl, public web), but the processing, filtering, deduplication, and legal review costs $5-20 million in engineering time and compute.
+
+**People:** A team of 30-50 ML engineers, infrastructure engineers, and researchers, at fully loaded costs of $300-500K per person, runs $10-20 million per year.
+
+**Electricity:** 16,000 H100s at 700W each draw about 11.2 MW, plus cooling overhead brings total facility power to ~18-20 MW. At $0.05/kWh, three months of training costs about **$6.5 million** in electricity. At California rates ($0.15/kWh), that triples.
+
+All in, a single frontier training run in 2025-2026 costs **$100-300 million**, depending on whether you own or rent the hardware, where you're located, and how many failed runs you go through before getting a good one. Reports suggest that GPT-5 and Gemini Ultra's successors are budgeting $500 million to $1 billion for training compute.
+
+And here's the counterintuitive part: **most of that money is wasted on failed experiments**. The numbers above describe a single successful training run. But before that run, there are dozens of smaller experiments testing hyperparameters, data mixtures, and architectural choices at 1/10th or 1/100th scale. The successful run itself might be restarted multiple times due to loss spikes, infrastructure failures, or the discovery of data contamination. OpenAI reportedly trained GPT-4 twice — the first run was largely discarded after discovering issues with the training data distribution.
+
+## The Power (and Cooling) Problem
+
+The sheer energy consumption of AI training has become a geopolitical issue. NVIDIA's next-generation GB200 NVL72 rack — a single rack containing 72 Blackwell GPUs — consumes **120 kilowatts** and requires liquid cooling. A cluster of 100,000 such GPUs would draw 167 megawatts, roughly the output of a small natural gas power plant.
+
+This is why companies are signing long-term power purchase agreements (PPAs) with nuclear plants, building data centers next to hydroelectric dams, and even exploring dedicated small modular reactors (SMRs) for AI facilities. Microsoft signed a deal to restart the Three Mile Island Unit 1 reactor specifically to power AI workloads. Amazon bought a data center campus next to a nuclear plant in Pennsylvania. Oracle is planning a 1-gigawatt data center complex in Texas that would need its own dedicated power generation.
+
+Liquid cooling, once exotic, is now standard for AI training clusters. The H100 and B200 are available in "SXM" form factors designed for liquid-cooled baseplates, where chilled water flows directly over the GPU modules. Air cooling simply can't remove 700W+ per GPU at the densities required — you'd need hurricane-force airflow through the server chassis.
+
+## The xAI Colossus: A Case Study in Speed
+
+Perhaps the most dramatic example of modern cluster construction is xAI's Colossus cluster in Memphis, Tennessee. In the summer of 2024, Elon Musk's xAI team built a 100,000 H100 GPU cluster in approximately 122 days — from empty warehouse to running training jobs. For context, traditional data center construction takes 18-24 months.
+
+Colossus reportedly cost over $3 billion and consumed about 150 megawatts of power, initially supplied partly by portable natural gas generators (which drew EPA scrutiny). The cluster was used to train Grok-2 and subsequent models. Whether this breakneck construction pace led to optimal utilization is debated — running 100,000 GPUs at high efficiency requires months of software tuning even after the hardware is in place — but as a statement of ambition and capital deployment, it was unprecedented.
+
+## What This Means for the Field
+
+The training stack is increasingly the defining competitive advantage in AI. Algorithmic innovations (new attention mechanisms, better tokenizers, clever training objectives) are published in papers and spread across the field within months. But building a 100,000-GPU cluster, staffing it with world-class infrastructure engineers, negotiating power contracts, and developing the proprietary distributed training frameworks to run it efficiently — that's a multi-year, multi-billion-dollar moat.
+
+This is why the AI race has consolidated around a handful of players with access to capital and infrastructure: OpenAI (backed by Microsoft's Azure), Google DeepMind (owning TPU fabs and data centers), Meta (building its own clusters), Anthropic (partnered with AWS and Google Cloud), and xAI. Training a frontier model is no longer a graduate student project — it's an industrial operation on the scale of building a semiconductor fab or launching a constellation of satellites.
+
+---
+
+*Tomorrow, we'll look at what flows through this massive infrastructure: the training data itself. CommonCrawl, The Pile, and the dirty secrets of the datasets that gave LLMs their knowledge — and their biases, hallucinations, and legal headaches.*
+
+---
+
+<div style="margin-top: 2em; padding: 1.5em; background: #1a1a2e; border-radius: 8px; border: 1px solid #16213e;">
+
+## 📝 Quiz — Day 8
+
+Test your understanding of today's lesson.
+
+<a href="quizzes/day-08.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Take the Day 8 Quiz →</a>
+
+</div>
