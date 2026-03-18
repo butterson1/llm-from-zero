@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 15: The GPT Series — The Scaling Bet That Paid Off - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-15-the-gpt-series--the-scaling-bet-that-paid-off"><a class="header" href="#day-15-the-gpt-series--the-scaling-bet-that-paid-off">Day 15: The GPT Series — The Scaling Bet That Paid Off</a></h1>
+<p><em>How a small team's conviction that "just make it bigger" would work turned a modest 117-million-parameter experiment into a trillion-parameter empire — and reshaped the entire technology industry along the way.</em></p>
+<hr />
+<p>In June 2018, a researcher named Alec Radford at a small San Francisco nonprofit called OpenAI published a paper with one of the least exciting titles in AI history: "Improving Language Understanding by Generative Pre-Training." The paper described a model with 117 million parameters — roughly the memory footprint of a smartphone photo — trained on a single dataset of about 7,000 unpublished books called BooksCorpus. It used 12 transformer layers, 768-dimensional embeddings, and 12 attention heads. The entire thing could be trained on 8 GPUs in about a month.</p>
+<p>Nobody outside a small circle of NLP researchers paid much attention.</p>
+<p>Seven years and several hundred billion dollars later, that model's descendants power the most widely used AI products on the planet. The lineage from GPT-1 through GPT-4 and beyond represents perhaps the most successful scaling bet in the history of technology — a sustained, high-stakes wager that a single architectural idea, applied with exponentially more compute and data, would continue producing qualitatively new capabilities that nobody could have predicted from the previous generation.</p>
+<p>This is the story of how that bet unfolded, what each generation changed, what it cost, and what it revealed about the strange relationship between scale and intelligence.</p>
+<h2 id="gpt-1-the-proof-of-concept-june-2018"><a class="header" href="#gpt-1-the-proof-of-concept-june-2018">GPT-1: The Proof of Concept (June 2018)</a></h2>
+<p>GPT-1 was, in retrospect, a beautifully simple idea. By mid-2018, the NLP community was drowning in task-specific models: one architecture for sentiment analysis, another for question answering, a third for textual entailment. Each task required its own labeled dataset, its own training pipeline, its own bag of tricks. Radford and co-authors Karthik Narasimhan, Tim Salimans, and Ilya Sutskever proposed something different: what if you trained a single generative model on a mountain of unlabeled text, then fine-tuned it with a thin task-specific layer for each downstream task?</p>
+<p>The model itself was a decoder-only transformer — 12 layers, a context window of 512 tokens, trained with a simple next-token prediction objective on BooksCorpus's roughly 800 million words. The fine-tuning stage was almost comically minimal: slap a linear layer on top, train on a few thousand labeled examples, done.</p>
+<p>The results were solid but not earth-shattering. GPT-1 achieved state-of-the-art performance on 9 out of 12 benchmarks, including commonsense reasoning (Stories Cloze Test: 86.5% accuracy) and question answering. But the real insight wasn't the numbers — it was the proof that unsupervised pre-training on raw text could transfer effectively to supervised tasks. BERT, published by Google just four months later in October 2018, would take a different architectural approach (bidirectional, encoder-only) and temporarily steal GPT-1's thunder. But Radford's decoder-only, autoregressive approach would ultimately prove more scalable — a fact that would take another two years to become obvious.</p>
+<p>The key philosophical difference: BERT was designed to understand text. GPT was designed to generate it. Understanding is useful for classification tasks. Generation turns out to be useful for <em>everything</em>.</p>
+<h2 id="gpt-2-too-dangerous-to-release-february-2019"><a class="header" href="#gpt-2-too-dangerous-to-release-february-2019">GPT-2: "Too Dangerous to Release" (February 2019)</a></h2>
+<p>GPT-2 took the GPT-1 recipe and scaled it by roughly 13×. Parameters jumped from 117 million to <strong>1.5 billion</strong>. Training data expanded from BooksCorpus to <strong>WebText</strong>, a new dataset of about 8 million web pages (roughly 40 GB of text) scraped by following outbound links from Reddit posts with at least 3 karma — a clever heuristic for finding human-curated quality content.</p>
+<p>The architectural changes were modest: 48 layers instead of 12, context window extended from 512 to 1,024 tokens, vocabulary expanded from roughly 40,000 to 50,257 BPE tokens. Layer normalization moved to the input of each sub-block (pre-norm), and an additional layer normalization was added after the final self-attention block. These are the kind of engineering tweaks that read as boring in a paper but matter enormously at scale — pre-norm, in particular, proved critical for training stability as models got deeper.</p>
+<p>But GPT-2's significance wasn't architectural. It was about what the model could <em>do</em>.</p>
+<p>OpenAI demonstrated that GPT-2 could generate remarkably coherent paragraphs of text. Given a prompt about the discovery of unicorns in the Andes mountains, the model produced several paragraphs of plausible-sounding (if fictional) news journalism, complete with invented quotes from scientists. The samples were good enough to fool casual readers — and bad enough to alarm the nascent AI safety community.</p>
+<p>In what became one of the most controversial decisions in AI history, OpenAI initially released only the smallest version (117M parameters) and withheld the full 1.5B model, citing concerns about potential misuse for generating misinformation. The decision was widely ridiculed — critics pointed out that the model wasn't actually that good at generating convincing disinformation, and that the "staged release" strategy looked more like a publicity stunt than a genuine safety measure. Aaron Gokaslan and Vanya Cohen independently replicated the full model within months using publicly available data, undermining the notion that withholding weights could prevent misuse.</p>
+<p>OpenAI eventually released the full model in November 2019, noting they had "seen no strong evidence of misuse so far." The episode established a pattern that would repeat at increasing stakes with each generation: release model, provoke debate about safety, release anyway.</p>
+<p>What GPT-2 genuinely proved, beyond the controversy, was the zero-shot transfer hypothesis. Without any task-specific fine-tuning, the 1.5B model achieved 55 F1 on the CoQA reading comprehension benchmark — matching or exceeding several supervised baselines. It solved 7 out of 8 tested language tasks in zero-shot settings, simply by framing each task as text completion. The implication was profound: <strong>sufficiently large language models don't need to be told what task they're performing. They can infer it from context.</strong></p>
+<h2 id="gpt-3-the-in-context-learning-revolution-june-2020"><a class="header" href="#gpt-3-the-in-context-learning-revolution-june-2020">GPT-3: The In-Context Learning Revolution (June 2020)</a></h2>
+<p>And then the scaling got serious.</p>
+<p>GPT-3 didn't just scale up. It leapt. Parameters went from 1.5 billion to <strong>175 billion</strong> — a 117× increase. The model used 96 transformer layers, 12,288-dimensional embeddings, and 96 attention heads. The context window doubled to 2,048 tokens. Training data expanded to a blend of Common Crawl (filtered, 410 billion tokens), WebText2 (an expanded version of GPT-2's data, 19 billion tokens), two internet-based books corpora (67 billion tokens), and English Wikipedia (3 billion tokens) — roughly <strong>300 billion tokens</strong> total, though the model saw roughly 300B tokens during training with varying sampling weights across datasets.</p>
+<p>The training compute was estimated at <strong>3,640 petaflop/s-days</strong> — equivalent to running a petaflop machine continuously for 3,640 days, or about 10 years. In practice, OpenAI used a cluster of NVIDIA V100 GPUs, and the training cost has been estimated at <strong>$4.6 million</strong> in compute alone, with total development costs including experimentation likely reaching $10–30 million.</p>
+<p>GPT-3's landmark contribution was the discovery (or rather, the formalization) of <strong>in-context learning</strong>, which we covered in Day 13. But from a scaling perspective, the critical insight was captured in Figure 1.2 of the paper: a set of smooth power-law curves showing that larger models consistently performed better on essentially every benchmark, with no sign of plateauing. Performance on SuperGLUE improved from 42.3 (125M parameters) to 71.8 (175B parameters). Few-shot accuracy on TriviaQA hit 71.2%, surpassing the then-state-of-the-art fine-tuned model at 68.0%.</p>
+<p>More importantly, GPT-3 exhibited capabilities that simply didn't exist in GPT-2. It could write functional code. It could perform 3-digit arithmetic (though it failed at 4-digit). It could translate between languages it had barely seen. It could generate creative fiction that, while not great literature, was clearly structured and coherent over multiple paragraphs. None of these abilities were explicitly trained — they emerged from the interaction of scale and data.</p>
+<p>The paper, authored by Tom Brown and 30 co-authors, became one of the most cited machine learning papers ever published. Its title — "Language Models are Few-Shot Learners" — made a claim that seemed audacious at the time and obvious in retrospect.</p>
+<p>GPT-3 also introduced the <strong>API business model</strong>. Rather than releasing the model openly, OpenAI offered access through an API, initially in private beta. This was a pivotal strategic shift: OpenAI was becoming a company that sold AI capabilities as a service. The decision was both commercially smart (GPT-3 would eventually generate hundreds of millions in API revenue) and philosophically significant — OpenAI, founded in 2015 as a nonprofit dedicated to ensuring AI "benefits all of humanity," was now a for-profit entity controlling access to its most powerful model.</p>
+<h2 id="gpt-35-and-chatgpt-the-product-breakthrough-november-2022"><a class="header" href="#gpt-35-and-chatgpt-the-product-breakthrough-november-2022">GPT-3.5 and ChatGPT: The Product Breakthrough (November 2022)</a></h2>
+<p>The period between GPT-3 (June 2020) and GPT-4 (March 2023) is often glossed over, but it contains one of the most important developments in AI history: the discovery that <strong>alignment makes models useful</strong>.</p>
+<p>OpenAI published the InstructGPT paper in March 2022, showing that fine-tuning GPT-3 with reinforcement learning from human feedback (RLHF) — the technique we covered in Day 11 — dramatically improved the model's ability to follow instructions and produce helpful responses. The resulting model, with only <strong>1.3 billion parameters</strong>, was preferred by human labelers over the base 175B GPT-3 model 85% of the time. Read that again: a model 135× smaller, when properly aligned, was judged better by humans than the raw giant.</p>
+<p>This insight — that alignment is a multiplier on capability, not just a safety feature — led directly to ChatGPT.</p>
+<p>ChatGPT, launched on November 30, 2022, was built on GPT-3.5 — an intermediate model that OpenAI never formally published a paper about, but which appears to have been a GPT-3-class model further trained on code data (likely the Codex training pipeline) and then fine-tuned with RLHF. The model wasn't substantially more capable than GPT-3 on benchmarks. But it was <strong>dramatically more usable</strong>. It could hold coherent conversations. It followed instructions consistently. It admitted uncertainty (sometimes). It felt, for the first time, like talking to something that understood you.</p>
+<p>ChatGPT reached 100 million monthly active users within two months — the fastest-growing consumer application in history at the time. It single-handedly transformed public perception of AI, triggered a multi-hundred-billion-dollar wave of corporate investment, and scared Google badly enough to declare a "code red" and rush out their own chatbot (Bard, later renamed Gemini) within weeks.</p>
+<p>The lesson of ChatGPT wasn't about architecture or scale. It was about <strong>product-market fit</strong>: the right interface (conversation), the right alignment technique (RLHF), and good-enough capabilities, delivered at the right moment.</p>
+<h2 id="gpt-4-the-mixture-of-experts-gambit-march-2023"><a class="header" href="#gpt-4-the-mixture-of-experts-gambit-march-2023">GPT-4: The Mixture of Experts Gambit (March 2023)</a></h2>
+<p>GPT-4 is where OpenAI stopped publishing details.</p>
+<p>The GPT-4 technical report, released in March 2023, is one of the most frustrating documents in the history of scientific publishing. It's 98 pages long and contains essentially no information about the model's architecture, parameter count, training data, or training cost. OpenAI explicitly stated they would not disclose these details, citing "the competitive landscape and the safety implications."</p>
+<p>What we know comes largely from leaks and reverse engineering, particularly a July 2023 report by SemiAnalysis that has been broadly corroborated. According to these reports, GPT-4 uses a <strong>Mixture of Experts (MoE) architecture</strong> — the first confirmed use of MoE at this scale in the GPT lineage. The model reportedly contains approximately <strong>1.8 trillion total parameters</strong> spread across <strong>120 transformer layers</strong>, with <strong>16 expert modules</strong> of roughly <strong>111 billion parameters each</strong>. During any given forward pass, only <strong>2 experts</strong> are activated per token, meaning the model's effective compute per token is roughly equivalent to a 220-billion-parameter dense model — not 1.8 trillion.</p>
+<p>This is the engineering insight that made GPT-4 economically feasible. A dense 1.8T model would be essentially impossible to serve at consumer scale — you'd need roughly 3,700 TFLOP per inference pass, requiring hardware that doesn't exist in commercially viable configurations. But with MoE routing only 2 of 16 experts per token, inference costs drop by roughly 8× compared to a dense model of the same total parameter count, while the model retains the <em>knowledge capacity</em> of the full 1.8T parameters (since different experts specialize in different domains).</p>
+<p>Training reportedly took place on a cluster of approximately <strong>25,000 NVIDIA A100 GPUs</strong> over roughly 90-100 days, using about <strong>13 trillion tokens</strong> of training data — a mix of CommonCrawl, RefinedWeb, curated internet text, books, and code. The compute cost is estimated at roughly <strong>$100 million</strong> for the final training run alone, with total development costs (including experimentation, failed runs, and smaller model training) likely several times higher.</p>
+<p>The capability jump was unmistakable. GPT-4 passed the Uniform Bar Exam in the <strong>90th percentile</strong> (GPT-3.5 scored around the 10th percentile). It scored a <strong>5 on AP Biology, AP Calculus BC, and AP Chemistry</strong>. On the LSAT, it placed in the <strong>88th percentile</strong>. On competitive programming problems (Codeforces), it moved from the 5th percentile (GPT-3.5) to the 49th percentile. It could reason about images — a first for the GPT lineage — describing charts, reading text in photos, and explaining visual humor.</p>
+<p>Here's the counterintuitive fact buried in these numbers: <strong>GPT-4 uses roughly the same amount of compute per token at inference as GPT-3 did</strong>, despite being vastly more capable. The MoE architecture means that most of the 1.8 trillion parameters sit idle for any given token, activated only when the routing network determines they're relevant. The model got dramatically smarter without getting proportionally more expensive to run. This is the engineering magic of Mixture of Experts — you get the knowledge capacity of a giant, with the speed of a model a fraction its size.</p>
+<h2 id="beyond-gpt-4-the-post-number-era-20242026"><a class="header" href="#beyond-gpt-4-the-post-number-era-20242026">Beyond GPT-4: The Post-Number Era (2024–2026)</a></h2>
+<p>After GPT-4, OpenAI's naming scheme fractured in a way that reflects a deeper strategic shift.</p>
+<p><strong>GPT-4 Turbo</strong> (November 2023) extended the context window from 8,192 to <strong>128,000 tokens</strong> — a 16× increase — while reducing API pricing by 3×. This was an engineering achievement as much as a research one: fitting 128K tokens into the KV cache at reasonable cost required significant attention optimization (likely including grouped-query attention and other techniques we'll cover in Day 19).</p>
+<p><strong>GPT-4o</strong> (May 2024) introduced native multimodality — a single model handling text, images, and audio natively, rather than stitching together separate models. The "o" stands for "omni." It was also significantly faster and cheaper than GPT-4 Turbo, suggesting an optimized architecture or aggressive distillation.</p>
+<p>Then came the <strong>o-series</strong>: o1 (September 2024) and o3 (December 2024). These represent a fundamentally different approach. Rather than scaling pre-training (more parameters, more data), the o-series scales <strong>inference-time compute</strong> — the model "thinks" longer on hard problems by generating internal reasoning chains before producing an answer. OpenAI calls this "test-time compute scaling." On the ARC-AGI benchmark, o3 achieved <strong>87.5%</strong> accuracy, a massive jump from GPT-4's performance. On competitive mathematics (AIME 2024), o1 scored comparably to gold-medalist humans.</p>
+<p>This shift — from scaling training to scaling inference — may represent the most significant strategic pivot in the GPT lineage. We'll explore it in depth on Day 28, but the key insight is: there might be two different axes of scaling, and OpenAI appears to be betting that inference-time scaling has more room to run.</p>
+<h2 id="the-meta-story-what-the-gpt-series-actually-proved"><a class="header" href="#the-meta-story-what-the-gpt-series-actually-proved">The Meta-Story: What the GPT Series Actually Proved</a></h2>
+<p>Zoom out from the individual models and the GPT series tells a single, remarkable story: <strong>more compute, applied to the same basic architecture, consistently produces qualitatively new capabilities.</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Model</th><th>Year</th><th>Parameters</th><th>Training Data</th><th>Estimated Cost</th><th>Key Capability</th></tr></thead><tbody>
+<tr><td>GPT-1</td><td>2018</td><td>117M</td><td>~800M words</td><td>~$10K</td><td>Transfer learning</td></tr>
+<tr><td>GPT-2</td><td>2019</td><td>1.5B</td><td>~40GB (8M pages)</td><td>~$50K</td><td>Coherent text generation</td></tr>
+<tr><td>GPT-3</td><td>2020</td><td>175B</td><td>~300B tokens</td><td>~$4.6M</td><td>In-context learning</td></tr>
+<tr><td>GPT-4</td><td>2023</td><td>~1.8T (MoE)</td><td>~13T tokens</td><td>~$100M</td><td>Expert-level reasoning</td></tr>
+</tbody></table>
+</div>
+<p>Each generation costs roughly 20–100× more than the last. Each produces capabilities that would have seemed implausible to the previous generation's researchers. GPT-1's team could not have predicted few-shot learning. GPT-3's team could not have predicted bar exam performance. The returns to scale haven't just been quantitative — they've been qualitative.</p>
+<p>But the most important lesson might be what <em>didn't</em> change. Every model in the GPT lineage uses the same fundamental operation: predicting the next token. The same attention mechanism. The same basic transformer block. The architecture of GPT-4, despite being a Mixture of Experts, is recognizably a descendant of GPT-1. The innovations have been primarily about scale (more parameters, more data, more compute), training methodology (RLHF, constitutional AI, instruction tuning), and engineering (MoE routing, longer contexts, inference optimization) — not about fundamental architectural breakthroughs.</p>
+<p>This is either profoundly encouraging or deeply unsettling, depending on your perspective. Encouraging because it means we may not need fundamentally new ideas to make further progress — just more resources. Unsettling because it raises the question of whether we've been exploring one narrow branch of the design space, and whether radically different approaches might be more efficient.</p>
+<p>It also raises a question that haunts every AI lab: <strong>is the scaling curve bending?</strong> GPT-4 to GPT-4o showed significant efficiency improvements but arguably modest capability gains. The pivot to inference-time scaling with the o-series might be an acknowledgment that pure pre-training scaling is hitting diminishing returns — or it might simply be an additional dimension of scaling that supplements rather than replaces the original approach.</p>
+<hr />
+<p><em>Tomorrow, we step outside the OpenAI bubble entirely. Claude, Gemini, Llama — how did other labs respond to the GPT juggernaut? Some copied the playbook. Some diverged radically. The choices they made reveal what's actually essential about the GPT approach versus what was just one lab's particular set of bets.</em></p>
+<hr />
+<div style="margin-top: 2em; padding: 1.5em; border-radius: 8px;">
+<h2 id="-quiz-day-15"><a class="header" href="#-quiz-day-15">📝 Quiz: Day 15</a></h2>
+<p>Test your understanding of the GPT series evolution:</p>
+<p><a href="quizzes/day-15.toml" class="quiz-link" style="display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; background: #e94560; color: white; border-radius: 4px; text-decoration: none;">Take the Day 15 Quiz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-14.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-14.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

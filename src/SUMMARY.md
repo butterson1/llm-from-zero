@@ -15,3 +15,4 @@
 - [Day 12: Constitutional AI & Safety — Alignment Without Human Labels](./day-12.md)
 - [Day 13: Prompt Engineering vs In-Context Learning — Why Examples Work](./day-13.md)
 - [Day 14: Emergent Abilities — Chain-of-Thought, Tool Use, and What Nobody Predicted](./day-14.md)
+- [Day 15: The GPT Series — The Scaling Bet That Paid Off](./day-15.md)
