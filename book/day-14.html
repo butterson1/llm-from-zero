@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 14: Emergent Abilities — Chain-of-Thought, Tool Use, and What Nobody Predicted - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-14-emergent-abilities--chain-of-thought-tool-use-and-what-nobody-predicted"><a class="header" href="#day-14-emergent-abilities--chain-of-thought-tool-use-and-what-nobody-predicted">Day 14: Emergent Abilities — Chain-of-Thought, Tool Use, and What Nobody Predicted</a></h1>
+<p><em>The strangest thing about large language models isn't what we designed them to do — it's what they learned to do on their own. And the fiercest debate in AI right now is whether that "learning" is even real.</em></p>
+<hr />
+<h2 id="the-discovery-that-shook-the-field"><a class="header" href="#the-discovery-that-shook-the-field">The Discovery That Shook the Field</a></h2>
+<p>In January 2022, Jason Wei and a team of researchers at Google Brain published a paper that would spark one of the most fascinating arguments in modern AI. The paper, "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models," demonstrated something that felt almost magical: if you simply showed a large language model a few examples of step-by-step reasoning before asking it a question, it could suddenly solve math problems, logic puzzles, and multi-step reasoning tasks that had previously been beyond its reach.</p>
+<p>Here's what made this so surprising. Nobody trained the model to reason step by step. Nobody added a "reasoning module." Nobody changed a single weight. All Wei and colleagues did was change the <em>prompt</em> — the text fed to the model before the question. Instead of showing the model examples like "Q: Roger has 5 tennis balls. He buys 2 more cans of 3. How many does he have? A: 11," they showed examples that included the intermediate steps: "Q: Roger has 5 tennis balls. He buys 2 more cans of 3. That is 2 × 3 = 6 tennis balls. 5 + 6 = 11. A: 11."</p>
+<p>The results were dramatic. On the GSM8K benchmark — a set of grade-school math word problems that has become a standard test of mathematical reasoning — PaLM 540B (Google's 540 billion parameter model) went from 17.9% accuracy with standard prompting to 56.9% with chain-of-thought prompting. That's not a marginal improvement. That's the difference between an F and a passing grade, unlocked by changing nothing but the prompt.</p>
+<p>But here's the part that really got people's attention: <strong>chain-of-thought only works at sufficient scale.</strong> When Wei and colleagues tried the same technique on smaller models — PaLM 8B, PaLM 62B — the step-by-step prompting actually <em>hurt</em> performance. The small models would produce garbled reasoning chains and arrive at worse answers than if they'd just guessed directly. It was only above roughly 100 billion parameters that the technique suddenly "turned on," with performance jumping sharply. Below a critical model size: useless. Above it: transformative.</p>
+<p>This pattern — abilities that seem to appear suddenly at scale, absent in smaller models and present in larger ones — is what Wei and colleagues named <strong>emergent abilities</strong>, borrowing a term from physics where complex system-level behaviors "emerge" from simple component-level rules. Water molecules don't individually exhibit wetness. Neurons don't individually exhibit consciousness. And, the argument goes, small language models don't individually exhibit reasoning — until they do.</p>
+<h2 id="the-catalog-of-surprises"><a class="header" href="#the-catalog-of-surprises">The Catalog of Surprises</a></h2>
+<p>The emergent abilities paper wasn't just about chain-of-thought. Wei and colleagues surveyed the BIG-bench benchmark suite — a collaborative project involving over 450 researchers who contributed 204 diverse tasks designed to probe language model capabilities — and found emergence everywhere.</p>
+<p><strong>Multi-step arithmetic</strong> was perhaps the most striking. GPT-3's 175 billion parameters could handle 2-digit addition with reasonable accuracy, but 3-digit addition was essentially at chance. Yet future, larger models started cracking multi-digit operations without being specifically trained for them.</p>
+<p><strong>Word unscrambling</strong> showed a similar cliff. Models below a certain scale performed at random on tasks like decoding "ehlol" → "hello." Above that scale, they suddenly could.</p>
+<p><strong>International Olympiad problems</strong> — tasks requiring sophisticated mathematical reasoning — showed flat-at-zero performance for model after model, until a sufficiently large one cracked the pattern.</p>
+<p><strong>Persian QA, Bengali translation, logical deduction</strong> — the paper documented over a dozen tasks that exhibited this phase-transition behavior. The common pattern: performance flat near zero across multiple model scales, then a sudden jump.</p>
+<p>And then came the abilities nobody even thought to test for. Researchers at Google discovered that PaLM 540B could explain why a joke was funny — parsing the social expectations, the setup, the subversion. It could identify logical fallacies in arguments. It could generate analogies that mapped structural relationships across domains. None of these were training objectives. None were optimized for. They just... appeared.</p>
+<h2 id="zero-shot-chain-of-thought-the-five-word-revolution"><a class="header" href="#zero-shot-chain-of-thought-the-five-word-revolution">Zero-Shot Chain-of-Thought: The Five-Word Revolution</a></h2>
+<p>If Wei's chain-of-thought prompting was surprising, what came next was downright eerie. In May 2022, Takeshi Kojima and colleagues at the University of Tokyo published "Large Language Models are Zero-Shot Reasoners," showing that you didn't even need to provide examples of step-by-step reasoning. You could simply append five words to any question: <strong>"Let's think step by step."</strong></p>
+<p>That's it. No examples. No careful prompt engineering. Just a casual invitation to think out loud.</p>
+<p>On the MultiArith benchmark, this trivial addition boosted accuracy from 17.7% to 78.7% — a 4.4× improvement from five words. On GSM8K, it jumped from 10.4% to 40.7%. Kojima's team tested a variety of phrasings ("Let's work this out in a step by step way to be sure we have the right answer," "First, let's think about this carefully," etc.) and found that while the exact wording mattered somewhat, the general pattern was robust: asking the model to show its work unlocked latent reasoning capabilities.</p>
+<p>This raised a genuinely deep question: if the capability was "in there" all along, what does it mean that it needed a particular prompt to come out? It's as if you discovered that your calculator could solve differential equations — but only if you said "please" first.</p>
+<p>The emerging scientific picture is that chain-of-thought prompting works because it changes the <em>computational path</em> through the model. A transformer generates tokens left-to-right, and each token depends on all previous tokens. When a model writes "First, I need to find the total cost of 3 items at $4.50 each: 3 × 4.50 = 13.50," those intermediate tokens become part of the context for generating the final answer. The model is, in effect, using its own output as a scratchpad — a form of external working memory that extends its effective computational depth far beyond what a single forward pass could achieve.</p>
+<p>Think of it this way: a transformer's forward pass has a fixed depth (the number of layers — 96 for GPT-4-scale models). Without chain-of-thought, the model must solve the entire problem in that fixed number of computational steps. With chain-of-thought, it gets to make <em>multiple</em> forward passes, each building on the previous output. A 96-layer model generating a 20-token reasoning chain effectively gets 96 × 20 = 1,920 layers of computation to work with. It's turning serial depth into parallel breadth.</p>
+<h2 id="self-consistency-and-the-wisdom-of-crowds"><a class="header" href="#self-consistency-and-the-wisdom-of-crowds">Self-Consistency and the Wisdom of Crowds</a></h2>
+<p>Wei and colleagues didn't stop at basic chain-of-thought. In a follow-up paper, Xuezhi Wang, Jason Wei, and others at Google introduced <strong>self-consistency</strong> — a technique that samples multiple reasoning chains for the same question and takes a majority vote on the final answer.</p>
+<p>The intuition is elegant: if a problem has a correct answer, different valid reasoning paths should converge on it, while errors in reasoning tend to be random and uncorrelated. By sampling, say, 40 different reasoning chains and picking the answer that appears most often, you filter out the noise.</p>
+<p>Self-consistency boosted PaLM 540B on GSM8K from 56.9% (chain-of-thought alone) to 74.4%. On the StrategyQA commonsense reasoning benchmark, it pushed accuracy from 75.6% to 81.6%. The technique is computationally expensive — you're running inference 40 times instead of once — but it demonstrates something profound about what's happening inside these models: the "knowledge" for correct reasoning exists as a probability distribution across many possible reasoning paths, and no single sample reliably captures it.</p>
+<h2 id="tool-use-when-models-learn-to-pick-up-a-phone"><a class="header" href="#tool-use-when-models-learn-to-pick-up-a-phone">Tool Use: When Models Learn to Pick Up a Phone</a></h2>
+<p>Perhaps the most practically consequential emergent behavior is tool use — the ability of language models to recognize when they need external help and to formulate the right "call" to get it.</p>
+<p>In February 2023, Timo Schick and colleagues at Meta AI published <strong>Toolformer</strong>, a paper that demonstrated language models could teach <em>themselves</em> to use tools. The approach was clever: they started with a 6.7 billion parameter GPT-J model, annotated training examples with API calls (to a calculator, a search engine, a translation system, a calendar, and a QA system), and then trained the model only on examples where the API call actually <em>improved</em> the model's predictions. The model learned to insert API calls mid-sentence — for instance, generating text like "The population of Paris is [QA('population of Paris')] 2.1 million" — and to integrate the returned results into its output.</p>
+<p>But Toolformer was a training-time intervention. What's more striking is that sufficiently large models exhibit tool-use behavior <em>without</em> any tool-specific training, through pure in-context learning. Give GPT-4 or Claude access to a code interpreter and describe how to call it, and the model will spontaneously decide when a calculation is too complex for mental math, write code to solve it, parse the output, and incorporate the result into its response. Nobody trained it to do this. The behavior arises from the model's understanding of text patterns that describe tool use — because its training data included countless examples of humans describing how they use calculators, search engines, and APIs.</p>
+<p>The ReAct framework, introduced by Shunyu Yao and colleagues at Princeton in October 2022, formalized this into a <strong>Reasoning + Acting</strong> loop. Instead of generating a final answer in one shot, the model alternates between "Thought" steps (reasoning about what to do) and "Action" steps (calling external tools), incorporating "Observation" results before continuing. On the HotpotQA benchmark, which requires combining information from multiple Wikipedia articles, ReAct with a search tool outperformed pure chain-of-thought by significant margins — not because the model reasoned better, but because it knew when to <em>stop</em> reasoning and go look something up.</p>
+<p>This is a qualitative shift. A language model with tool use is no longer a static knowledge base queried at inference time. It's an <em>agent</em> — something that can perceive, plan, act, and adapt. And this behavior emerged from training on text.</p>
+<h2 id="the-mirage-debate-are-emergent-abilities-real"><a class="header" href="#the-mirage-debate-are-emergent-abilities-real">The Mirage Debate: Are Emergent Abilities Real?</a></h2>
+<p>In April 2023, Rylan Schaeffer, Brando Miranda, and Sanmi Koyejo at Stanford dropped a bomb on the emergence narrative with "Are Emergent Abilities of Large Language Models a Mirage?" The paper, which won a NeurIPS 2023 Outstanding Paper award, argued that the apparent sudden appearance of abilities was an artifact of how researchers chose to <em>measure</em> performance, not a genuine property of the models.</p>
+<p>Their argument is technical but devastating. Most emergence claims rely on <strong>nonlinear metrics</strong> — measurements that don't scale smoothly with underlying ability. Exact-match accuracy is the prime example: if a model needs to produce "Ottawa" to correctly answer "What is the capital of Canada?", then a model that outputs "Ottaw" scores 0, and a model that outputs "Ottawa" scores 1. There's no partial credit.</p>
+<p>Schaeffer and colleagues showed mathematically that if you have a metric with such a sharp threshold and an underlying capability that improves <em>smoothly</em> and <em>gradually</em> with scale, you'll observe exactly the "sudden emergence" pattern that Wei reported. Imagine a model's probability of getting each character right increases linearly from 80% to 99.5% as you scale from 1B to 500B parameters. For a 6-character answer like "Ottawa," the probability of getting <em>all</em> characters right goes from 0.80⁶ ≈ 26% to 0.995⁶ ≈ 97%. Plot exact-match accuracy against scale, and you'll see what looks like a sudden jump — even though the underlying improvement was perfectly gradual.</p>
+<p>To prove their point, they showed that when you replace exact-match accuracy with a <strong>linear metric</strong> like token-level edit distance (measuring how close the model got), the "emergence" vanishes. Performance improves smoothly and predictably across all scales. The phase transition was in the <em>measurement</em>, not the model.</p>
+<p>This was a genuinely important insight, and it recalibrated the field. But it didn't settle the debate entirely. Critics pointed out several limitations:</p>
+<p>First, some emergent behaviors are hard to reduce to linear metrics. How do you assign "partial credit" for explaining a joke? For generating a valid Python program? For correctly applying a logical rule? Some tasks genuinely have a discrete success criterion.</p>
+<p>Second, chain-of-thought prompting's scale dependence remains hard to explain as a metric artifact. Small models don't just <em>underperform</em> with chain-of-thought — they get actively <em>worse</em>. Their reasoning chains are incoherent, introducing errors rather than solving problems. Something qualitative changes in the model's internal representation of multi-step reasoning at scale.</p>
+<p>Third, even if individual capabilities improve smoothly, the <em>composition</em> of capabilities might not. A model that's 90% good at parsing syntax, 90% good at retrieving facts, and 90% good at logical inference will only succeed at tasks requiring all three about 73% of the time (0.9³). The composed capability can exhibit sharp thresholds even when components improve gradually.</p>
+<p>The current scientific consensus, such as it exists, is probably this: "emergence" as a mystical phase transition has been debunked, but <em>scale-dependent capability thresholds</em> are real and practically important. The truth is more mundane but no less fascinating than the original hype suggested.</p>
+<h2 id="the-surprising-science-of-what-models-know-but-cant-show"><a class="header" href="#the-surprising-science-of-what-models-know-but-cant-show">The Surprising Science of What Models Know But Can't Show</a></h2>
+<p>Here's the most counterintuitive finding in this entire space, and it's one that both sides of the emergence debate agree on: <strong>models know more than they can demonstrate in a single forward pass.</strong></p>
+<p>This has been shown in multiple ways. Probing studies — where researchers train small classifiers on a model's internal representations — consistently find that models encode information they can't express in their outputs. A model might have a clear internal representation of whether a mathematical statement is true or false, yet still produce the wrong answer when asked directly.</p>
+<p>Kenneth Li and colleagues at Harvard showed in 2023 that language models trained to play Othello develop an internal representation of the actual board state — a genuine world model — even though they were only trained on sequences of moves with no visual input. The model "knows" where the pieces are. But extracting that knowledge requires prompting the model through a specific computational path.</p>
+<p>This is what makes chain-of-thought so profound. It's not teaching the model something new. It's giving the model a <em>format</em> in which to express knowledge it already possesses. The reasoning chains are scaffolding that allows the model's internal representations to be computed, compared, and combined across multiple generation steps. Without the scaffolding, the knowledge is there but inaccessible — like a library with no card catalog.</p>
+<h2 id="tool-use-in-the-wild-from-theory-to-production"><a class="header" href="#tool-use-in-the-wild-from-theory-to-production">Tool Use in the Wild: From Theory to Production</a></h2>
+<p>The theory is fascinating, but the practical impact has been extraordinary. By 2024-2025, tool use had gone from a research curiosity to the backbone of production AI systems.</p>
+<p>OpenAI's function calling API, launched in June 2023, formalized the pattern: developers define tools as JSON schemas, and the model decides when to call them, with what arguments, and how to incorporate the results. Claude, Gemini, and open-source models like Llama followed with their own implementations.</p>
+<p>The results have been transformative. GitHub Copilot doesn't just complete code — it runs tests, reads documentation, and iterates on errors. AI assistants book flights, search databases, control smart homes, and write-then-execute code, all through the same mechanism: a language model deciding, token by token, that the next thing to generate is a tool call rather than a word.</p>
+<p>What's remarkable is how <em>natural</em> this feels to the models. Tool use isn't a bolted-on capability — it flows from the same next-token prediction that generates poetry and code. The model treats "[SEARCH('quantum entanglement')]" as just another sequence of tokens to generate, one that happens to trigger an external system. The boundary between "thinking" and "acting" dissolves into a unified token stream.</p>
+<h2 id="what-this-means"><a class="header" href="#what-this-means">What This Means</a></h2>
+<p>The emergent abilities story — whether you believe it's genuine phase transitions or smooth scaling with threshold effects — carries a practical lesson that towers above the theoretical debate: <strong>we don't fully know what these models can do.</strong></p>
+<p>Every few months, someone discovers a new prompting technique, a new way to compose capabilities, or a new task that models handle surprisingly well (or surprisingly poorly). Tree-of-thought prompting, graph-of-thought, skeleton-of-thought — each extracts different capabilities from the same frozen weights. The model is a fixed object, but the <em>interface</em> to it is still being explored.</p>
+<p>This means that benchmarks systematically underestimate model capabilities. The GSM8K score for a given model is not "how good this model is at math." It's "how good this model is at math <em>given this particular prompting strategy.</em>" Change the strategy and you change the score, sometimes dramatically.</p>
+<p>It also means that the gap between what models can do in principle and what they do in practice is enormous — and closing that gap is as important as building bigger models. Test-time compute scaling, reasoning tokens, and extended thinking are all variations on this theme: giving models more computational runway to express what they already know.</p>
+<h2 id="tomorrows-preview"><a class="header" href="#tomorrows-preview">Tomorrow's Preview</a></h2>
+<p>Today we explored the strange things that happen when models get big enough — abilities that emerge, tools that get wielded, reasoning that unfolds. Tomorrow, we zoom in on the most commercially successful story in this space: the <strong>GPT series, from GPT-1 to GPT-4</strong>. We'll trace how OpenAI made one big bet — that scaling up a simple autoregressive language model would yield increasingly powerful AI — and watched that bet pay off in ways that reshaped the entire technology industry. It's the story of a 117-million-parameter experiment that grew into a multi-hundred-billion-dollar company.</p>
+<hr />
+<h2 id="-quiz-time"><a class="header" href="#-quiz-time">📝 Quiz Time</a></h2>
+<p>Test your understanding of emergent abilities, chain-of-thought reasoning, and tool use with today's quiz:</p>
+<p><a href="quizzes/day-14.toml" class="quiz-link" style="display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; background: #e94560; color: white; border-radius: 4px; text-decoration: none;">Take the Day 14 Quiz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-13.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-13.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
