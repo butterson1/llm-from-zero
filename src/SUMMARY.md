@@ -11,3 +11,4 @@
 - [Day 8: The Training Stack — GPUs, Clusters, Data Pipelines, and What $100M Buys You](./day-08.md)
 - [Day 9: Data — CommonCrawl, The Pile, and the Dirty Secret of Training Data](./day-09.md)
 - [Day 10: Fine-Tuning & Transfer Learning — Adapting a Foundation Model](./day-10.md)
+- [Day 11: RLHF — Teaching Models to Be Helpful](./day-11.md)

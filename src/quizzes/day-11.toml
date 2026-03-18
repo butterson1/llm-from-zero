@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the InstructGPT paper, what was the key finding about model size vs. alignment?"
+prompt.distractors = [
+    "The 175B InstructGPT model was preferred over the 175B GPT-3 base model in 60% of comparisons",
+    "The 6B InstructGPT model matched the 175B GPT-3 base model but could not surpass it in any evaluation",
+    "The 175B GPT-3 base model outperformed smaller InstructGPT models when given sufficiently detailed prompts"
+]
+answer.answer = "The 1.3B InstructGPT model was preferred by evaluators over the 175B GPT-3 base model in 85% of comparisons"
+context = "This was one of the most striking findings: a model 135x smaller, but aligned with RLHF, was overwhelmingly preferred over the much larger base model, demonstrating that alignment matters more than raw scale."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the purpose of the KL divergence penalty in the RLHF training objective?"
+prompt.distractors = [
+    "It ensures the reward model maintains high accuracy by keeping its parameters close to initialization values",
+    "It maximizes the diversity of generated responses by encouraging exploration of the full token vocabulary",
+    "It regularizes the reward model's output distribution to prevent assigning extreme scores to any response"
+]
+answer.answer = "It prevents the RL-tuned policy from straying too far from the SFT model, reducing reward hacking"
+context = "Without the KL penalty, the model would find degenerate outputs that exploit weaknesses in the reward model (reward hacking). The penalty keeps the aligned model close to the SFT distribution while still allowing meaningful improvement."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does RLHF use pairwise comparisons rather than absolute quality scores from human labelers?"
+prompt.distractors = [
+    "Absolute scores require specialized domain expertise that most labelers lack, making recruitment prohibitively expensive",
+    "Pairwise comparisons generate twice as many training examples per annotation hour, reducing overall labeling costs",
+    "Absolute scoring requires calibrating a universal quality scale across all prompts, which introduces systematic bias"
+]
+answer.answer = "Humans are more consistent at relative rankings than absolute scoring, producing more reliable training signal"
+context = "It's much easier and more reliable for humans to say 'A is better than B' than to assign a score of 7.3/10 to response A. Pairwise comparisons yield higher inter-annotator agreement and more consistent training data for the reward model."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the core mathematical insight behind Direct Preference Optimization (DPO)?"
+prompt.distractors = [
+    "The reward model can be approximated by a linear function of token probabilities, enabling gradient-free optimization",
+    "Preference data can be converted into synthetic reward scores through a calibration step, replacing the RL loop",
+    "The policy gradient theorem allows preference rankings to substitute for scalar rewards in standard PPO training"
+]
+answer.answer = "The optimal RLHF solution has a closed-form relationship to preference data, making the reward model unnecessary"
+context = "Rafailov et al. showed that you can rearrange the RLHF objective to express the reward implicitly as a function of the policy and reference model ratio, allowing direct optimization on preference pairs without training a separate reward model."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "During PPO-based RLHF training, how many models must be held in GPU memory simultaneously?"
+prompt.distractors = [
+    "Two: the policy model being optimized and the frozen reward model that provides training signal",
+    "Three: the policy model, the reference model for KL computation, and the reward model for scoring",
+    "Five: policy, reference, reward, value, and a separate critic model for advantage estimation"
+]
+answer.answer = "Four: the policy model, the reference model, the reward model, and the value model"
+context = "PPO requires the policy (being optimized), the reference model (frozen SFT model for KL penalty), the reward model (scoring outputs), and a value model (estimating expected future rewards). This ~4x memory requirement is a major practical challenge."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the RL algorithm used in the original InstructGPT RLHF pipeline?"
+answer.answer = "PPO"
+answer.alternatives = ["Proximal Policy Optimization", "ppo"]
+context = "Proximal Policy Optimization (PPO), developed by John Schulman in 2017, was the RL algorithm used in InstructGPT and became the standard for RLHF until DPO and other alternatives emerged."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is 'sycophancy' in the context of RLHF-trained models?"
+prompt.distractors = [
+    "The model's tendency to refuse requests excessively due to overly conservative safety training signals",
+    "The model's habit of producing overly verbose responses because human raters preferred longer answers",
+    "The model's tendency to repeat the user's question back before answering due to format training bias"
+]
+answer.answer = "The model's bias toward agreeing with users' stated beliefs, even when those beliefs are incorrect"
+context = "Because human raters tend to prefer responses that agree with them, RLHF can train models to validate users' incorrect beliefs rather than correcting them. This is an active area of alignment research."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does KTO (Kahneman-Tversky Optimization) differ from standard DPO in its data requirements?"
+prompt.distractors = [
+    "KTO requires ranked lists of three or more responses per prompt instead of DPO's pairwise comparisons",
+    "KTO needs absolute quality scores from human raters rather than relative preference judgments between pairs",
+    "KTO requires paired preferences like DPO but adds a third 'neutral' category for ambiguous comparisons"
+]
+answer.answer = "KTO works with unpaired examples labeled simply as 'good' or 'bad', without needing paired comparisons"
+context = "KTO leverages insights from prospect theory about how humans weigh gains vs losses, allowing it to learn from unpaired good/bad labels rather than requiring the same prompt answered multiple times for comparison."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What technique scores each intermediate step in a reasoning chain rather than only the final response?"
+answer.answer = "process reward model"
+answer.alternatives = ["process reward models", "PRM", "prm"]
+context = "Process reward models (PRMs) score each step of reasoning rather than just the final answer. OpenAI's 'Let's Verify Step by Step' paper showed this dramatically improves mathematical problem-solving and connects to the development of reasoning models like o1."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was reported about the human labelers who performed content classification work for OpenAI via the company Sama?"
+prompt.distractors = [
+    "They were paid $8-12 per hour but requested hazard pay due to the repetitive nature of the ranking tasks",
+    "They were university researchers in the US who volunteered for the work as part of academic studies",
+    "They were paid $5-7 per hour and worked remotely from offices in Eastern Europe and South America"
+]
+answer.answer = "They were Kenyan workers paid $1.32-$2 per hour who were exposed to violent and disturbing content"
+context = "Time Magazine reported in January 2023 that Kenyan workers labeling toxic content for OpenAI via Sama were paid $1.32-$2/hour and exposed to traumatic material. Sama ended its contract early, highlighting the hidden human cost behind aligned AI models."

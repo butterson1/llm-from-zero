@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 11: RLHF — Teaching Models to Be Helpful - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-11-rlhf--teaching-models-to-be-helpful"><a class="header" href="#day-11-rlhf--teaching-models-to-be-helpful">Day 11: RLHF — Teaching Models to Be Helpful</a></h1>
+<p><em>How reinforcement learning from human feedback turned raw text predictors into the assistants we actually use — and why the field is already moving beyond it.</em></p>
+<hr />
+<h2 id="the-problem-nobody-expected"><a class="header" href="#the-problem-nobody-expected">The Problem Nobody Expected</a></h2>
+<p>Here's the paradox at the heart of modern AI: a language model trained on trillions of tokens from the internet is, by every objective metric, extraordinarily capable. GPT-3, when it launched in June 2020, could write poetry, debug code, translate between languages, and answer obscure trivia. But ask it a simple question — "How do I make a bomb?" — and it would cheerfully comply. Ask it to summarize a document and it might instead continue the document with plausible-sounding nonsense. Ask it for medical advice and it would hallucinate with the confidence of a tenured professor.</p>
+<p>The model was <em>competent</em> but not <em>aligned</em>. It could predict what text comes next, but it had no concept of what text <em>should</em> come next. This gap — between raw capability and actual helpfulness — turned out to be the most important problem in AI. And the solution that emerged, <strong>Reinforcement Learning from Human Feedback (RLHF)</strong>, is arguably the single innovation that turned language models from impressive demos into products used by hundreds of millions of people.</p>
+<p>InstructGPT, the paper that crystallized this approach, was published by OpenAI in March 2022 with a finding that still shocks: a <strong>1.3 billion parameter</strong> model fine-tuned with RLHF was preferred by human evaluators over a <strong>175 billion parameter</strong> base model (GPT-3). Let that sink in. A model 135x smaller, but with better alignment, was more useful. Capability wasn't the bottleneck — alignment was.</p>
+<h2 id="the-three-step-recipe"><a class="header" href="#the-three-step-recipe">The Three-Step Recipe</a></h2>
+<p>RLHF, as implemented in InstructGPT and later adopted by essentially every major AI lab, follows a deceptively simple three-step process. Each step is subtle, and the devil is very much in the details.</p>
+<h3 id="step-1-supervised-fine-tuning-sft"><a class="header" href="#step-1-supervised-fine-tuning-sft">Step 1: Supervised Fine-Tuning (SFT)</a></h3>
+<p>Before you can do anything with reinforcement learning, you need a starting point that's at least in the right ballpark. This is where <strong>supervised fine-tuning</strong> comes in — the same process we covered on Day 10, but with a very specific flavor.</p>
+<p>OpenAI hired a team of 40 human contractors and had them write tens of thousands of ideal responses to prompts. These weren't randomly sampled from the internet — they were carefully crafted demonstrations of what a helpful, harmless, and honest AI assistant should say. The prompts came from real API users (with consent), covering everything from creative writing to factual questions to sensitive topics.</p>
+<p>The base model (GPT-3) was fine-tuned on this demonstration data using standard supervised learning. This SFT model is already dramatically better than the base model — it knows it's supposed to <em>answer</em> questions, not just <em>continue</em> text. But it's still limited by the quality and diversity of those human-written demonstrations. Humans can only write so many examples, and they can't cover every edge case.</p>
+<p>This is where the real magic begins.</p>
+<h3 id="step-2-training-a-reward-model"><a class="header" href="#step-2-training-a-reward-model">Step 2: Training a Reward Model</a></h3>
+<p>Here's the key insight: <strong>it's easier for humans to judge outputs than to produce them.</strong> Writing the perfect response to "Explain quantum entanglement to a 10-year-old" is hard. But given two candidate responses, choosing which one is better? That's much easier, faster, and more reliable.</p>
+<p>OpenAI collected comparison data by showing human labelers pairs (or groups) of model outputs for the same prompt and asking them to rank them from best to worst. Over roughly 33,000 prompts, they gathered these preference rankings — not absolute scores, but relative comparisons.</p>
+<p>This comparison data was used to train a <strong>reward model (RM)</strong> — a separate neural network (typically initialized from the same language model but with the final layer replaced by a scalar output) that takes a prompt and a response and outputs a single number: a score representing how "good" that response is according to human preferences.</p>
+<p>The reward model is trained using a <strong>Bradley-Terry model</strong> of pairwise preferences. If response A was preferred over response B, the reward model is optimized so that RM(prompt, A) &gt; RM(prompt, B). The loss function is essentially:</p>
+<p><strong>Loss = -log(σ(r(preferred) - r(rejected)))</strong></p>
+<p>where σ is the sigmoid function and r is the reward score. This is elegant because you never need absolute quality scores — only relative rankings, which humans are much better at providing consistently.</p>
+<p>The InstructGPT reward model was a 6B parameter model. Anthropic's early reward models were similar in scale. Today's reward models at frontier labs are believed to be 70B+ parameters — because a better reward model directly translates into a better final model.</p>
+<p>Here's the counterintuitive bit: <strong>the reward model doesn't need to be right about everything.</strong> It just needs to be right <em>on average</em>, because reinforcement learning will explore many trajectories and the statistical signal will dominate the noise. Think of it like a food critic — they don't need to be right about every single dish, but if they're right 75% of the time, a restaurant that consistently gets high scores from them is probably genuinely good.</p>
+<h3 id="step-3-reinforcement-learning-with-ppo"><a class="header" href="#step-3-reinforcement-learning-with-ppo">Step 3: Reinforcement Learning with PPO</a></h3>
+<p>Now comes the step that gives RLHF its name. With a trained reward model in hand, you can optimize the language model to produce outputs that score highly — without needing any more human feedback.</p>
+<p>The algorithm used is <strong>Proximal Policy Optimization (PPO)</strong>, a reinforcement learning method developed by OpenAI's John Schulman in 2017. In RL terms, the language model is the <strong>policy</strong> (it maps states to actions), each token generation is an <strong>action</strong>, and the reward model's score at the end of a response is the <strong>reward</strong>.</p>
+<p>But there's a critical constraint: you can't just maximize the reward model's score blindly. If you did, the model would quickly find degenerate outputs that exploit weaknesses in the reward model — a phenomenon called <strong>reward hacking</strong>. It might discover that the reward model gives high scores to responses that are very long, or that begin with "Great question!", or that use certain patterns that correlate with quality in the training data but aren't actually helpful.</p>
+<p>The solution is a <strong>KL divergence penalty</strong> — a term in the objective function that penalizes the RL-tuned model for straying too far from the SFT model's distribution. The final objective is:</p>
+<p><strong>Reward = RM(prompt, response) - β · KL(π_RL || π_SFT)</strong></p>
+<p>where β controls how much freedom the RL model has to diverge. Too little KL penalty and you get reward hacking. Too much and the model barely changes from the SFT baseline. Getting β right is one of the critical hyperparameters of RLHF, and labs typically sweep over multiple values.</p>
+<p>During PPO training, the model generates responses to prompts, the reward model scores them, and gradients flow back through the policy to increase the probability of high-scoring responses and decrease the probability of low-scoring ones. This happens over thousands of iterations, and the improvement is typically visible within the first few hundred steps.</p>
+<h2 id="the-numbers-behind-instructgpt"><a class="header" href="#the-numbers-behind-instructgpt">The Numbers Behind InstructGPT</a></h2>
+<p>The InstructGPT paper provides unusually detailed numbers that illuminate the entire pipeline:</p>
+<ul>
+<li><strong>Demonstration data:</strong> 13,000 prompt-response pairs for SFT</li>
+<li><strong>Comparison data:</strong> 33,000 prompts with ranked outputs for the reward model</li>
+<li><strong>Labeler team:</strong> ~40 contractors, carefully screened for agreement rates</li>
+<li><strong>Labeler agreement:</strong> ~73% on rankings (humans don't even agree with each other perfectly)</li>
+<li><strong>SFT model:</strong> 1.3B, 6B, and 175B parameter variants</li>
+<li><strong>Reward model:</strong> 6B parameters</li>
+<li><strong>PPO training:</strong> A few hundred thousand episodes over several days</li>
+<li><strong>Cost:</strong> Not officially disclosed, but the human labeling alone likely cost $500K-$1M</li>
+</ul>
+<p>The result? The 1.3B InstructGPT model was preferred over the 175B GPT-3 base model in <strong>85%</strong> of comparisons. The 175B InstructGPT was even more dominant. This wasn't a marginal improvement — it was a qualitative leap in perceived usefulness.</p>
+<h2 id="why-ppo-is-so-difficult"><a class="header" href="#why-ppo-is-so-difficult">Why PPO Is So Difficult</a></h2>
+<p>If RLHF sounds straightforward on paper, the reality is anything but. PPO applied to language models is one of the most finicky training procedures in modern ML. Several factors conspire to make it painful:</p>
+<p><strong>Instability:</strong> PPO involves training four models simultaneously — the policy model (being optimized), the reference model (frozen SFT model for KL penalty), the reward model, and a value model (that estimates expected future rewards). All four need to fit in GPU memory, and the interaction between them creates complex training dynamics. One bad hyperparameter and training diverges.</p>
+<p><strong>Memory requirements:</strong> With four models in play, RLHF requires roughly 4x the GPU memory of standard training. For a 70B parameter model, this means you need clusters with hundreds of high-end GPUs just for the RL phase.</p>
+<p><strong>Reward model quality ceiling:</strong> Your final model can only be as good as your reward model's ability to distinguish quality. If the reward model has blind spots, the policy will find and exploit them. This creates an arms race between reward model quality and policy optimization.</p>
+<p><strong>Reproducibility:</strong> Small changes in hyperparameters, random seeds, or training data can lead to substantially different outcomes. Several research groups have reported difficulty reproducing RLHF results, even with the same architecture and data.</p>
+<p>John Schulman himself, the creator of PPO, gave a talk at Berkeley in 2023 where he candidly described RLHF as requiring "a lot of tricks" and "careful engineering" to work well. It's not the kind of thing you can implement from a paper in a weekend.</p>
+<h2 id="dpo-cutting-out-the-middleman"><a class="header" href="#dpo-cutting-out-the-middleman">DPO: Cutting Out the Middleman</a></h2>
+<p>Given all the headaches of PPO, a natural question emerges: do we <em>actually</em> need reinforcement learning? In May 2023, a team from Stanford — Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher Manning, and Chelsea Finn — published a paper that sent shockwaves through the alignment community: <strong>Direct Preference Optimization (DPO)</strong>.</p>
+<p>Their core insight was mathematical and beautiful: the optimal solution to the RLHF objective (reward maximization with KL penalty) has a closed-form relationship to the preference data. You can rearrange the equations to show that the reward model is implicitly defined by the ratio of the aligned policy to the reference policy. This means you can skip the reward model entirely and optimize the language model directly on preference pairs.</p>
+<p>The DPO loss function is:</p>
+<p><strong>Loss = -log(σ(β · (log π(preferred) - log π_ref(preferred)) - β · (log π(rejected) - log π_ref(rejected))))</strong></p>
+<p>This looks complex but boils down to: increase the probability of preferred responses relative to the reference model, and decrease the probability of rejected responses, with β controlling the strength.</p>
+<p>The advantages of DPO are enormous:</p>
+<ul>
+<li><strong>No reward model needed</strong> — saves memory, compute, and complexity</li>
+<li><strong>No RL training loop</strong> — just standard supervised optimization</li>
+<li><strong>Stable training</strong> — behaves like regular fine-tuning, much easier to debug</li>
+<li><strong>Similar or better results</strong> — on benchmarks like TL;DR summarization and Anthropic's helpfulness data, DPO matched or exceeded PPO</li>
+</ul>
+<p>DPO training a 7B model on preference data takes hours on a single 8-GPU node. PPO for the same model might take days on a much larger cluster. The efficiency gain is not incremental — it's transformational.</p>
+<h2 id="the-dpo-family-tree"><a class="header" href="#the-dpo-family-tree">The DPO Family Tree</a></h2>
+<p>DPO's success spawned an explosion of variants, each tweaking the formula:</p>
+<p><strong>IPO (Identity Preference Optimization)</strong> addressed a theoretical concern — DPO can overfit to preference data in certain regimes. IPO uses a slightly different loss that's more robust.</p>
+<p><strong>KTO (Kahneman-Tversky Optimization)</strong> went further: what if you don't even have <em>paired</em> preferences? KTO works with unpaired data — just examples labeled "good" or "bad" — by leveraging insights from prospect theory about how humans weigh gains versus losses. This dramatically reduces data requirements since you don't need the same prompt answered multiple times.</p>
+<p><strong>ORPO (Odds Ratio Preference Optimization)</strong> combines SFT and preference optimization into a single training step, eliminating the need for a separate SFT phase entirely.</p>
+<p><strong>SimPO (Simple Preference Optimization)</strong> removes the reference model dependency, using the average log probability of the response as an implicit reward, making it even simpler than DPO.</p>
+<p>Each variant chips away at another piece of complexity. The trajectory is clear: alignment is becoming cheaper, simpler, and more accessible.</p>
+<h2 id="what-rlhf-actually-changes"><a class="header" href="#what-rlhf-actually-changes">What RLHF Actually Changes</a></h2>
+<p>What does the model actually learn during RLHF? This is more nuanced than "being helpful." Careful analysis reveals several distinct behavioral shifts:</p>
+<p><strong>Format compliance:</strong> Base models ramble. RLHF models learn to give direct answers, use appropriate length, format code in code blocks, and match the expected style for each query type.</p>
+<p><strong>Refusal behavior:</strong> The model learns to say "I can't help with that" for dangerous requests. This is perhaps the most visible change — and the most controversial, since overrefusal (being too cautious) is a persistent complaint.</p>
+<p><strong>Calibrated uncertainty:</strong> RLHF models are more likely to say "I'm not sure" when they genuinely don't know, rather than hallucinating confidently. Though this improvement is partial — hallucination remains a major unsolved problem.</p>
+<p><strong>Instruction following:</strong> The model becomes dramatically better at doing what you actually asked, rather than doing something adjacent. Ask for "a limerick about databases" and you'll get a limerick about databases, not a free-verse poem about SQL.</p>
+<p><strong>Sycophancy:</strong> Here's a troubling side effect. RLHF models learn that human raters tend to prefer responses that agree with them. This creates a bias toward telling users what they want to hear rather than what's true. If you assert something incorrect and ask the model to verify, RLHF models are more likely to validate your wrong belief than base models are. This is an active area of research.</p>
+<h2 id="the-rlhf-supply-chain"><a class="header" href="#the-rlhf-supply-chain">The RLHF Supply Chain</a></h2>
+<p>Behind every RLHF'd model is an army of human annotators whose working conditions have become increasingly controversial. Scale AI, Surge AI, and similar companies employ thousands of contractors — many in Kenya, India, the Philippines, and other developing nations — who spend their days comparing model outputs and ranking them.</p>
+<p>Time Magazine reported in January 2023 that Kenyan workers labeling toxic content for OpenAI (via Sama) were paid between $1.32 and $2 per hour. The work involved reading and categorizing violent, sexual, and disturbing content generated by models. Sama ended its contract with OpenAI ahead of schedule, citing the traumatic nature of the work.</p>
+<p>This raises uncomfortable questions about RLHF's hidden human cost. The models we experience as polished, helpful assistants are partly the product of thousands of hours of low-paid human judgment work, including extensive exposure to the worst content the internet has to offer.</p>
+<h2 id="where-the-field-is-heading"><a class="header" href="#where-the-field-is-heading">Where the Field Is Heading</a></h2>
+<p>RLHF was the breakthrough, but the field is evolving rapidly:</p>
+<p><strong>RLAIF (RL from AI Feedback):</strong> Anthropic demonstrated in 2023 that you can use a language model itself to generate preference data, partially replacing human labelers. Constitutional AI (which we'll explore tomorrow on Day 12) takes this further. The quality isn't quite as good as human feedback for all tasks, but the cost reduction is enormous — AI judgments cost fractions of a cent versus dollars per human comparison.</p>
+<p><strong>Online DPO and iterative training:</strong> Rather than collecting all preference data upfront, newer approaches generate preference data on-the-fly from the current model, creating a tighter feedback loop.</p>
+<p><strong>Process reward models:</strong> Instead of scoring only the final response, these reward models score each intermediate step in a reasoning chain. OpenAI's "Let's Verify Step by Step" paper showed this dramatically improves math problem-solving. This connects directly to the recent explosion in reasoning models like o1 and o3.</p>
+<p><strong>Reward model ensembles:</strong> Using multiple reward models and taking their consensus reduces reward hacking. If five different reward models all agree a response is good, it probably actually is.</p>
+<h2 id="the-bigger-picture"><a class="header" href="#the-bigger-picture">The Bigger Picture</a></h2>
+<p>RLHF solved a specific problem: bridging the gap between what a language model <em>can</em> do and what it <em>should</em> do. But it's worth stepping back to appreciate how strange this is. We're using human preferences — messy, inconsistent, culturally specific, sometimes contradictory — as a training signal for systems that will eventually be used by billions of people across every culture on Earth.</p>
+<p>Whose preferences count? The 40 contractors OpenAI hired? The thousands of gig workers at Scale AI? The values embedded in the comparison data reflect specific choices about what "helpful" and "harmless" mean, and those choices are not culturally neutral.</p>
+<p>This is why alignment research is not just a technical problem — it's a deeply philosophical one. And tomorrow, we'll explore Anthropic's attempt to grapple with this head-on: <strong>Constitutional AI</strong>, an approach that tries to specify values explicitly rather than learning them implicitly from human preferences.</p>
+<hr />
+<div style="margin-top: 2rem; padding: 1.5rem; background: #1a1a2e; border-radius: 8px; border-left: 4px solid #e94560;">
+<h2 id="-quiz-time"><a class="header" href="#-quiz-time">📝 Quiz Time</a></h2>
+<p>Test your understanding of RLHF with today's quiz:</p>
+<p><a href="quizzes/day-11.toml" class="quiz-link" style="display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; background: #e94560; color: white; border-radius: 4px; text-decoration: none;">Take the Day 11 Quiz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-10.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-10.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
