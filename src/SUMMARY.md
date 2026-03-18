@@ -12,3 +12,4 @@
 - [Day 9: Data — CommonCrawl, The Pile, and the Dirty Secret of Training Data](./day-09.md)
 - [Day 10: Fine-Tuning & Transfer Learning — Adapting a Foundation Model](./day-10.md)
 - [Day 11: RLHF — Teaching Models to Be Helpful](./day-11.md)
+- [Day 12: Constitutional AI & Safety — Alignment Without Human Labels](./day-12.md)
