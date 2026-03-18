@@ -13,3 +13,4 @@
 - [Day 10: Fine-Tuning & Transfer Learning — Adapting a Foundation Model](./day-10.md)
 - [Day 11: RLHF — Teaching Models to Be Helpful](./day-11.md)
 - [Day 12: Constitutional AI & Safety — Alignment Without Human Labels](./day-12.md)
+- [Day 13: Prompt Engineering vs In-Context Learning — Why Examples Work](./day-13.md)
