@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 16: Claude, Gemini, Llama — How Other Labs Diverged from GPT - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-16-claude-gemini-llama--how-other-labs-diverged-from-gpt"><a class="header" href="#day-16-claude-gemini-llama--how-other-labs-diverged-from-gpt">Day 16: Claude, Gemini, Llama — How Other Labs Diverged from GPT</a></h1>
+<p><em>OpenAI drew the map, but the most interesting AI story of 2023-2025 is what happened when other labs decided to take different roads — and sometimes found better ones.</em></p>
+<hr />
+<p>By the time GPT-4 launched in March 2023, the playbook seemed obvious. Take a decoder-only transformer. Train it on trillions of tokens of internet text. Scale it up. Apply RLHF. Ship an API. That's how you build a frontier model.</p>
+<p>Except it wasn't that simple. Within 18 months, at least five organizations had produced models that matched or exceeded GPT-4 on major benchmarks — and nearly all of them had made architectural, training, or philosophical decisions that deviated significantly from OpenAI's approach. The result is the most fascinating natural experiment in AI history: multiple teams with billions of dollars, access to similar research, and different theories about what matters most, all racing toward the same goal from different directions.</p>
+<p>What they built — and why they built it differently — tells us far more about the nature of intelligence than any single model ever could.</p>
+<h2 id="anthropic-the-safety-lab-that-became-a-capabilities-lab"><a class="header" href="#anthropic-the-safety-lab-that-became-a-capabilities-lab">Anthropic: The Safety Lab That Became a Capabilities Lab</a></h2>
+<p>Anthropic's origin story reads like a Silicon Valley soap opera. In late 2020 and early 2021, Dario Amodei (VP of Research), his sister Daniela Amodei (VP of Operations), and about a dozen senior researchers — including Tom Brown, the first author of the GPT-3 paper — walked out of OpenAI. Their stated reason: disagreements about the pace and safety culture of AI development. Their unstated advantage: they knew exactly how GPT-3 had been built, and they had ideas about how to do it better.</p>
+<p>The first Claude model, launched in March 2023, was roughly GPT-3.5-tier. Claude 2, arriving in July 2023, closed the gap further. But it was <strong>Claude 3</strong>, released in March 2024, that changed the conversation entirely. The Opus variant matched or exceeded GPT-4 on most benchmarks — MMLU (86.8% vs. GPT-4's 86.4%), graduate-level reasoning (GPQA at 50.4%), and coding (HumanEval at 84.9%) — while exhibiting noticeably different behavioral characteristics.</p>
+<p>What made Anthropic's approach distinctive wasn't just Constitutional AI, which we covered on Day 12. It was a constellation of design choices:</p>
+<p><strong>Long context as a first-class feature.</strong> While GPT-4 launched with an 8K context window (later expanded to 128K), Claude 2 shipped with a 100K-token context window from day one. Claude 3 pushed this to 200K tokens, with an effective retrieval accuracy above 99% across the full window — the famous "needle in a haystack" test. This wasn't just a larger number; it required fundamental changes to how attention is computed and how positional information is encoded. Anthropic invested heavily in making long context <em>actually work</em>, not just technically fit in memory.</p>
+<p><strong>Honesty over helpfulness.</strong> Anthropic made an explicit choice to optimize for a different point on the helpfulness-honesty-harmlessness triangle. Early Claude models were notoriously cautious — sometimes frustratingly so — but this reflected a genuine architectural and training decision. The Constitutional AI approach means the model was trained to reason about its own responses before generating them, producing a distinctive "thinking through the problem" quality that users either loved or found verbose.</p>
+<p><strong>Character training.</strong> Starting with Claude 3, Anthropic began investing significantly in what they called the model's "character" — its tone, epistemic humility, and behavioral consistency. Claude was trained to say "I don't know" more readily, to resist sycophancy (telling users what they want to hear), and to maintain a consistent persona across conversations. This wasn't just RLHF tuning; it was baked into the constitutional principles themselves.</p>
+<p>By Claude 3.5 Sonnet (released June 2024, updated October 2024), something surprising had happened. A model from the "safety lab" was consistently beating GPT-4o on coding benchmarks, agentic tasks, and instruction-following — not because Anthropic had abandoned caution, but because their particular approach to training turned out to produce models that were genuinely better at following complex, multi-step instructions. The safety research had become a capabilities advantage. Claude 3.5 Sonnet scored 93.7% on HumanEval and topped the SWE-bench Verified leaderboard at 49%, a benchmark that tests real-world software engineering.</p>
+<h2 id="google-deepmind-the-multimodal-bet"><a class="header" href="#google-deepmind-the-multimodal-bet">Google DeepMind: The Multimodal Bet</a></h2>
+<p>Google's AI story during this period is one of organizational chaos producing, almost despite itself, genuinely novel technical work.</p>
+<p>When ChatGPT launched in November 2022, Google had two separate AI research organizations: Google Brain (which had invented the transformer in 2017) and DeepMind (the London-based lab famous for AlphaGo). In a panic-merger in April 2023, they were combined into Google DeepMind. The merger was messy. Researchers who had been competitors for years were suddenly on the same team. Projects overlapped. Priorities clashed.</p>
+<p>Out of this chaos came <strong>Gemini</strong>, announced in December 2023. And despite the rocky organizational backdrop, Gemini represented the most ambitious architectural departure from the GPT playbook by any major lab.</p>
+<p>The key insight: Google decided to build a <strong>natively multimodal</strong> model from the ground up. While GPT-4V and Claude 3 handled images by bolting a vision encoder (typically a ViT variant) onto a language model and training a projection layer between them, Gemini was trained from scratch on interleaved sequences of text, images, audio, and video. The training data wasn't "text, plus some images on the side" — it was genuinely mixed-modal from the first training step.</p>
+<p>This mattered more than it might sound. In a bolt-on approach, the language model and vision encoder have fundamentally different internal representations that must be bridged. In Gemini's native approach, the model learns unified representations where text and visual concepts live in the same embedding space from the beginning. A picture of a cat and the word "cat" activate overlapping neural circuits, not separate ones connected by a thin bridge.</p>
+<p><strong>Gemini 1.0 Ultra</strong> — the largest variant — hit 90.0% on MMLU, making it the first model to credibly claim superhuman performance on that benchmark (the estimated expert human ceiling is around 89.8%). It used a Mixture-of-Experts architecture (more on that tomorrow), which Google had pioneered in their earlier Switch Transformer and GLaM models. The total parameter count was reportedly around 1.56 trillion, with roughly 300-500 billion active per forward pass.</p>
+<p>But Google's most significant technical contribution might have been on the context length front. <strong>Gemini 1.5 Pro</strong>, released in February 2024, shipped with a 1-million-token context window — and later expanded to 2 million. To put this in perspective: GPT-4's 128K window could hold a long novel. Gemini 1.5's 1M window could hold approximately <em>ten</em> novels simultaneously, or the entire codebase of a substantial software project, or a full hour of video.</p>
+<p>This wasn't achieved through brute force. The key innovations included <strong>ring attention</strong> (distributing attention computation across devices in a ring topology), <strong>RoPE scaling</strong> (extending Rotary Position Embeddings to positions far beyond training range), and aggressive attention sparsification. The model maintained strong recall performance across the full window — Google demonstrated it correctly identifying a single changed scene in a 45-minute video.</p>
+<p>Gemini 2.0 Flash, arriving in late 2024, pushed further with native tool use, real-time audio/video streaming, and "agentic" capabilities — the ability to take multi-step actions in external environments. Google's unique asset here was integration: Gemini could natively search the web, execute code, and interact with Google's product ecosystem in ways that required API gymnastics from competitors.</p>
+<h2 id="metas-llama-the-open-source-earthquake"><a class="header" href="#metas-llama-the-open-source-earthquake">Meta's Llama: The Open Source Earthquake</a></h2>
+<p>If Anthropic's story is about safety becoming capability, and Google's is about multimodal architecture, Meta's is about something more fundamental: the decision to give it all away.</p>
+<p>In February 2023, Meta released <strong>LLaMA</strong> (Large Language Model Meta AI) — a family of models from 7B to 65B parameters. The models themselves were impressive but not frontier-level. What was revolutionary was the license: Meta released the full model weights, allowing anyone to download, modify, and build upon them. Within a week, the weights had leaked to the broader internet. Within a month, an entire ecosystem had exploded into existence.</p>
+<p>LLaMA was trained on 1.4 trillion tokens of publicly available data — a deliberate choice. By using only public data, Meta avoided the copyright quagmire that haunted models trained on proprietary books or paywalled content. The architecture was a relatively standard decoder-only transformer, but with three notable choices borrowed from recent research:</p>
+<ol>
+<li><strong>RMSNorm</strong> instead of LayerNorm (simpler, faster, from the 2019 Zhang &amp; Sennrich paper)</li>
+<li><strong>SwiGLU</strong> activation functions (from Noam Shazeer's 2020 paper, roughly 1% better than ReLU at the same compute)</li>
+<li><strong>Rotary Position Embeddings (RoPE)</strong> instead of learned absolute positions (better extrapolation to unseen sequence lengths)</li>
+</ol>
+<p>These weren't Meta innovations, but Meta's combination of them into a clean, well-trained package at multiple sizes created a foundation that the open-source community could actually use.</p>
+<p><strong>LLaMA 2</strong> (July 2023) scaled to 70B parameters and 2 trillion training tokens, with a chat-tuned variant that was arguably competitive with the original ChatGPT. <strong>LLaMA 3</strong> (April 2024) was the real leap: the 70B variant was trained on 15 trillion tokens — roughly 7.5× more data per parameter than the Chinchilla-optimal ratio would suggest. This was deliberate overtraining: Meta wanted the best possible model at inference time, even if training was compute-inefficient, because the model would be run billions of times after training. The 8B variant of LLaMA 3 outperformed the 70B LLaMA 2 on many benchmarks, demonstrating the power of data scaling at fixed model sizes.</p>
+<p><strong>LLaMA 3.1 405B</strong>, released in July 2024, was the crown jewel: a 405-billion-parameter model trained on 15.6 trillion tokens across 16,384 H100 GPUs. It matched GPT-4o and Claude 3.5 Sonnet on most benchmarks. This was a frontier-class model, available for anyone to download, fine-tune, and deploy. The training run consumed an estimated 30.84 million GPU-hours. At market H100 rental rates, that's roughly $60-100 million in compute alone.</p>
+<p>Here's the counterintuitive part: <strong>Meta makes no money from AI models directly.</strong> They don't sell API access. They don't charge for the weights. The strategic logic is that open-source models commoditize the AI layer, preventing any single company from controlling it — which protects Meta's actual business (advertising) from being disrupted by an AI gatekeeper. If everyone has access to frontier AI, nobody can charge monopoly rents. It's the same logic IBM used when it open-sourced Eclipse, or Google used with Android.</p>
+<p>The downstream effects were staggering. Thousands of fine-tuned variants appeared within weeks of each release. Quantized versions running on consumer hardware. Specialized models for medicine, law, code, every language under the sun. The entire field of efficient fine-tuning (LoRA, QLoRA, and their descendants) was essentially built on the LLaMA family.</p>
+<h2 id="mistral-the-european-dark-horse"><a class="header" href="#mistral-the-european-dark-horse">Mistral: The European Dark Horse</a></h2>
+<p>In a world of $100M+ training runs, Mistral AI proved that a small team with deep expertise could punch absurdly above its weight. Founded in May 2023 by Arthur Mensch, Guillaume Lample, and Timothée Lacroix — all former researchers at Meta and DeepMind — Mistral raised €385 million at a €2 billion valuation before shipping a single product.</p>
+<p><strong>Mistral 7B</strong>, released in September 2023, embarrassed the industry. A 7-billion-parameter model trained on undisclosed data outperformed LLaMA 2 13B on every benchmark tested. The key innovations were <strong>Grouped-Query Attention (GQA)</strong> — sharing key-value heads across multiple query heads, reducing memory requirements by 4-8× during inference — and <strong>Sliding Window Attention (SWA)</strong>, which limited each token's attention to a fixed window (4,096 tokens) while using stacked layers to achieve effective context lengths of 32K+ tokens. The result: faster inference, lower memory, and better performance than models twice its size.</p>
+<p><strong>Mixtral 8x7B</strong> (December 2023) was even more remarkable. It was one of the first high-quality open Mixture-of-Experts models: eight 7B expert networks with a routing mechanism that activates only 2 of the 8 for each token. Total parameters: 46.7 billion. Active parameters per token: ~13 billion. The result was a model with the quality of a 40B+ dense model at the computational cost of a ~13B model. It matched GPT-3.5-Turbo on most benchmarks while being fully open-weight.</p>
+<p>Mistral's approach embodied a contrarian thesis: <strong>architectural efficiency matters more than raw scale.</strong> While everyone else was racing to train the largest possible model, Mistral focused on getting the maximum performance per FLOP at inference time. In a world where training happens once but inference happens billions of times, this might be the more economically rational approach.</p>
+<h2 id="the-convergences-and-divergences"><a class="header" href="#the-convergences-and-divergences">The Convergences and Divergences</a></h2>
+<p>Looking across all these efforts, a pattern emerges. Some things everyone agrees on:</p>
+<p><strong>Decoder-only transformers won.</strong> Despite Google's history with encoder-decoder models (T5, original Transformer), every frontier model from 2023 onward is decoder-only. The simplicity and scalability of "just predict the next token" proved unbeatable.</p>
+<p><strong>Post-training matters as much as pre-training.</strong> Every lab invests heavily in instruction tuning, RLHF or its variants, and safety training. The base model is increasingly just a starting point.</p>
+<p><strong>Data quality trumps quantity past a certain point.</strong> Every lab now invests enormous resources in data curation, deduplication, filtering, and quality scoring. The "just scrape the whole internet" era is over.</p>
+<p>But the divergences are equally revealing:</p>
+<p><strong>Open vs. closed.</strong> Meta and Mistral bet on open weights. OpenAI and Anthropic kept models proprietary. Google hedged with Gemma (smaller open models) while keeping Gemini closed. The market hasn't decisively chosen.</p>
+<p><strong>Native multimodal vs. bolt-on.</strong> Google went all-in on native multimodal from training. Others added vision and audio capabilities through adapters and projection layers. The native approach produces more elegant cross-modal reasoning but requires fundamentally different training infrastructure.</p>
+<p><strong>Safety philosophy.</strong> Anthropic centers Constitutional AI and deliberate character training. OpenAI applies RLHF and behavioral guidelines. Meta releases weights and lets the community decide. These aren't just product decisions — they're genuine philosophical disagreements about who should control powerful AI systems.</p>
+<p><strong>Model size strategy.</strong> OpenAI went with massive MoE. Anthropic's exact architecture is undisclosed. Meta released a range of sizes. Mistral focused on efficient medium-sized models. There's no consensus on optimal architecture at the frontier.</p>
+<h2 id="the-surprising-lesson"><a class="header" href="#the-surprising-lesson">The Surprising Lesson</a></h2>
+<p>Here's what nobody expected in 2022: <strong>the gap between labs would narrow so dramatically.</strong> When GPT-4 launched, it seemed like OpenAI had an insurmountable lead. Twelve months later, four organizations had models within striking distance. Twenty-four months later, an open-weight model (LLaMA 3.1 405B) could match it.</p>
+<p>This suggests something profound about the current paradigm. The transformer architecture plus massive pre-training plus alignment fine-tuning is a <em>recipe</em>, not a secret. Once the recipe is known, execution matters — but execution is a much thinner moat than invention. The labs that pull ahead in 2025-2026 will likely do so not because they found a better recipe for transformers, but because they found something beyond transformers — or found a way to make the existing recipe work on fundamentally different problems.</p>
+<p>The commoditization of baseline capabilities is pushing competition to the edges: who has the best coding ability? The best agentic behavior? The best long-context reasoning? The best efficiency at a given price point? The most trustworthy safety profile? The answers to these questions differ depending on which lab you ask — and that's exactly how a healthy technology ecosystem is supposed to work.</p>
+<hr />
+<p><em>Tomorrow, we dive into one of the most elegant architectural tricks in modern AI: Mixture of Experts. How do you build a model with a trillion parameters but only use a fraction of them for each token? It's the technique behind GPT-4, Mixtral, and Gemini — and it's the reason the next generation of models will be simultaneously larger and cheaper to run.</em></p>
+<hr />
+<div style="margin-top: 2em; padding: 1.5em; border-radius: 8px;">
+<h2 id="-quiz-day-16"><a class="header" href="#-quiz-day-16">📝 Quiz: Day 16</a></h2>
+<p>Test your understanding of how different labs diverged from the GPT approach:</p>
+<p><a href="quizzes/day-16.toml" class="quiz-link" style="display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; background: #e94560; color: white; border-radius: 4px; text-decoration: none;">Take the Day 16 Quiz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-15.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-15.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

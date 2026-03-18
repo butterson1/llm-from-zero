@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key architectural distinction of Google's Gemini compared to GPT-4V and Claude 3's approach to multimodality?"
+prompt.distractors = [
+    "Gemini used a separate vision transformer with a larger projection layer between visual and language representations",
+    "Gemini processed images and text sequentially in separate forward passes then merged their output embeddings",
+    "Gemini employed a dual-encoder architecture where vision and language models shared weights but had distinct attention heads"
+]
+answer.answer = "Gemini was trained from scratch on interleaved text, image, audio, and video data in a natively multimodal architecture"
+context = "While GPT-4V and Claude 3 bolted vision encoders onto language models with projection layers, Gemini was trained from the first step on mixed-modal data, creating unified representations where text and visual concepts share the same embedding space."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did Meta choose to 'overtrain' LLaMA 3's 70B model with 15 trillion tokens, far exceeding the Chinchilla-optimal data ratio?"
+prompt.distractors = [
+    "Meta needed to compensate for lower-quality public domain training data by exposing the model to more examples overall",
+    "The Chinchilla scaling laws don't apply to decoder-only architectures, so Meta followed a different compute-optimal formula",
+    "Meta's training infrastructure required high data throughput to maintain GPU utilization above 90% across 16K devices"
+]
+answer.answer = "Meta optimized for inference-time performance since the model would be run billions of times, making training-time compute waste worthwhile"
+context = "Since training happens once but inference happens billions of times, overtraining at the cost of compute efficiency produces a better model at deployment time. LLaMA 3 8B outperformed LLaMA 2 70B on many benchmarks thanks to this strategy."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was Mistral 7B's Sliding Window Attention (SWA) approach to handling long contexts?"
+prompt.distractors = [
+    "Each token attended to the full context but with linearly decaying attention weights based on relative distance from the token",
+    "The model divided the input into non-overlapping fixed-size chunks and applied full attention within each chunk independently",
+    "Tokens beyond the window boundary were represented by compressed summary vectors that were updated during each forward pass"
+]
+answer.answer = "Each token's attention was limited to a fixed window of 4,096 tokens, with stacked layers creating effective context lengths of 32K+ tokens"
+context = "Sliding Window Attention limits each layer's attention to a local window (4,096 tokens), but information propagates across layers, so stacking multiple layers allows the effective receptive field to cover 32K+ tokens while keeping memory and compute costs low."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Mixtral 8x7B achieve dense-model quality at significantly lower inference cost?"
+prompt.distractors = [
+    "It used 8 expert networks of 7B parameters each but distilled them into a single 7B network at inference time using online distillation",
+    "It trained 8 separate 7B models on different data domains and averaged their outputs with learned weights during generation",
+    "It pruned 6 of the 8 expert networks after training, keeping only the 2 most frequently activated ones as a static dense model"
+]
+answer.answer = "It routed each token through only 2 of 8 expert networks, giving 46.7B total parameters but only ~13B active per forward pass"
+context = "Mixtral 8x7B is a Mixture-of-Experts model with 46.7B total parameters. A routing mechanism selects 2 of 8 experts per token, so only ~13B parameters are active for each forward pass, matching 40B+ dense model quality at ~13B dense model compute cost."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What strategic business logic drove Meta's decision to open-source frontier-class models like LLaMA 3.1 405B?"
+prompt.distractors = [
+    "Meta planned to monetize through premium support contracts and enterprise fine-tuning services for LLaMA deployments",
+    "Open-sourcing allowed Meta to crowdsource safety red-teaming at scale, reducing their internal alignment research costs significantly",
+    "Meta anticipated that open-source models would attract developer talent to their AR/VR platform ecosystem and Reality Labs division"
+]
+answer.answer = "Commoditizing the AI layer prevents any company from becoming an AI gatekeeper that could disrupt Meta's core advertising business"
+context = "Meta doesn't sell AI models or API access. By open-sourcing frontier models, they prevent competitors from controlling AI as a platform — similar to how Google open-sourced Android to prevent mobile OS lock-in. If everyone has frontier AI, nobody can charge monopoly rents."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What normalization technique did LLaMA use instead of the standard LayerNorm, chosen for its simplicity and speed?"
+answer.answer = "RMSNorm"
+answer.alternatives = ["rms norm", "Root Mean Square Normalization", "rmsnorm"]
+context = "LLaMA adopted RMSNorm (Root Mean Square Normalization) from Zhang & Sennrich's 2019 paper as a simpler and faster alternative to LayerNorm, which requires computing both mean and variance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was Gemini 1.5 Pro's maximum context window size, and what technique helped achieve it?"
+prompt.distractors = [
+    "512K tokens, achieved primarily through sparse attention patterns that skipped every other token beyond the first 128K positions",
+    "2 million tokens, achieved primarily through hierarchical attention that compressed older tokens into fixed-size memory blocks",
+    "4 million tokens, achieved primarily through linear attention approximations that replaced softmax with kernel-based similarity functions"
+]
+answer.answer = "Up to 2 million tokens, achieved partly through ring attention that distributes attention computation across devices in a ring topology"
+context = "Gemini 1.5 Pro launched with a 1M token context window and later expanded to 2M tokens. Key innovations included ring attention (distributing attention computation across devices), RoPE scaling, and aggressive attention sparsification."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Which Anthropic model first demonstrated that safety-focused training could also produce leading capabilities, topping the SWE-bench Verified leaderboard?"
+prompt.distractors = [
+    "Claude 3 Opus, which scored 49% on SWE-bench Verified and 86.8% on MMLU when released in March 2024",
+    "Claude 3 Haiku, which scored 49% on SWE-bench Verified and achieved 93.7% on HumanEval in June 2024",
+    "Claude 3.5 Opus, which scored 49% on SWE-bench Verified and demonstrated superior agentic task performance in late 2024"
+]
+answer.answer = "Claude 3.5 Sonnet, which scored 49% on SWE-bench Verified and 93.7% on HumanEval, beating GPT-4o on coding benchmarks"
+context = "Claude 3.5 Sonnet (June 2024, updated October 2024) topped the SWE-bench Verified leaderboard at 49% and scored 93.7% on HumanEval, demonstrating that Anthropic's safety-focused Constitutional AI training produced models with leading real-world coding capabilities."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What activation function did LLaMA adopt (from Noam Shazeer's 2020 paper) that gave roughly 1% improvement over ReLU at the same compute?"
+answer.answer = "SwiGLU"
+answer.alternatives = ["swiglu", "SwiGLU activation", "Swish-Gated Linear Unit"]
+context = "LLaMA adopted SwiGLU activation functions from Noam Shazeer's 2020 paper. SwiGLU combines Swish activation with a Gated Linear Unit, yielding approximately 1% better performance than ReLU at equivalent compute cost."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What surprising outcome did the rapid proliferation of frontier labs reveal about the current transformer-based AI paradigm?"
+prompt.distractors = [
+    "Each lab discovered fundamentally different training dynamics, proving that transformer behavior is highly sensitive to initialization and data ordering",
+    "The convergence of all labs on similar benchmarks revealed that current evaluations are saturated and no longer measure meaningful capability differences",
+    "Labs with more proprietary training data consistently maintained a permanent advantage, showing that data access remains the decisive competitive moat"
+]
+answer.answer = "The rapid narrowing of the gap between labs showed that the transformer plus pre-training plus alignment recipe is reproducible, making execution a thinner moat than invention"
+context = "When GPT-4 launched, OpenAI seemed to have an insurmountable lead. Within 24 months, multiple organizations matched it — including an open-weight model (LLaMA 3.1 405B). This suggests the current paradigm is a reproducible recipe, not a proprietary secret."
