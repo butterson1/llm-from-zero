@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is autoregressive LLM token generation primarily memory-bandwidth-bound rather than compute-bound on modern GPUs?"
+prompt.distractors = [
+    "The attention softmax function requires sequential memory access patterns that prevent GPU parallelism from being exploited",
+    "GPUs lack specialized hardware units for the matrix operations that transformer inference requires",
+    "The model's activation functions introduce branching logic that serializes execution across GPU cores"
+]
+answer.answer = "Each token requires reading all model weights from memory, but performs only ~2 FLOPs per parameter, yielding arithmetic intensity far below the GPU's ridge point"
+context = "An A100 needs ~156 FLOPs per byte loaded to saturate its compute. Autoregressive generation performs ~2 FLOPs per weight byte loaded, giving arithmetic intensity of ~1 — over 100× below the ridge point. The GPU spends most of its time waiting for data, not computing."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the approximate KV cache memory cost per token for Llama 3 70B (with GQA, 8 KV heads, FP16)?"
+prompt.distractors = [
+    "Approximately 32 KB per token, calculated from 2 × 80 layers × 64 heads × 128 dim × 2 bytes, divided by the GQA compression ratio",
+    "Approximately 2.5 MB per token, calculated from 2 × 80 layers × 64 heads × 128 dim × 2 bytes, with no GQA reduction applied",
+    "Approximately 40 KB per token, calculated from 2 × 80 layers × 8 heads × 256 dim × 2 bytes, using the extended head dimension"
+]
+answer.answer = "Approximately 320 KB per token, calculated from 2 × 80 layers × 8 KV heads × 128 dim × 2 bytes, reflecting the 8× GQA reduction"
+context = "The formula is 2 × num_layers × num_kv_heads × head_dim × bytes_per_element. For Llama 3 70B: 2 × 80 × 8 × 128 × 2 = 327,680 bytes ≈ 320 KB. GQA reduces 64 query heads to 8 KV head groups."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does PagedAttention (vLLM) reduce KV cache memory waste from 60-80% to under 4%?"
+prompt.distractors = [
+    "It compresses KV vectors using learned low-rank projections, storing only the most important attention dimensions per request",
+    "It dynamically evicts less-important cached tokens using attention score statistics, keeping only high-relevance entries in memory",
+    "It applies per-layer quantization to cached key-value pairs, reducing precision from FP16 to INT4 based on layer sensitivity"
+]
+answer.answer = "It stores KV caches in small fixed-size pages allocated on demand, using a page table to map logical positions to scattered physical memory"
+context = "PagedAttention borrows virtual memory concepts from OS design. Instead of pre-allocating contiguous blocks for maximum sequence length, it allocates 16-token pages on demand. This eliminates internal fragmentation from over-allocation and enables copy-on-write sharing of common prefixes."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What key insight makes AWQ (Activation-aware Weight Quantization) produce better 4-bit models than standard approaches?"
+prompt.distractors = [
+    "It uses the inverse Hessian matrix to identify weight sensitivity and applies per-column quantization with optimal bit allocation",
+    "It trains a small auxiliary neural network to predict optimal quantization bin boundaries for each layer independently",
+    "It clusters similar weight values together using k-means and assigns more quantization levels to densely populated clusters"
+]
+answer.answer = "It identifies the ~1% of weights connected to high-activation channels and scales them up before quantization, giving them more precision"
+context = "AWQ's insight is that weight importance correlates with activation magnitude, not weight magnitude. By scaling up salient weight channels (and scaling down corresponding activations), those weights effectively get more quantization bins, preserving the computations that matter most."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the hand-optimized CUDA kernel that makes 4-bit quantized models run 2-3× faster than naive dequantization approaches on NVIDIA GPUs?"
+answer.answer = "Marlin"
+answer.alternatives = ["marlin", "Marlin kernel", "marlin kernel"]
+context = "The Marlin kernel, developed by IST Austria and Neural Magic, achieves near-ideal memory bandwidth utilization for INT4 matrix multiplication. It boosted GPTQ throughput from 276 to 741 tokens/second on an A100."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does speculative decoding produce mathematically identical output to standard autoregressive decoding despite using a smaller draft model?"
+prompt.distractors = [
+    "The draft model is a distilled version of the target model, so its probability distributions are provably close enough for identical sampling",
+    "The algorithm only uses the draft model for token ordering, while final token selection always comes from the target model's greedy argmax",
+    "Both models share the same embedding layer and tokenizer, ensuring their vocabulary-level probability distributions are mathematically equivalent"
+]
+answer.answer = "It uses a rejection sampling scheme that accepts draft tokens matching the target distribution and resamples rejected tokens from a corrected distribution"
+context = "The rejection sampling ensures the final token distribution exactly matches what the target model would have produced alone. Tokens are accepted with probability min(1, p_target/p_draft) and rejected tokens are resampled from max(0, p_target - p_draft), preserving the target distribution perfectly."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What makes self-speculative decoding possible without deploying a separate draft model?"
+prompt.distractors = [
+    "It caches attention patterns from previous generation steps and reuses them as approximate drafts for future positions",
+    "It uses the model's embedding layer alone (without transformer layers) to generate high-speed draft tokens from learned co-occurrence patterns",
+    "It runs the model at reduced numerical precision (INT4) for drafting and full precision (FP16) for verification in alternating steps"
+]
+answer.answer = "It uses the target model itself but skips a large portion of transformer layers during the draft phase, trading quality for speed"
+context = "For example, Llama 3 70B has 80 layers. Running only 20 layers produces rough but useful drafts at ~4× speed. The full model then verifies all drafted tokens in one parallel forward pass, keeping only correct ones."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "BitNet b1.58 achieves competitive language modeling with ternary weights (-1, 0, +1). What is the key reason it outperforms post-training quantization to similar bit-widths?"
+prompt.distractors = [
+    "Ternary arithmetic can be implemented with simple addition and subtraction, avoiding GPU memory bandwidth limitations entirely",
+    "The ternary weight space has favorable gradient properties that prevent vanishing gradients in deep transformer architectures",
+    "Ternary weights eliminate the need for a KV cache during inference, since attention can be computed with integer-only logic"
+]
+answer.answer = "The model learns internal representations adapted to ternary constraints during training, rather than losing information through post-hoc rounding"
+context = "Quantization-aware training allows the model to compensate for limited precision during learning, developing weight patterns and activation distributions specifically suited to ternary operations. Post-training quantization crudely rounds a model optimized for high precision."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What technique does SGLang use to extend KV cache sharing to arbitrary shared prefixes across a tree of related requests?"
+answer.answer = "RadixAttention"
+answer.alternatives = ["radix attention", "Radix Attention", "radixattention"]
+context = "RadixAttention extends PagedAttention's copy-on-write sharing by organizing cached prefixes in a radix tree data structure. This enables efficient sharing of arbitrary common prefixes across multi-turn conversations and batched requests."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In production LLM serving, what is the approximate compound throughput improvement when combining INT4 quantization, PagedAttention, GQA-optimized KV cache, and speculative decoding?"
+prompt.distractors = [
+    "Roughly 3-5× improvement, as the techniques share overlapping optimization targets and their benefits are largely redundant",
+    "Roughly 100-500× improvement, as each technique independently provides an order-of-magnitude speedup that multiplies with the others",
+    "Roughly 8-12× improvement, limited primarily by the PCIe bus bandwidth ceiling between CPU and GPU memory subsystems"
+]
+answer.answer = "Roughly 10-40× improvement, from ~5-10 req/s (naive FP16) to ~50-200+ req/s on the same hardware, as the techniques target different bottlenecks"
+context = "The techniques compound because they address different bottlenecks: quantization reduces data movement, PagedAttention improves memory utilization, GQA shrinks per-request cache, and speculative decoding reduces latency. A fully optimized stack achieves 10-40× better throughput than naive serving."
