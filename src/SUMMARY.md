@@ -22,3 +22,4 @@
 - [Day 19: Inference Optimization — KV Cache, Speculative Decoding, and Quantization](./day-19.md)
 - [Day 20: Small Models That Punch Above Their Weight — Distillation, Pruning, and LoRA](./day-20.md)
 - [Day 21: Multimodal Models — Vision, Audio, and the Road to Unified Intelligence](./day-21.md)
+- [Day 22: Retrieval-Augmented Generation (RAG) — Giving Models External Memory](./day-22.md)
