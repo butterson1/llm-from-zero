@@ -24,3 +24,4 @@
 - [Day 21: Multimodal Models — Vision, Audio, and the Road to Unified Intelligence](./day-21.md)
 - [Day 22: Retrieval-Augmented Generation (RAG) — Giving Models External Memory](./day-22.md)
 - [Day 23: Agents & Tool Use — From Chatbot to Autonomous Worker](./day-23.md)
+- [Day 24: Code Generation — Copilot, Codex, and Why Code Is the Killer App](./day-24.md)
