@@ -21,3 +21,4 @@
 - [Day 18: Context Windows — From 512 to 1M+ Tokens](./day-18.md)
 - [Day 19: Inference Optimization — KV Cache, Speculative Decoding, and Quantization](./day-19.md)
 - [Day 20: Small Models That Punch Above Their Weight — Distillation, Pruning, and LoRA](./day-20.md)
+- [Day 21: Multimodal Models — Vision, Audio, and the Road to Unified Intelligence](./day-21.md)
