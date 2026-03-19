@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In knowledge distillation, what are 'soft labels' and why are they valuable?"
+prompt.distractors = [
+    "Regularized weight matrices from the teacher that prevent student overfitting during training",
+    "Smoothed one-hot encodings where incorrect classes get a uniform small probability mass",
+    "Gradient signals from the teacher's intermediate layers that guide student weight updates"
+]
+answer.answer = "Full probability distributions over the vocabulary that encode the teacher's learned inter-class relationships"
+context = "Soft labels are the teacher's output probability distributions, which reveal rich information about conceptual similarities — e.g., 'kitten' getting 8% when the answer is 'cat' teaches the student about semantic relationships that hard labels (just 'cat' = 1) don't capture."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What does temperature scaling (T > 1) accomplish in the distillation process?"
+prompt.distractors = [
+    "It increases the entropy of the training data distribution to prevent the student from memorizing examples",
+    "It accelerates convergence by amplifying gradient magnitudes in the student's early training layers",
+    "It normalizes the teacher's hidden-state representations to match the student's smaller embedding dimension"
+]
+answer.answer = "It softens the teacher's output distribution by spreading probability mass more evenly, revealing internal knowledge structure"
+context = "After training, models often put 99%+ probability on the top prediction, burying informative relationships. Dividing logits by T > 1 before softmax spreads the distribution, making the 'dark knowledge' in non-top predictions visible to the student."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What distinguished DeepSeek-R1's distillation approach from traditional logit-matching distillation?"
+prompt.distractors = [
+    "It used reinforcement learning rewards as soft labels instead of the teacher's output probability distributions",
+    "It distilled only the attention patterns and head activations while training the FFN layers from random initialization",
+    "It applied progressive layer-dropping during distillation, removing teacher layers one at a time over training"
+]
+answer.answer = "It distilled the teacher's chain-of-thought reasoning sequences, training students to reproduce full reasoning chains"
+context = "DeepSeek-R1 distillation went beyond matching output distributions — it trained the student models to generate the same step-by-step reasoning chains the teacher produced, transferring the reasoning process itself rather than just final answer probabilities."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does unstructured pruning (zeroing individual weights) often fail to deliver real inference speedups despite high sparsity rates?"
+prompt.distractors = [
+    "Zeroed weights still consume memory bandwidth because the model checkpoint stores explicit zero values on disk",
+    "Modern optimizers like AdamW restore pruned weights through momentum terms during subsequent forward passes",
+    "The remaining non-zero weights compensate by increasing in magnitude, negating the theoretical computational savings"
+]
+answer.answer = "The resulting sparse matrices have irregular patterns that GPUs cannot efficiently accelerate with their dense computation hardware"
+context = "GPUs are designed for dense, regular matrix operations. Unstructured pruning creates irregular sparsity patterns — scattered zeros throughout the matrix — that don't map well to GPU hardware. Structured pruning (removing entire heads, neurons, or layers) produces smaller but still dense matrices that GPUs handle efficiently."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the hypothesis (by Frankle and Carlin, 2019) that states a large randomly initialized network contains a small subnetwork that can match the full network's performance when trained in isolation?"
+answer.answer = "Lottery Ticket Hypothesis"
+answer.alternatives = ["lottery ticket", "the lottery ticket hypothesis"]
+context = "The Lottery Ticket Hypothesis proposes that within large networks exist small 'winning ticket' subnetworks that, when trained from their original initialization, achieve full-network performance — implying most parameters exist only because we can't identify the winning subnetwork in advance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In LoRA, why can fine-tuning weight updates be well-approximated by the product of two low-rank matrices (ΔW ≈ BA)?"
+prompt.distractors = [
+    "Because transformer weight matrices are inherently low-rank due to the softmax normalization in attention layers",
+    "Because gradient descent naturally converges to sparse update patterns when the learning rate is sufficiently small",
+    "Because the Adam optimizer's momentum terms compress the effective update space into a fixed low-dimensional manifold"
+]
+answer.answer = "Because task-specific adaptation requires changes in a much smaller subspace than the full parameter space of a pre-trained model"
+context = "A pre-trained model already encodes language understanding, facts, and reasoning patterns. Adapting it for a specific task (e.g., medical terminology, a particular response format) requires nudging it in a relatively low-dimensional direction, which is well-captured by low-rank matrix decomposition."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What two key innovations did QLoRA introduce to enable fine-tuning a 65B model on a single 48GB GPU?"
+prompt.distractors = [
+    "Gradient checkpointing with mixed-precision training and dynamic batch size scaling based on available memory",
+    "Sparse attention patterns during fine-tuning and layer-wise adaptive rank allocation for LoRA matrices",
+    "Progressive layer freezing from bottom to top and activation offloading to NVMe storage during backpropagation"
+]
+answer.answer = "Double quantization of quantization constants and paged optimizers using CPU memory as GPU overflow"
+context = "QLoRA quantized the base model to 4-bit NormalFloat4 and introduced double quantization (quantizing the quantization constants themselves, saving 0.37 bits/param) and paged optimizers (using NVIDIA unified memory to spill optimizer states to CPU RAM when GPU fills up)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does DoRA (Weight-Decomposed Low-Rank Adaptation) differ from standard LoRA in its approach to weight updates?"
+prompt.distractors = [
+    "It applies separate LoRA adapters to each attention head independently rather than to the full projection matrices",
+    "It uses a learned gating mechanism to dynamically route inputs to different LoRA matrices based on token content",
+    "It trains LoRA matrices in frequency space using a discrete cosine transform to capture periodic weight patterns"
+]
+answer.answer = "It decomposes weights into magnitude and direction components and applies low-rank adaptation only to the direction"
+context = "DoRA separates weight matrices into magnitude (scalar) and direction (unit vector) components, then applies LoRA updates only to the directional component. This better mirrors how full fine-tuning actually updates weights and consistently outperforms standard LoRA, especially at low ranks."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "DistilBERT retained what percentage of BERT's performance on the GLUE benchmark while being 40% smaller?"
+answer.answer = "97%"
+answer.alternatives = ["97", "97 percent"]
+context = "DistilBERT (2019, Hugging Face) distilled BERT-base from 110M to 66M parameters — 40% smaller and 60% faster — while retaining 97% of BERT's GLUE benchmark performance, making it one of the first major distillation success stories."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What approach did NVIDIA's Minitron use to determine which neurons and attention heads to prune, instead of weight magnitude?"
+prompt.distractors = [
+    "Fisher information estimates computed from second-order gradient statistics over a calibration dataset",
+    "Mutual information scores between each neuron's output and the model's final prediction on held-out data",
+    "Reinforcement learning with a binary reward signal based on downstream task accuracy after each pruning step"
+]
+answer.answer = "Activation-based importance estimation measuring how much each neuron's activation varies across real input data"
+context = "Minitron measured activation variance rather than weight size. A neuron whose activation barely changes regardless of input is effectively a constant — it contributes no useful information and can be removed. This captures functional importance rather than just parametric magnitude."

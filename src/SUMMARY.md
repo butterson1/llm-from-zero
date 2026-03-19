@@ -20,3 +20,4 @@
 - [Day 17: Mixture of Experts — How Sparse Models Get Big Without the Compute Cost](./day-17.md)
 - [Day 18: Context Windows — From 512 to 1M+ Tokens](./day-18.md)
 - [Day 19: Inference Optimization — KV Cache, Speculative Decoding, and Quantization](./day-19.md)
+- [Day 20: Small Models That Punch Above Their Weight — Distillation, Pruning, and LoRA](./day-20.md)
