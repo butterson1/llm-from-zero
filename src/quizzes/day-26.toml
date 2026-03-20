@@ -1,0 +1,103 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the original LLaMA (Llama 1) trained on, and why did its release have such outsized impact despite being restricted to researchers?"
+prompt.distractors = [
+    "Trained on 2.4 trillion tokens from proprietary Meta data, impactful because it was the first model to match GPT-4 performance at a fraction of the size",
+    "Trained on 1.4 trillion tokens of public data, impactful because Meta included the full training pipeline allowing anyone to reproduce the model from scratch",
+    "Trained on 800 billion tokens of curated academic text, impactful because it was released under a fully permissive Apache 2.0 license with no usage restrictions"
+]
+answer.answer = "Trained on 1.4 trillion tokens of public data, impactful because its weights were quickly leaked and the 65B model matched far larger models like PaLM-540B"
+context = "LLaMA was trained on 1.4T public tokens and its 65B model matched Chinchilla-70B and PaLM-540B despite being much smaller. After leaking on 4chan within a week of restricted release, the weights enabled Stanford's Alpaca (fine-tuned for $600) and an explosion of open-source development."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did Meta deliberately release Llama weights despite the enormous training cost ($100M+ for Llama 3.1 405B)?"
+prompt.distractors = [
+    "To comply with emerging EU AI Act requirements that mandate open-sourcing foundation models above certain capability thresholds",
+    "To undercut OpenAI's revenue by making comparable models free, since Meta's primary AI revenue comes from hardware sales rather than API access",
+    "To accelerate AI safety research by allowing the broader community to red-team and patch vulnerabilities in the model weights directly"
+]
+answer.answer = "To make Llama the industry standard so Meta's infrastructure and ecosystem become the default platform, similar to how Linux became dominant"
+context = "Zuckerberg explicitly stated the strategy: making Llama the industry standard benefits Meta because if everyone builds on Meta's models, Meta's ecosystem becomes the default. This mirrors the Linux playbook — give away the core technology and profit from the services and infrastructure around it."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What distinguishes Mistral AI's approach from Meta's in the open model ecosystem?"
+prompt.distractors = [
+    "Mistral releases complete training pipelines including data, code, and checkpoints, while Meta only releases final model weights under restrictive licenses",
+    "Mistral focuses on training the largest possible models and releasing them freely, while Meta focuses on smaller models behind commercial API access",
+    "Mistral primarily releases multimodal models combining vision and language, while Meta focuses exclusively on text-only language model releases"
+]
+answer.answer = "Mistral demonstrated that efficient architecture design can beat brute-force scale, with their 7B model outperforming Llama 2 13B, while using a dual-track strategy of open models for reputation and closed models for revenue"
+context = "Mistral 7B outperformed the twice-as-large Llama 2 13B on every benchmark. Mistral's strategy is dual-track: open models (Mistral 7B, Mixtral 8x7B) build reputation and ecosystem adoption, while commercial models (Mistral Large) generate revenue."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do almost no 'open' AI models qualify as truly open source under the Open Source Initiative's 2024 definition?"
+prompt.distractors = [
+    "Because most models use patented transformer architectures that prevent redistribution under any open-source license framework",
+    "Because the OSI definition requires models to be trained exclusively on openly licensed data, which no frontier model achieves due to web scraping",
+    "Because most models exceed a parameter threshold that the OSI definition caps at 10 billion parameters for safety classification purposes"
+]
+answer.answer = "Because true open source requires releasing training code, training data (or detailed reproduction info), weights, and methodology under a license with no field-of-use restrictions — and most models restrict at least one element"
+context = "The OSI's Open Source AI Definition (October 2024) requires: complete training code, all data needed to reproduce training, model weights, and methodology — all under OSD-compliant licenses with no field-of-use restrictions. Llama's license bars companies with 700M+ monthly users. Even 'fully open' models rarely include training data."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the community term for removing safety fine-tuning from open-weight models to remove content guardrails?"
+answer.answer = "uncensoring"
+answer.alternatives = ["uncensored", "un-censoring"]
+context = "The open model community calls the process of stripping safety fine-tuning 'uncensoring.' This typically costs only a few hundred dollars of compute and produces models that will respond to any request without safety guardrails — a key concern in the open vs. closed debate."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the 2024 RAND Corporation report find regarding open models and catastrophic misuse risk?"
+prompt.distractors = [
+    "Open models significantly increased bioweapon synthesis capability by providing step-by-step protocols not available through conventional searches",
+    "Open models posed moderate uplift risk for cyberattacks but negligible risk for CBRN threats compared to closed model API access",
+    "Open models were substantially more dangerous than closed models because safety fine-tuning removal was trivial and accessible to non-experts"
+]
+answer.answer = "Current open models provided at most a marginal uplift in catastrophic misuse capability compared to what was already available through conventional internet search"
+context = "The RAND report found that current open models provide 'at most a marginal uplift' for catastrophic misuse (bioweapons, cyberattacks, CBRN threats) compared to conventional internet search. The key open question is whether this remains true as models become more capable."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the primary economic argument for enterprises adopting open-weight models despite a capability gap with frontier closed models?"
+prompt.distractors = [
+    "Open models can be fine-tuned to exceed frontier closed model performance on specific enterprise tasks, eliminating the capability gap entirely",
+    "Open models have lower latency than API-based models because they eliminate network round-trip time, which matters more than raw capability for enterprise workloads",
+    "Open model licenses guarantee backward compatibility and version stability, while closed model APIs frequently introduce breaking changes to model behavior"
+]
+answer.answer = "Open models provide control over costs, data privacy, availability, and roadmap — a 90th-percentile model you control beats a 99th-percentile model that can be deprecated or repriced at any time"
+context = "Enterprises value control: over costs (own GPUs vs. API pricing), data (nothing leaves infrastructure), availability (no API outages), and roadmap (no dependency on provider decisions). Several companies faced emergency migrations when OpenAI deprecated GPT-3 endpoints in 2023."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did DeepSeek's models impact the open vs. closed AI debate?"
+prompt.distractors = [
+    "DeepSeek proved that Chinese labs could match Western models but kept weights closed due to government regulations, reinforcing the closed model paradigm",
+    "DeepSeek released 7B and 13B models that matched Llama 2 quality but offered novel multilingual capabilities that Western open models lacked entirely",
+    "DeepSeek demonstrated that reasoning capabilities require closed-source RLHF pipelines by releasing only their base models while keeping reasoning variants proprietary"
+]
+answer.answer = "DeepSeek-V3 (671B MoE, trained for $5.5M) matched frontier closed models at a fraction of the cost with weights released under permissive licenses, making the open ecosystem genuinely global"
+context = "DeepSeek-V3 shocked the industry: a 671B MoE model trained for just $5.5M that matched frontier closed models, released with permissive licenses. Combined with Alibaba's Qwen and other Chinese labs, this made the open model ecosystem truly global rather than dominated by Western companies."
+
+# Review question from Day 25 (recent)
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What pattern describes the cost relationship of reasoning models like o1 compared to standard inference?"
+prompt.distractors = [
+    "Reasoning models cost 2-3x more than standard inference due to larger model sizes and specialized hardware requirements for chain-of-thought processing",
+    "Reasoning models have flat per-query pricing regardless of problem complexity because the compute budget is fixed during model compilation",
+    "Reasoning models are cheaper per-token than standard models because chain-of-thought tokens are generated from cached intermediate representations"
+]
+answer.answer = "Reasoning models follow a bathtub curve where simple queries cost similar to standard inference but complex reasoning chains can cost 10-100x more due to extended token generation"
+context = "Reasoning models like o1 exhibit variable costs: simple queries use short chains and cost $0.01-0.05, but complex reasoning problems generate thousands of thinking tokens, pushing costs to $0.50-3.00+ per query — a bathtub-shaped cost distribution."
+
+# Review question from Day 22 (older)
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What technique uses a lightweight cross-encoder model to re-score retrieved documents before passing them to the LLM, acting as a critical quality filter in RAG pipelines?"
+answer.answer = "reranking"
+answer.alternatives = ["reranker", "re-ranking", "cross-encoder reranking", "rerankers"]
+context = "Rerankers (cross-encoders) take each (query, document) pair and produce a relevance score, re-ordering the initial retrieval results. They are computationally expensive but dramatically improve precision, acting as a hidden quality lever in production RAG systems."

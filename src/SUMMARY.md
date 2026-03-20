@@ -26,3 +26,4 @@
 - [Day 23: Agents & Tool Use — From Chatbot to Autonomous Worker](./day-23.md)
 - [Day 24: Code Generation — Copilot, Codex, and Why Code Is the Killer App](./day-24.md)
 - [Day 25: The Economics — Inference Costs, API Pricing, and Who's Making Money](./day-25.md)
+- [Day 26: Open Source vs Closed — Llama, Mistral, and the Access Debate](./day-26.md)
