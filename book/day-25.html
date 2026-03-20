@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 25: The Economics — Inference Costs, API Pricing, and Who&#x27;s Making Money - Large Language Models: From Zero to Hero</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Large Language Models: From Zero to Hero</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-25-the-economics--inference-costs-api-pricing-and-whos-making-money"><a class="header" href="#day-25-the-economics--inference-costs-api-pricing-and-whos-making-money">Day 25: The Economics — Inference Costs, API Pricing, and Who's Making Money</a></h1>
+<p><em>How a single ChatGPT conversation might cost $0.003 but OpenAI still burns billions — and why the entire AI industry is locked in a bet that unit economics will flip before the money runs out.</em></p>
+<hr />
+<h2 id="the-most-expensive-software-ever-built"><a class="header" href="#the-most-expensive-software-ever-built">The Most Expensive Software Ever Built</a></h2>
+<p>Here's a number that should stop you cold: OpenAI reportedly spent over <strong>$5 billion</strong> more than it earned in 2024. Not on research. Not on salaries. Primarily on the compute required to <em>run</em> the models it had already built. Training GPT-4 was expensive — somewhere around $100 million by most estimates — but that was a one-time cost. Serving it to 200+ million weekly users? That's the meter that never stops running.</p>
+<p>This is the central economic paradox of the LLM era. Training is a capital expenditure: you pay it once, and you have an asset. Inference is an operating expense: every single query, every token generated, burns GPU-seconds that you can never get back. And as AI products get more popular, that burn rate doesn't stabilize — it <em>accelerates</em>.</p>
+<p>To understand why the economics of AI look the way they do, you need to understand what actually happens when you send a message to Claude or ChatGPT — not at the software level (we covered that in Day 19), but at the dollar level.</p>
+<h2 id="the-anatomy-of-an-inference-dollar"><a class="header" href="#the-anatomy-of-an-inference-dollar">The Anatomy of an Inference Dollar</a></h2>
+<p>When you type a prompt into an API and get a response, here's roughly where each dollar goes:</p>
+<p><strong>GPU compute</strong> eats the lion's share — typically 60-80% of the cost. An NVIDIA H100 GPU costs around $25,000-$35,000 (when you can get one), and a single server with 8 H100s runs $250,000-$300,000. Cloud rental prices from AWS, Azure, or GCP range from $2-4 per GPU-hour for H100s. A large model like GPT-4 or Claude 3.5 Sonnet requires multiple GPUs working in concert for every single request, because the model's parameters don't fit on one chip.</p>
+<p><strong>Memory bandwidth</strong>, not raw compute, is often the actual bottleneck. As we learned on Day 19, autoregressive generation is fundamentally memory-bound: each token requires reading the entire model's weights from GPU memory. An H100 has 3.35 TB/s of memory bandwidth. A 70B parameter model in FP16 occupies 140 GB. Reading those weights once takes about 42 milliseconds. For each token. This is why generating a 500-token response requires 500 sequential reads of 140 GB each — roughly 70 TB of memory traffic for one conversation.</p>
+<p><strong>Networking and storage</strong> add another 10-15%. The KV cache for long conversations must be stored somewhere, requests need load-balancing across thousands of GPUs, and the results need to travel back to the user with acceptable latency.</p>
+<p><strong>Electricity</strong> is the silent killer. A single H100 draws about 700W under load. A cluster of 10,000 H100s — a modest deployment by frontier lab standards — consumes 7 MW, enough to power about 5,000 homes. At $0.05-0.10/kWh for industrial power, that's $3-6 million per year just in electricity for one cluster. Microsoft's total AI-related power consumption is estimated to have pushed past 5 GW by late 2025.</p>
+<p><strong>Overhead</strong> — software engineering, monitoring, safety systems, customer support, the building the servers sit in — typically adds 15-25% on top of raw compute costs.</p>
+<h2 id="the-price-war-nobody-expected"><a class="header" href="#the-price-war-nobody-expected">The Price War Nobody Expected</a></h2>
+<p>In early 2023, accessing GPT-4-class intelligence cost $0.03 per 1,000 input tokens and $0.06 per 1,000 output tokens through OpenAI's API. A typical conversation (1,000 tokens in, 500 out) ran about $0.06. Expensive enough that developers watched their billing dashboards like hawks.</p>
+<p>Then the floor fell out.</p>
+<p>By mid-2025, the pricing landscape had transformed beyond recognition. Here's a snapshot of what frontier-class intelligence costs across major providers:</p>
+<div class="table-wrapper"><table><thead><tr><th>Provider</th><th>Model</th><th>Input (per 1M tokens)</th><th>Output (per 1M tokens)</th></tr></thead><tbody>
+<tr><td>OpenAI</td><td>GPT-4o</td><td>$2.50</td><td>$10.00</td></tr>
+<tr><td>OpenAI</td><td>GPT-4o mini</td><td>$0.15</td><td>$0.60</td></tr>
+<tr><td>Anthropic</td><td>Claude 3.5 Sonnet</td><td>$3.00</td><td>$15.00</td></tr>
+<tr><td>Anthropic</td><td>Claude 3.5 Haiku</td><td>$0.80</td><td>$4.00</td></tr>
+<tr><td>Google</td><td>Gemini 1.5 Flash</td><td>$0.075</td><td>$0.30</td></tr>
+<tr><td>DeepSeek</td><td>DeepSeek-V3</td><td>$0.27</td><td>$1.10</td></tr>
+</tbody></table>
+</div>
+<p>That's a <strong>100x reduction</strong> in cost-per-token for comparable quality in roughly two years. Nothing in the history of software has seen cost compression this dramatic, this fast. Even Moore's Law, at its most aggressive, only delivered a 2x improvement every 18 months.</p>
+<p>How did this happen? Three reinforcing dynamics:</p>
+<p><strong>Hardware improvements:</strong> The jump from A100 to H100 GPUs delivered roughly 3x better inference throughput per dollar. The H200 (with its 141 GB HBM3e) pushed that further. And NVIDIA's B200 Blackwell GPUs, shipping through 2025, promise another 2-4x improvement for inference workloads specifically, thanks to a dedicated "transformer engine" that exploits FP4 precision.</p>
+<p><strong>Algorithmic efficiency:</strong> The techniques from Days 19-20 — quantization, speculative decoding, KV cache optimization, grouped-query attention — compound multiplicatively. A model quantized to INT4 uses 4x less memory than FP16, which means 4x more requests per GPU. Speculative decoding can improve throughput by 2-3x. PagedAttention (vLLM) eliminated KV cache memory waste, boosting effective throughput another 2-4x. Combined, these optimizations can deliver 20-40x better throughput versus naive FP16 serving.</p>
+<p><strong>Competition:</strong> DeepSeek's arrival in late 2024 broke the pricing cartel. Their V3 model, trained for a reported $5.6 million using clever FP8 training and multi-head latent attention, offered GPT-4-level performance at a fraction of the price. When a Chinese lab demonstrates that frontier-quality inference can be served profitably at $0.27 per million input tokens, it becomes very hard for American labs to justify charging 10-50x more.</p>
+<h2 id="the-bathtub-curve-why-reasoning-models-break-the-price-story"><a class="header" href="#the-bathtub-curve-why-reasoning-models-break-the-price-story">The Bathtub Curve: Why Reasoning Models Break the Price Story</a></h2>
+<p>Just when it looked like inference costs were on an irreversible downward trajectory, reasoning models threw a wrench into the narrative.</p>
+<p>OpenAI's o1 model, launched in late 2024, introduced a new paradigm: instead of generating answers in a single forward pass, it <em>thinks</em> — generating hundreds or thousands of hidden reasoning tokens before producing a visible response. The quality improvement is dramatic (o1 scored 83% on competition math problems where GPT-4 scored 13%), but the cost implications are severe.</p>
+<p>A single o1 query might generate 10,000-50,000 internal reasoning tokens before producing a 500-token answer. At $15 per million input tokens and $60 per million output tokens (o1's launch pricing), a complex math problem could cost $0.50-$3.00 to solve. That's 100-1,000x more expensive than a GPT-4o query.</p>
+<p>This creates what you might call the <strong>bathtub curve</strong> of AI pricing: costs dropped steeply for standard generation (the left side of the tub), but reasoning models pushed the ceiling back up for complex tasks (the right side). The bottom of the tub — cheap, fast, good-enough inference — is where most volume lives. But the highest-value tasks (coding, research, analysis) increasingly demand the expensive reasoning models.</p>
+<p>Anthropic's Claude 3.5 Opus and Google's Gemini 2.0 Ultra followed similar trajectories: extended thinking modes that trade compute for quality, at dramatically higher per-query costs. The market is bifurcating into "fast and cheap" (Haiku, Flash, GPT-4o mini) and "slow and expensive" (o1, extended thinking, deep research).</p>
+<h2 id="whos-actually-making-money"><a class="header" href="#whos-actually-making-money">Who's Actually Making Money?</a></h2>
+<p>The uncomfortable truth: almost nobody in the LLM application layer is profitable yet. But the <em>infrastructure</em> layer is printing money.</p>
+<h3 id="nvidia-the-arms-dealer"><a class="header" href="#nvidia-the-arms-dealer">NVIDIA: The Arms Dealer</a></h3>
+<p>NVIDIA's data center revenue hit <strong>$115 billion</strong> in fiscal year 2025 (ending January 2026), up from $47.5 billion the prior year. Their gross margins hover around 73-75% — extraordinary for a hardware company. Every major AI lab, every cloud provider, every enterprise AI deployment runs on NVIDIA GPUs. Jensen Huang has essentially positioned NVIDIA as the OPEC of artificial intelligence: controlling the critical resource that everyone needs and nobody else can supply in sufficient quantity.</p>
+<p>The H100 alone generated more revenue than many entire tech companies. And with Blackwell (B200/GB200), NVIDIA created an upgrade cycle so compelling that customers placed orders worth tens of billions before the chips even shipped.</p>
+<h3 id="cloud-providers-the-landlords"><a class="header" href="#cloud-providers-the-landlords">Cloud Providers: The Landlords</a></h3>
+<p>Microsoft (Azure), Amazon (AWS), and Google (GCP) are the primary beneficiaries of the AI capex boom. When a startup raises $100 million to build an AI product, roughly $70-80 million of that ends up flowing to cloud providers for compute. Microsoft's "AI-related" cloud revenue reportedly exceeded $13 billion in annual run rate by the end of 2025, and Azure's growth reaccelerated to 30%+ year-over-year partly on AI workload demand.</p>
+<p>The cloud providers' genius move was realizing they don't need to <em>win</em> the model race. They just need to be the platform where <em>everyone else</em> races. Azure hosts OpenAI. AWS hosts Anthropic (thanks to a $4 billion investment). GCP hosts Google's own models. All three host open-source models. Whoever wins the model war, the cloud providers collect rent.</p>
+<h3 id="api-providers-the-toll-booth-operators"><a class="header" href="#api-providers-the-toll-booth-operators">API Providers: The Toll Booth Operators</a></h3>
+<p>OpenAI's annual revenue reportedly hit <strong>$5-6 billion</strong> by early 2026, growing from about $3.4 billion in 2024. That sounds impressive until you learn they spent $5+ billion more than they earned. ChatGPT Plus subscriptions ($20/month, ~10 million subscribers) generate roughly $2.4 billion annually. API revenue — developers paying per-token — makes up most of the rest.</p>
+<p>Anthropic reportedly reached <strong>$1 billion+</strong> in annualized revenue by late 2025, primarily from API sales to enterprises. Their strategy of focusing on safety and enterprise reliability (longer contexts, better instruction-following, consistent formatting) positioned Claude as the default for professional applications.</p>
+<p>But here's the critical question: are these <em>sustainable</em> businesses, or are they burning through venture capital to subsidize usage and grab market share? OpenAI's pricing suggests the latter. When GPT-4o mini costs $0.15 per million input tokens and a single H100 can serve maybe 5-10 million tokens per hour at a cost of $3-4, the margins look razor-thin before you account for networking, orchestration, safety filtering, and all the other infrastructure.</p>
+<h3 id="the-application-layer-still-searching"><a class="header" href="#the-application-layer-still-searching">The Application Layer: Still Searching</a></h3>
+<p>The application layer — companies building products on top of LLMs — is where the economics get most precarious. A typical AI startup might spend 40-60% of revenue on inference costs alone. Compare that to traditional SaaS, where gross margins typically run 75-85%. This "AI tax" on gross margins means AI startups need dramatically higher revenue per customer to achieve the same profitability as traditional software companies.</p>
+<p>Some startups have found defensible niches: Cursor (AI-powered code editor) reportedly hit $100 million+ ARR by early 2026, largely by deeply integrating AI into a developer workflow where productivity gains justify premium pricing. Harvey AI (legal) and Glean (enterprise search) have built domain-specific moats. But for every success, dozens of "GPT wrapper" startups have discovered that their entire value proposition can be replicated by a well-crafted system prompt.</p>
+<h2 id="the-jevons-paradox-and-the-demand-curve"><a class="header" href="#the-jevons-paradox-and-the-demand-curve">The Jevons Paradox and the Demand Curve</a></h2>
+<p>Here's the counterintuitive insight that makes bulls optimistic despite the current bloodbath: <strong>Jevons Paradox</strong>. In 1865, economist William Stanley Jevons observed that as coal engines became more efficient, total coal consumption <em>increased</em> because cheaper energy enabled new use cases. The same dynamic is playing out in AI.</p>
+<p>When inference costs drop 10x, usage doesn't just grow 10x — it can grow 100x or 1,000x, because entirely new applications become economically viable. At $0.06 per conversation, you'd only use GPT-4 for high-value queries. At $0.001 per conversation, you'd use it to proofread every email, summarize every meeting, pre-screen every customer support ticket, review every code commit.</p>
+<p>The data supports this. OpenAI's API call volume has grown faster than prices have fallen, meaning total revenue increased even as per-token prices dropped by orders of magnitude. Anthropic reported similar dynamics: price cuts on Claude Haiku led to usage increases that more than compensated for the revenue-per-query decrease.</p>
+<p>This is also why the "race to zero" on API pricing might not be the catastrophe it appears. If AI inference becomes as cheap as electricity — a utility priced at fractions of a cent — the total addressable market expands from "knowledge workers asking complex questions" to "every piece of software on earth having an intelligent layer." That's not a $100 billion market. That's a multi-trillion-dollar transformation of the entire software industry.</p>
+<h2 id="the-surprising-math-of-self-hosting"><a class="header" href="#the-surprising-math-of-self-hosting">The Surprising Math of Self-Hosting</a></h2>
+<p>The open-source revolution (which we'll explore tomorrow on Day 26) has created a parallel economic track: self-hosting. When Meta released Llama 3.1 405B, it became possible for organizations to run GPT-4-class models on their own hardware. But should they?</p>
+<p>The math is nuanced. Renting an 8xH100 node from a cloud provider costs roughly $25-30 per hour. Running Llama 3.1 405B (quantized to INT4) requires two such nodes. At $50-60/hour, that's $1,200-1,440/day or roughly $43,000-52,000/month. If your organization makes fewer than ~15-20 million API calls per month, you're probably better off using Anthropic's or OpenAI's API. Above that threshold, self-hosting starts winning — and the savings compound as volume grows.</p>
+<p>But the hidden costs are real: ML engineers to operate the stack ($200-400K/year), infrastructure monitoring, model updates, safety guardrails you now have to build yourself. Companies like Anyscale, Together AI, and Fireworks AI have built businesses in this gap — offering API-like simplicity with self-hosting-like economics by running open-source models on optimized infrastructure.</p>
+<h2 id="where-the-money-will-be"><a class="header" href="#where-the-money-will-be">Where the Money Will Be</a></h2>
+<p>The AI economics story is still in its opening chapter. Three structural shifts will determine who captures the value:</p>
+<p><strong>Custom silicon</strong> is coming. Google's TPUv5e already offers competitive inference economics. Amazon's Trainium2 chips promise 4x better price-performance than NVIDIA GPUs for training. Microsoft is developing Maia. If any of these succeed at scale, NVIDIA's pricing power erodes, and inference costs could fall another 5-10x.</p>
+<p><strong>Inference efficiency</strong> has more room to run. Techniques like mixture-of-experts (only activating 10-20% of parameters per query), early exit strategies, and model cascading (using a cheap model first, escalating to an expensive one only when needed) could deliver another order of magnitude in cost reduction.</p>
+<p><strong>The application layer will mature.</strong> Today's AI economics look like the early internet: massive infrastructure spending, thin application margins, and a bet on future scale. Amazon lost money for a decade before becoming the most valuable retailer on earth. The AI companies burning billions today are making a similar bet — that the use cases enabled by cheap, intelligent inference will eventually generate returns that dwarf the current investment.</p>
+<p>The question isn't whether AI will be economically viable. It's whether the companies spending the most <em>right now</em> will be the ones to capture that value — or whether, like the telecom companies that laid the fiber optic cables in the 1990s, they'll build the infrastructure that makes <em>someone else</em> rich.</p>
+<hr />
+<p><em>Tomorrow on Day 26, we dive into the most contentious question in AI: open source vs closed. Meta gave away Llama 3.1 405B — a model that cost hundreds of millions to train — for free. Why? The answer reveals a fascinating strategic game where giving things away might be the most profitable move of all.</em></p>
+<hr />
+<div style="margin-top: 2rem; padding: 1.5rem; background: #1a1a2e; border-radius: 8px; border-left: 4px solid #e94560;">
+<h2 id="-day-25-quiz"><a class="header" href="#-day-25-quiz">📝 Day 25 Quiz</a></h2>
+<p>Test your understanding of AI economics before moving on:</p>
+<p><a href="quizzes/day-25.toml" style="display: inline-block; background: #4CAF50; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">📝 Take the Day 25 Quiz</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-24.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-24.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
