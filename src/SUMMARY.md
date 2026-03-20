@@ -28,3 +28,4 @@
 - [Day 25: The Economics — Inference Costs, API Pricing, and Who's Making Money](./day-25.md)
 - [Day 26: Open Source vs Closed — Llama, Mistral, and the Access Debate](./day-26.md)
 - [Day 27: Risks — Hallucination, Misuse, Deepfakes, and Existential Concerns](./day-27.md)
+- [Day 28: What's Next — Test-Time Compute, Reasoning Models, and the Road to AGI](./day-28.md)

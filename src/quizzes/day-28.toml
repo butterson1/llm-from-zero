@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key innovation that made OpenAI's o1 dramatically better than GPT-4o on reasoning tasks?"
+prompt.distractors = [
+    "Training on 10x more data with a curated dataset of competition math and science problems",
+    "Using a mixture-of-experts architecture with 16 specialized reasoning expert modules",
+    "Applying constitutional AI techniques to produce more logically consistent outputs"
+]
+answer.answer = "Generating extended hidden chains of reasoning tokens before committing to a final answer"
+context = "o1's breakthrough was test-time compute — letting the model produce long internal chains of thought (sometimes thousands of tokens) before answering. Same model family, same parameter count, but dramatically better results from more inference-time computation."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "On AIME 2024, GPT-4o scored 13.4%. What did o1 achieve on the same benchmark?"
+prompt.distractors = [
+    "47.2%, roughly tripling GPT-4o's performance on competition-level math problems",
+    "96.7%, essentially achieving a near-perfect score on the competition exam",
+    "63.8%, crossing the threshold that matches average human competition performance"
+]
+answer.answer = "83.3%, a roughly 6x improvement over GPT-4o using test-time compute scaling"
+context = "o1 scored 83.3% on AIME 2024, compared to GPT-4o's 13.4%. The 96.7% figure was achieved later by o3. This dramatic improvement came purely from test-time compute, not from a larger model."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What made DeepSeek-R1-Zero particularly significant for the reasoning model research community?"
+prompt.distractors = [
+    "It achieved o1-level reasoning using a novel sparse attention mechanism that reduced compute by 90%",
+    "It demonstrated that Chinese hardware could match NVIDIA GPUs for training reasoning models at scale",
+    "It proved that distilled smaller models always outperform larger models when given sufficient test-time compute"
+]
+answer.answer = "It showed reasoning behaviors emerged from pure RL with correctness rewards, without supervised chain-of-thought training data"
+context = "DeepSeek-R1-Zero applied RL with only a simple correctness reward to their base model — no supervised fine-tuning on chain-of-thought traces. The model spontaneously developed self-verification, reflection, and multi-step reasoning, proving that reasoning capability can emerge from pure reinforcement learning."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Stanford's s1 model achieved o1-preview-level math reasoning using which combination of techniques?"
+prompt.distractors = [
+    "A 70B parameter base model, 50,000 curated math proofs, and reinforcement learning with verifier feedback",
+    "The Llama 3.1 405B base model, 10,000 training traces, and standard supervised fine-tuning with early stopping",
+    "A custom sparse MoE architecture with 8 expert modules, 5,000 examples, and reward model distillation"
+]
+answer.answer = "Qwen2.5-32B as the base model, just 1,000 curated training examples, and budget forcing to extend reasoning"
+context = "Stanford's s1 used only 1,000 carefully curated training examples on Qwen2.5-32B, combined with 'budget forcing' — appending 'Wait' tokens to prevent early conclusion, forcing the model to reason longer. This showed test-time scaling didn't require massive compute budgets."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What score did OpenAI's o3 achieve on ARC-AGI-2 (the harder version of the visual reasoning benchmark), compared to roughly 60% for average humans?"
+answer.answer = "3%"
+answer.alternatives = ["3", "three percent", "~3%"]
+context = "Despite scoring 75.7% on the original ARC-AGI, o3 scored just 3% on ARC-AGI-2. This dramatic gap revealed that reasoning models still rely heavily on pattern matching and struggle with truly novel abstract reasoning that even children can perform."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "According to the Snell et al. (2024) Google DeepMind paper, how did optimally allocated test-time compute compare to simply scaling model parameters?"
+prompt.distractors = [
+    "A larger model with minimal test-time compute always outperformed a smaller model with extended reasoning on all task types",
+    "Test-time compute was only effective for mathematical tasks but showed no benefit on code generation or language understanding",
+    "The benefits were roughly equivalent — doubling test-time compute matched doubling parameter count on challenging tasks"
+]
+answer.answer = "A smaller model with optimal test-time compute could match or exceed a 14x larger model on challenging reasoning tasks"
+context = "The DeepMind paper showed that optimally allocated test-time compute could make a small model match a 14x larger one on hard reasoning tasks. This was pivotal — it meant frontier performance didn't necessarily require billion-dollar training runs."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does Anthropic's extended thinking approach differ architecturally from OpenAI's o-series reasoning?"
+prompt.distractors = [
+    "It uses parallel reasoning chains that are voted on, rather than a single sequential chain of thought",
+    "It replaces chain-of-thought with retrieval-augmented generation to ground each reasoning step in external facts",
+    "It applies constitutional AI critique-revision loops during inference instead of generating free-form reasoning tokens"
+]
+answer.answer = "It exposes the reasoning process to users with a configurable thinking budget rather than hiding the chain of thought entirely"
+context = "Claude's extended thinking lets users set a 'thinking budget' (hundreds to hundreds of thousands of tokens) and inspect the reasoning, reflecting Anthropic's transparency-first philosophy. OpenAI's o1 initially hid its chain of thought completely. Claude also introduced interleaved thinking — reasoning between tool calls."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do reasoning models excel at math and code but show more modest improvements on creative writing tasks?"
+prompt.distractors = [
+    "Creative tasks require multimodal understanding that text-only reasoning chains cannot effectively capture",
+    "The RL training process for reasoning models specifically penalizes non-deterministic outputs like creative writing",
+    "Reasoning models allocate a fixed compute budget that is optimized for structured problems and wasted on open-ended generation"
+]
+answer.answer = "Math and code have verifiable answers that provide clear RL reward signals, while creative quality is ambiguous and hard to reward"
+context = "Reasoning models are trained with RL where the reward is answer correctness. For math and code, correctness is easy to verify (does the proof check out? does the code pass tests?). For creative writing, there's no clean reward signal for 'was this essay insightful?', making RL optimization much harder."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What term describes the AI research direction — pursued by Yann LeCun, Sora, and Runway's GWM-1 — focused on systems that simulate physical reality rather than just predicting text tokens?"
+answer.answer = "world models"
+answer.alternatives = ["world model", "world simulators", "world simulation"]
+context = "World models aim to build AI systems that simulate how the physical world works — understanding physics, spatial relationships, and causality. LeCun's JEPA framework, OpenAI's Sora, and Runway's GWM-1 all pursue this approach, arguing that true intelligence requires understanding reality beyond text."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "The 'convergence thesis' for AGI argues that general intelligence will most likely emerge from:"
+prompt.distractors = [
+    "A single decisive breakthrough in a novel architecture that fundamentally replaces the transformer paradigm",
+    "Reaching a critical parameter threshold around 10 trillion parameters where emergent general reasoning spontaneously appears",
+    "Training a single unified model on every possible data modality simultaneously using a massive pre-training run"
+]
+answer.answer = "The compound stacking of reasoning, tool use, multimodal perception, memory, and agentic capabilities in a single system"
+context = "The convergence thesis says AGI emerges from simultaneously scaling multiple capability dimensions — pre-training compute, test-time compute, tool use, multimodal integration, and memory/retrieval — rather than from any single breakthrough. A model that combines deep reasoning, tool use, perception, and experience is qualitatively different from one with only one or two capabilities."
