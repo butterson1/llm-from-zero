@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "BERT masks 15% of tokens during pre-training, but not all masked positions are replaced with the [MASK] token. What is the masking strategy and why?"
+prompt.distractors = [
+  "80% [MASK], 10% random, 10% unchanged — this prevents the model from learning a shortcut where it only attends to non-masked positions during fine-tuning on classification tasks",
+  "80% [MASK], 10% random, 10% unchanged — this acts as a form of data augmentation that increases effective training set size by creating diverse input variations per epoch",
+  "80% [MASK], 10% random, 10% unchanged — this forces the model to maintain uncertainty about all positions, which serves as an implicit regularizer preventing overfitting to the training corpus"
+]
+answer.answer = "80% [MASK], 10% random, 10% unchanged — this addresses the train-test mismatch where [MASK] tokens never appear during fine-tuning, so the model must maintain good representations for all positions regardless of input format"
+context = "The core problem is that during fine-tuning, the model sees normal text without [MASK] tokens. If 100% of selected positions were masked, the model would only learn to make predictions in the presence of [MASK] — a token it never encounters in downstream tasks. The random and unchanged portions ensure the model can't rely on the [MASK] signal alone."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "RoBERTa (2019) outperformed BERT on every benchmark by changing several training decisions. Which modification did they find was most important?"
+prompt.distractors = [
+  "Switching from WordPiece tokenization to byte-level BPE, which eliminated out-of-vocabulary tokens and improved performance on rare words and code-mixed text",
+  "Increasing the model's hidden dimension and number of attention heads while keeping the same total parameter count through architectural efficiency improvements",
+  "Training with a curriculum learning schedule that started with shorter sequences and gradually increased to the full 512-token context over the training run"
+]
+answer.answer = "Removing the next sentence prediction (NSP) objective, which was too easy and actually diluted the training signal from the masked language modeling task"
+context = "Liu et al. showed that NSP was a surprisingly harmful objective — it was easy enough that it didn't teach the model anything useful about inter-sentence coherence, while taking up training capacity that could have been used for more masked LM signal. Dropping it and training longer on more data were the biggest wins."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did the field converge on causal (autoregressive) language modeling over masked language modeling for frontier models, despite BERT's strong performance on understanding benchmarks?"
+prompt.distractors = [
+  "Causal LM is significantly more computationally efficient during training because it generates a training signal at every token position without requiring a separate masking pipeline",
+  "Causal LM produces more robust internal representations because the left-to-right constraint forces the model to encode information more compactly than bidirectional attention allows",
+  "Causal LM training data is easier to curate because it requires no special preprocessing or corruption strategy, reducing the engineering complexity of the training pipeline"
+]
+answer.answer = "Causal LM naturally generates text token-by-token, enabling chat and generation applications, and understanding capabilities emerge as a byproduct of next-token prediction at sufficient scale"
+context = "The key insight was that generation is more commercially valuable than classification, and understanding comes free at scale with causal LM. GPT-4 can do sentiment analysis just by being asked, but no BERT variant can write coherent essays. The asymmetry sealed the deal."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "T5 uses 'span corruption' instead of BERT's single-token masking. What does this mean concretely?"
+prompt.distractors = [
+  "T5 masks tokens with probabilities proportional to their information content, so high-entropy tokens are masked more often while common function words are masked less frequently",
+  "T5 replaces each selected token with a token from the same semantic cluster, forcing the model to distinguish between closely related concepts rather than just predicting from context",
+  "T5 applies progressively longer masks during training, starting with single tokens and extending to full sentences as training advances, following a curriculum learning approach"
+]
+answer.answer = "T5 masks contiguous spans of multiple tokens and replaces each span with a single sentinel token, then trains the model to generate all the missing tokens from each span in sequence"
+context = "Span corruption is more challenging than single-token masking because the model must reconstruct multiple consecutive tokens, learning longer-range dependencies. Each span is replaced by a unique sentinel (like <extra_id_0>), and the target output contains all spans concatenated with their sentinels."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What optimizer is used by virtually all modern LLM pre-training runs?"
+answer.answer = "AdamW"
+answer.alternatives = ["Adam W", "Adam with decoupled weight decay", "adamw"]
+context = "AdamW (Adam with decoupled weight decay) is the near-universal optimizer choice for LLM pre-training. It combines Adam's adaptive learning rates with properly decoupled weight decay regularization, introduced by Loshchilov and Hutter in 2019."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "GPT-3 was trained on approximately 300 billion tokens at an estimated cost of $4.6 million. LLaMA 2 70B required about 1.7 million A100 GPU-hours. What explains why training costs are so much lower than the $100M+ estimated for GPT-4?"
+prompt.distractors = [
+  "GPT-4 uses a fundamentally more expensive training objective that requires multiple forward passes per token, while GPT-3 and LLaMA 2 use single-pass autoregressive training",
+  "GPT-4's training cost is dominated by the RLHF alignment phase rather than pre-training, which requires human annotators at $50-100/hour generating millions of preference comparisons",
+  "GPT-4 was trained on significantly more expensive proprietary data sources that required licensing fees, while open models like LLaMA used freely available web crawl data"
+]
+answer.answer = "GPT-4 is estimated to have over 1 trillion parameters trained on 13+ trillion tokens, meaning its pre-training required roughly 10-50x more compute than GPT-3 or LLaMA 2 70B"
+context = "Training cost scales with both model size and data volume. GPT-4's ~10x more parameters and ~40x more tokens than GPT-3 translate to hundreds of times more FLOPs. Even with hardware efficiency improvements (A100s vs V100s), the raw compute increase explains the ~20x cost jump."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "During pre-training, learning rate typically follows a specific schedule. What is the standard approach and why?"
+prompt.distractors = [
+  "Constant learning rate with periodic restarts — the restarts escape local minima in the loss landscape, which is critical because LLM loss surfaces have many sharp local minima that trap the optimizer",
+  "Exponential decay from peak to minimum — the continuous exponential reduction ensures the model makes progressively smaller parameter updates, preventing oscillation around the optimum",
+  "Cyclical learning rates alternating between high and low values — the cycles help the model explore diverse regions of the loss landscape, improving generalization to held-out evaluation data"
+]
+answer.answer = "Linear warmup for ~2,000 steps followed by cosine decay to ~10% of peak — warmup prevents early training instability from large gradients, and cosine decay smoothly reduces the rate for fine convergence"
+context = "The warmup phase is critical because early in training, the model's activations and gradients are poorly calibrated. Large learning rates can cause divergence. After warmup, cosine decay provides a smooth annealing schedule that balances continued learning with stability."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "A surprising property of pre-trained LLMs is that capabilities like arithmetic, multi-step reasoning, and code generation emerge despite never being explicitly trained on those tasks. What is the most accepted explanation?"
+prompt.distractors = [
+  "The massive parameter count creates redundant capacity that spontaneously organizes into specialized circuits through a process analogous to crystallization in physical systems",
+  "The diverse training data contains implicit task demonstrations that the model memorizes and retrieves during inference using pattern-matching against stored templates",
+  "The self-attention mechanism naturally discovers formal grammars and logical rules because attention weight patterns can implement any finite-state automaton given sufficient heads"
+]
+answer.answer = "Predicting the next token well across a diverse corpus requires building internal models of the processes that generated the text, including reasoning, math, and programming logic"
+context = "This is the core insight: if your training data contains math derivations, the most efficient way to predict the next token in a proof is to develop something like mathematical reasoning. The statistical pressure of prediction at scale forces the model to compress the world's knowledge into useful internal representations."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the pre-training dataset Google created for T5, built from cleaned Common Crawl web text?"
+answer.answer = "C4"
+answer.alternatives = ["Colossal Clean Crawled Corpus", "c4", "the C4 dataset"]
+context = "C4 (Colossal Clean Crawled Corpus) was created by the T5 team by applying quality filters to Common Crawl data: removing duplicate text, filtering offensive content, and keeping only English text that resembled natural language. It contained roughly 750GB of cleaned text (~156 billion tokens)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "LLaMA 1's training data was mixed from multiple sources with specific ratios (67% web, 15% code, 4.5% Wikipedia, etc.). Why do these mixing ratios matter so much?"
+prompt.distractors = [
+  "The mixing ratios determine the model's vocabulary distribution, and skewed ratios cause the tokenizer to allocate capacity inefficiently between domains during pre-training",
+  "The mixing ratios control the effective learning rate per domain because domains with more data receive proportionally more gradient updates, creating an implicit curriculum",
+  "The mixing ratios affect the model's attention pattern diversity, and imbalanced domains cause attention heads to specialize too narrowly, reducing transfer to underrepresented tasks"
+]
+answer.answer = "The ratios control which capabilities the model develops strongest — too much code makes it write everything like a programmer, too little cripples coding ability — and finding the right balance is empirically critical for general performance"
+context = "Data mixing is one of the highest-leverage decisions in pre-training. The model's capabilities directly reflect what it was trained on. Meta, Google, and others run extensive ablation studies to find optimal mixes, and small changes (e.g., 10% vs 20% code) can meaningfully shift benchmark performance across all domains."

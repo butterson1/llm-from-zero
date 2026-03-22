@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is inference (serving) typically more expensive than training for popular LLMs over their lifetime?"
+prompt.distractors = [
+    "Training uses more expensive GPU models like H100s while inference can run on cheaper consumer GPUs",
+    "Inference requires higher-precision floating point formats (FP32) compared to training's mixed precision",
+    "Training costs are amortized over the model's lifetime while inference costs scale linearly with every query served"
+]
+answer.answer = "Training is a one-time capital expenditure while inference is an ongoing operating cost that grows with user demand"
+context = "Training GPT-4 cost ~$100M once. But serving it to 200M+ weekly users costs billions annually because every query burns GPU-seconds that scale with demand. OpenAI spent over $5 billion more than it earned in 2024, primarily on inference compute."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the primary bottleneck that limits LLM inference throughput for autoregressive token generation?"
+prompt.distractors = [
+    "GPU floating-point compute capacity (FLOPS), because each token requires billions of multiply-accumulate operations",
+    "Network bandwidth between GPUs in a multi-node cluster, causing synchronization delays between generation steps",
+    "CPU-to-GPU data transfer speeds across the PCIe bus, creating a pipeline stall for each generated token"
+]
+answer.answer = "GPU memory bandwidth, because each token requires reading the full model weights from HBM to compute units"
+context = "Autoregressive generation is memory-bound: each token requires reading all model weights once. A 70B model in FP16 (140 GB) takes ~42ms per read on an H100's 3.35 TB/s bandwidth. This makes memory bandwidth, not compute FLOPS, the limiting factor."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did combined algorithmic optimizations (quantization, speculative decoding, PagedAttention, GQA) improve inference throughput compared to naive FP16 serving?"
+prompt.distractors = [
+    "Approximately 3-5x improvement by reducing precision and eliminating redundant attention computations across layers",
+    "Approximately 100-200x improvement by fundamentally restructuring the transformer architecture for inference-only use",
+    "Approximately 5-8x improvement primarily through hardware-software co-design on specialized inference accelerators"
+]
+answer.answer = "Approximately 20-40x improvement through multiplicative compounding of individually modest optimization techniques"
+context = "INT4 quantization gives ~4x less memory, speculative decoding gives 2-3x throughput, PagedAttention gives 2-4x efficiency improvement. These optimizations compound multiplicatively: 4 × 2.5 × 3 ≈ 30x improvement over naive FP16."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do reasoning models like OpenAI's o1 break the narrative of continuously falling inference costs?"
+prompt.distractors = [
+    "Reasoning models require specialized hardware accelerators that cost significantly more per unit than standard H100 GPUs",
+    "Reasoning models need to load multiple different model checkpoints into memory for each query, multiplying GPU requirements",
+    "Reasoning models use higher-precision arithmetic (FP32 instead of FP16) to maintain mathematical accuracy during reasoning"
+]
+answer.answer = "Reasoning models generate thousands of hidden thinking tokens before producing visible output, multiplying per-query compute"
+context = "O1 generates 10,000-50,000 internal reasoning tokens before producing a visible response. At $15/$60 per million input/output tokens, a complex query can cost $0.50-$3.00 — 100-1,000x more than a standard GPT-4o query."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "NVIDIA's data center revenue reached approximately what figure in fiscal year 2025, reflecting its dominance in AI compute?"
+prompt.distractors = [
+    "$47.5 billion, representing steady growth from its established position in gaming and professional visualization markets",
+    "$75 billion, driven primarily by pre-orders for next-generation Blackwell architecture GPU shipments to hyperscalers",
+    "$28 billion, constrained by supply chain limitations on advanced chip packaging using TSMC's CoWoS technology"
+]
+answer.answer = "$115 billion, more than doubling from $47.5 billion the prior year on surging AI training and inference demand"
+context = "NVIDIA's data center revenue hit $115B in FY2025 (ending Jan 2026), up from $47.5B the prior year, with gross margins of 73-75%. Every major AI lab and cloud provider depends on NVIDIA GPUs."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What economic concept from 1865 explains why falling AI inference costs might increase total spending on compute rather than decrease it?"
+answer.answer = "Jevons Paradox"
+answer.alternatives = ["Jevons paradox", "jevons paradox", "Jevons' Paradox", "the Jevons Paradox"]
+context = "Jevons Paradox: economist William Stanley Jevons observed that more efficient coal engines led to increased total coal consumption. Similarly, cheaper AI inference enables entirely new use cases, growing total demand faster than per-query prices fall."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What role did DeepSeek's V3 model play in the AI pricing landscape when it launched in late 2024?"
+prompt.distractors = [
+    "It demonstrated that Chinese AI labs could match American model quality only by using government-subsidized compute at below-market rates",
+    "It introduced a subscription-based pricing model that undercut the per-token pricing structure used by OpenAI and Anthropic",
+    "It proved that smaller, distilled models could replace frontier models for most tasks, making expensive large models unnecessary"
+]
+answer.answer = "It broke the pricing consensus by offering GPT-4-level performance at $0.27/M input tokens after training for only $5.6M"
+context = "DeepSeek V3, trained for a reported $5.6M using FP8 training and multi-head latent attention, offered frontier performance at $0.27/M input tokens — making it very difficult for American labs to justify charging 10-50x more."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "At what approximate monthly API call volume does self-hosting an open-source model like Llama 3.1 405B become more cost-effective than using commercial APIs?"
+prompt.distractors = [
+    "Around 1-2 million calls per month, making self-hosting viable for most small startups with moderate AI usage",
+    "Around 50-100 million calls per month, meaning only the largest enterprises benefit from running their own infrastructure",
+    "Around 500,000 calls per month, since the cost of renting GPU nodes drops significantly with committed-use contracts"
+]
+answer.answer = "Around 15-20 million calls per month, below which commercial API pricing offers better economics than dedicated GPU rental"
+context = "Running Llama 3.1 405B (INT4) requires ~2 nodes of 8xH100s at $50-60/hr ($43-52K/month). Below 15-20M monthly API calls, commercial APIs are cheaper. Above that, self-hosting savings compound with volume."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do AI application startups face structural margin disadvantages compared to traditional SaaS companies?"
+prompt.distractors = [
+    "AI startups must pay ongoing licensing fees to model providers that traditional SaaS companies avoid by using open-source databases",
+    "AI startups require 3-5x more engineering headcount than SaaS companies to maintain model integrations and prompt pipelines",
+    "AI startups face higher customer acquisition costs because enterprise buyers require lengthy proof-of-concept evaluation periods"
+]
+answer.answer = "AI startups spend 40-60% of revenue on inference costs versus traditional SaaS gross margins of 75-85% on compute"
+context = "The 'AI tax' on gross margins means inference costs consume 40-60% of AI startup revenue, compared to 15-25% compute costs for traditional SaaS. This requires dramatically higher revenue per customer to achieve comparable profitability."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the approximate cost (in dollars per hour) to rent a single H100 GPU from major cloud providers like AWS, Azure, or GCP?"
+answer.answer = "$2-4"
+answer.alternatives = ["2-4", "$2-$4", "$3", "3", "$2 to $4"]
+context = "Cloud rental prices for H100 GPUs range from $2-4 per GPU-hour from AWS, Azure, or GCP. A server with 8 H100s costs $250-300K to purchase, making the rent-vs-buy calculus depend heavily on utilization rates."

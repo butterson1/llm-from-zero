@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 4: Transformer Mimarisi — Kodlayıcı, Kod Çözücü ve Neden Her Şeyi Değiştirdi - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-4-transformer-mimarisi--kodlayıcı-kod-Çözücü-ve-neden-her-Şeyi-değiştirdi"><a class="header" href="#gün-4-transformer-mimarisi--kodlayıcı-kod-Çözücü-ve-neden-her-Şeyi-değiştirdi">Gün 4: Transformer Mimarisi — Kodlayıcı, Kod Çözücü ve Neden Her Şeyi Değiştirdi</a></h1>
+<p><em>Dikkat mekanizmasını gördünüz — motoru. Bugün onun takıldığı arabayı görüyorsunuz: öyle zarif tasarlanmış bir makine ki, dokuz yıl sonra trilyon parametreli modeller hâlâ esasen aynı planı kullanıyor.</em></p>
+<hr />
+<h2 id="olmayacak-gibi-görünen-bir-makale"><a class="header" href="#olmayacak-gibi-görünen-bir-makale">Olmayacak Gibi Görünen Bir Makale</a></h2>
+<p>2017 baharında Google'daki sekiz araştırmacının bir problemi vardı. Olağanüstü bir şey inşa etmişlerdi — yineleme yok, konvolüsyon yok, dikkat ve basit ileri beslemeli katmanlardan başka hiçbir şey olmayan bir diziden-diziye model — ve şok edici derecede iyi çalışıyordu. Ama "Attention Is All You Need"i değerlendirmeye gönderdiklerinde tepkiler karışıktı. Bazı hakemler artımsal buldu. Bazıları başlığı küstah gördü.</p>
+<p>Makale kabul edildi. Sonra patladı.</p>
+<p>2026 itibariyle Transformer mimarisi, bilgi işlem tarihindeki en sonuç doğuran mühendislik planı haline geldi. GPT-4'ü, Claude'u, Gemini'yi, Llama'yı, Mistral'ı, DeepSeek-V3'ü — her öncü dil modelini — güçlendiriyor. Bilgisayarlı görmeye (ViT), protein yapı tahminine (AlphaFold 2), müzik üretimine (Jukebox), hava tahminine (Pangu-Weather) ve robotiğe yayıldı. Orijinal makale 140.000'den fazla atıf topladı. Makine çevirisi için önerilen tek bir mimari tasarımı, yapay zekânın evrensel alt katmanı oldu.</p>
+<p>Ama Transformer sadece dikkatten ibaret değil. Dikkat manşet oyuncusu, ama mimari özenle seçilmiş bileşenlerden oluşan bir topluluğun sayesinde başarılı — artık bağlantılar, katman normalizasyonu, konum-bazlı ileri beslemeli ağlar ve belirli bir kodlayıcı-kod çözücü düzenlemesi — her biri ayrı bir problemi çözüyor. Herhangi birini çıkarın ve tamamı çöker. Bugün her parçayı ve neden orada olduğunu anlayacağız.</p>
+<h2 id="büyük-resim-İki-kule"><a class="header" href="#büyük-resim-İki-kule">Büyük Resim: İki Kule</a></h2>
+<p>Orijinal Transformer, makine çevirisi için standart olan kodlayıcı-kod çözücü kalıbını takip eder. Bir kaynak cümleniz (diyelim İngilizce) ve üretmek istediğiniz bir hedef cümleniz (Fransızca) var. İki ayrı ağ bu iki işi üstlenir:</p>
+<p><strong>Kodlayıcı</strong> kaynak cümlenin tamamını okuyarak her token'ın zengin, bağlamsallaştırılmış bir temsilini oluşturur. Tüm konumları paralel olarak işler. 6 katmanlık öz-dikkat ve ileri beslemeli işlemden sonra, her token'ın temsili sadece o token'ın ne olduğunu değil, cümlenin tam bağlamındaki rolünü de kodlar.</p>
+<p><strong>Kod Çözücü</strong> hedef cümleyi her seferinde bir token üretir; hem kendi daha önce ürettiği token'lara hem de kodlayıcının çıktısına dikkat eder. Otoregresiftir: token 5, token 1-4'e bağlıdır, vb.</p>
+<p>Bu ayrım önemli. Kodlayıcı tüm girdiyi aynı anda görebilir — anlama için mükemmel. Kod çözücü sıralı üretmek zorunda — tutarlı çıktı üretmek için gerekli. Bunlar temelden farklı hesaplama rejimleri ve Transformer her ikisini de aynı temel yapı taşıyla idare eder: <strong>Transformer bloğu</strong>.</p>
+<h2 id="bir-transformer-bloğunun-İçi"><a class="header" href="#bir-transformer-bloğunun-İçi">Bir Transformer Bloğunun İçi</a></h2>
+<p>Hem kodlayıcı hem de kod çözücü yığılmış bloklardan inşa edilir (orijinal makalede 6'şar). Her blok aynı temel kalıba sahiptir: dikkat, sonra ileri besleme, her alt katmanı artık bağlantılar ve normalizasyon sarar.</p>
+<p>Bir token'ı tek bir kodlayıcı bloğundan takip edelim:</p>
+<h3 id="adım-1-Çok-başlı-Öz-dikkat"><a class="header" href="#adım-1-Çok-başlı-Öz-dikkat">Adım 1: Çok Başlı Öz-Dikkat</a></h3>
+<p>Token'ın temsili — temel modelde 512 sayılık bir vektör — öz-dikkat katmanına girer. Burada 8 paralel dikkat başı boyunca (her biri 64 boyutta çalışan) sorgulara, anahtarlara ve değerlere izdüşürülür, diğer tüm token'lara karşı dikkat ağırlıkları hesaplar ve dizinin geri kalanından gelen bilgiyle zenginleştirilmiş yeni bir temsil üretir.</p>
+<p>Bunu Gün 3'ten zaten biliyorsunuz. Ama sonraki adım eşit derecede önemli.</p>
+<h3 id="adım-2-topla-ve-normalize-et-artık-bağlantı"><a class="header" href="#adım-2-topla-ve-normalize-et-artık-bağlantı">Adım 2: Topla ve Normalize Et (Artık Bağlantı)</a></h3>
+<p>Öz-dikkatin çıktısı orijinal girdiyi basitçe değiştirmez. Bunun yerine model, öz-dikkat çıktısını orijinal girdiye <strong>ekler</strong>:</p>
+<p><strong>çıktı = KatmanNorm(x + ÖzDikkat(x))</strong></p>
+<p>Bu, 152 katman derinliğinde ağ eğitmeye olanak tanıyan 2015 bilgisayarlı görme mimarisi ResNet'ten ödünç alınmış bir <strong>artık bağlantıdır</strong> (atlama bağlantısı da denir). Fikir güzel biçimde basit: girdiden çıktıya tam dönüşümü öğrenmek yerine, her alt katman sadece <em>farkı</em> — artığı — öğrenmek zorunda. Bir katmanda optimal davranış hiçbir şey yapmamaksa, ağ basitçe sıfır çıktı vermeyi öğrenebilir ve girdi değişmeden geçer.</p>
+<p>Bu neden kritik? Artık bağlantılar olmadan derin Transformer'ları eğitmek neredeyse imkânsız. Geri yayılım sırasında gradyanlar her katmandan geriye doğru akmak zorundadır. Derin bir ağda bu, <strong>kaybolan gradyan problemini</strong> yaratır: gradyanlar her katmanda ağırlık matrisleriyle çarpılır ve bu çarpımlar sinyali tutarlı biçimde küçültürse, gradyanlar ilk katmanlara ulaştığında etkin olarak sıfırdır. Ağın ilk katmanları öğrenmeyi durdurur.</p>
+<p>Artık bağlantılar bir <strong>gradyan otoyolu</strong> yaratır — tüm ara işlemeyi atlayarak çıktıdan girdiye doğrudan bir yol. Dikkat ve ileri beslemeli katmanlar gradyan-dostu olmayan davranış gösterse bile, atlama bağlantısı en azından <em>biraz</em> gradyanın doğrudan akmasını garanti eder. Bu yüzden eğitim süreci çökmeden 96 Transformer katmanı (GPT-3'teki gibi) ya da daha fazlasını yığabilirsiniz.</p>
+<blockquote>
+<p>💡 <strong>Artık bağlantılar neden bu kadar önemli?</strong> Basit bir benzetme: 100 katlı bir binada asansör olmadan en üst kata çıkmak düşünün. Her katta merdiven çıkmak zorunda olduğunuzda, mesaj (gradyan) kaybolabilir. Artık bağlantı, doğrudan çatıya çıkan bir asansör gibidir — bilgi gecikmesiz akabilir.</p>
+</blockquote>
+<h3 id="adım-3-İleri-beslemeli-ağ"><a class="header" href="#adım-3-İleri-beslemeli-ağ">Adım 3: İleri Beslemeli Ağ</a></h3>
+<p>Öz-dikkat ve normalizasyondan sonra her token, <strong>konum-bazlı ileri beslemeli ağdan</strong> (FFN) geçer. Bu yanıltıcı biçimde basit: arada doğrusal olmayan bir aktivasyonla iki doğrusal dönüşüm.</p>
+<p><strong>FFN(x) = W₂ · ReLU(W₁ · x + b₁) + b₂</strong></p>
+<p>Temel Transformer'da girdi boyutu 512, iç boyut 2.048'e genişler (4× genişleme), sonra tekrar 512'ye düşürülür. Aynı ağırlıklar her token konumuna bağımsız olarak uygulanır — bu yüzden "konum-bazlı." Burada token'lar arası etkileşim yok. O, dikkatin işi.</p>
+<p>Peki FFN aslında ne yapıyor?</p>
+<p>Bu, Transformer'lar hakkındaki en hafife alınan kavrayışlardan biri: <strong>dikkat ve ileri beslemeli katmanlar temelden farklı roller oynar.</strong> Dikkat <em>iletişim</em> ile ilgilidir — token'ların bilgi paylaşmasını sağlar. FFN <em>hesaplama</em> ile ilgilidir — her token'ın komşularından bağlam topladıktan sonraki temsilini bireysel olarak işler.</p>
+<p>Tel Aviv Üniversitesi'nden Mor Geva ve ark.'nın (2021) araştırması büyüleyici bir şey ortaya çıkardı: FFN katmanları <strong>anahtar-değer bellekleri</strong> olarak işlev görüyor. İlk doğrusal katman (W₁) bir kalıp eşleştirici gibi davranır — satırları belirli girdi kalıpları (belirli bir kavram, sözdizimsel yapı ya da anlamsal rol) için aktive olur. İkinci katman (W₂) ilişkili çıktıyı depolar — kalıp algılandığında enjekte edilecek bilgi. Başka bir deyişle, her FFN yaklaşık 2.048 kayıtlı, her biri öğrenilmiş bir gerçeği ya da dönüşüm kuralını kodlayan yumuşak bir arama tablosudur.</p>
+<p>Bu, olgusal bilginin ileri beslemeli katmanlarda yaşadığı anlamına gelir. GPT-4 Paris'in Fransa'nın başkenti olduğunu "bildiğinde," bu bilgi dikkat katmanlarında değil FFN ağırlıklarındaki kalıplar olarak depolanmıştır. Dikkat neyin ilgili olduğunu bulur; FFN bilgiyi geri çağırır ve uygular.</p>
+<h3 id="adım-4-bir-topla-ve-normalize-et-daha"><a class="header" href="#adım-4-bir-topla-ve-normalize-et-daha">Adım 4: Bir Topla ve Normalize Et Daha</a></h3>
+<p>Adım 2 ile aynı — FFN çıktısı girdisine eklenir (artık bağlantı) ve katman normalize edilir. Ortaya çıkan vektör sonraki bloğun girdisi olur.</p>
+<p>Bu kadar. İşte bir kodlayıcı bloğu: <strong>öz-dikkat → topla &amp; norm → FFN → topla &amp; norm.</strong> Bunlardan altı tanesini yığın ve tam kodlayıcınız olsun.</p>
+<h2 id="katman-normalizasyonu-Şarkısı-söylenmeyen-kahraman"><a class="header" href="#katman-normalizasyonu-Şarkısı-söylenmeyen-kahraman">Katman Normalizasyonu: Şarkısı Söylenmeyen Kahraman</a></h2>
+<p>Katman normalizasyonu her alt katmandan sonra görünür ve çoğu insan üstünden geçer. Bu bir hata — onsuz Transformer'lar eğitilemez.</p>
+<p>KatmanNorm her token'ın temsilini boyutları boyunca sıfır ortalama ve birim varyansa normalize eder, sonra öğrenilmiş ölçek ve kayma parametreleri uygular:</p>
+<p><strong>KatmanNorm(x) = γ · (x - μ) / σ + β</strong></p>
+<p>μ ve σ tek bir token vektörünün 512 boyutu boyunca ortalama ve standart sapma, γ ve β boyut başına öğrenilmiş parametrelerdir.</p>
+<p>Neden gerekli? Eğitim sırasında aktivasyonların istatistiksel dağılımı katmandan katmana ve gruptan gruba kaymaya meyillidir — <strong>iç eşdeğişken kayması</strong> denen olgu. Her katman sürekli hareketli bir hedefe uyum sağlamak zorundadır. KatmanNorm bu dağılımları stabilize eder, her katmanın girdisini düzgün davranışlı bir aralıkta tutarak öğrenme hızlarının normalde güvenli olandan çok daha yüksek olmasına izin verir.</p>
+<p>Yıllarca tartışma yaratan bir incelik: orijinal Transformer, KatmanNorm'u artık toplamadan <em>sonra</em> uygular ("Post-LN"), yukarıda yazdığım gibi: <strong>KatmanNorm(x + AltKatman(x))</strong>. Ama 2020'de Xiong ve ark., alt katmandan <em>önce</em> uygulamanın ("Pre-LN"): <strong>x + AltKatman(KatmanNorm(x))</strong> — eğitimi özellikle derin modeller için önemli ölçüde daha kararlı hale getirdiğini gösterdi. GPT-3 ve torunları dahil çoğu modern Transformer Pre-LN kullanır. Keşfedilmesi üç yıl süren ama artık her yerde standart olan küçük değişikliklerden biri.</p>
+<p>Fark göründüğünden daha önemli. Post-LN'de artık yol üzerinden gradyan normalizasyondan da geçer ve bu onu bozabilir. Pre-LN'de artık bağlantı tamamen engelsizdir — gradyanlar atlama bağlantısından sıfır müdahaleyle akar. 96 katmanlı bir model için bu fark, yakınsayan eğitim ile ıraksayan eğitim arasındaki uçurumdur.</p>
+<h2 id="kod-Çözücü-otoregresyon-ve-maskeleme"><a class="header" href="#kod-Çözücü-otoregresyon-ve-maskeleme">Kod Çözücü: Otoregresyon ve Maskeleme</a></h2>
+<p>Kod çözücü bloğu kodlayıcıdan biraz daha karmaşıktır, kritik bir eklemeyle: <strong>çapraz-dikkat</strong> katmanı.</p>
+<p>Her kod çözücü bloğunun üç alt katmanı vardır:</p>
+<ol>
+<li>
+<p><strong>Maskeli öz-dikkat:</strong> Kod çözücü kendi önceki çıktılarına dikkat eder, ama kritik bir kısıtlamayla — her konum sadece kendinden <em>önceki</em> konumlara (ve kendisine) dikkat edebilir. Bu, gelecek konumlar için dikkat puanlarını -∞'a ayarlayarak softmax sonrasında sıfır olmalarını sağlayan bir <strong>nedensel maske</strong> ile uygulanır — üçgensel bir matris. Bu maske olmadan kod çözücü eğitim sırasında gelecek token'lara bakarak "kopya çekebilir," sonraki-token tahmin görevini önemsiz derecede kolaylaştırıp modelin çıkarım zamanında metin üretme yeteneğini yok eder.</p>
+</li>
+<li>
+<p><strong>Çapraz-dikkat:</strong> Kod çözücünün kodlayıcıya baktığı yer. Kod çözücünün her konumdaki temsili sorgular üretir, ama anahtarlar ve değerler kodlayıcının çıktısından gelir. Kod çözücünün kaynak cümleye erişme yöntemi budur — Gün 3'teki Bahdanau dikkati, ama sorgu-anahtar-değer biçimciliğiyle uygulanmış.</p>
+</li>
+<li>
+<p><strong>İleri beslemeli ağ:</strong> Kodlayıcının FFN'si ile aynı.</p>
+</li>
+</ol>
+<p>Her alt katmanın kendi artık bağlantısı ve katman normalizasyonu vardır.</p>
+<p>Nedensel maske mimarideki en zarif tasarım seçimlerinden biri. Eğitim sırasında model hedef cümlenin tamamını paralel olarak işler — tüm konumlar aynı anda. Ama maske, konum <em>t</em>'nin sadece 1'den <em>t</em>'ye kadar olan konumları görmesini sağlayarak sıralı üretim sürecini simüle eder. Buna <strong>öğretmen zorlama</strong> denir: model kendi tahminleri yerine doğru önceki token'ları (eğitim verisinden) görür. Her sorunun bir öncekinin cevabını açığa çıkardığı — ama sadece bir öncekinin — bir sınav gibi.</p>
+<p>Bu paralellik, Transformer eğitiminin bu kadar hızlı olmasının nedenidir. Yinelemeli bir kod çözücü eğitim sırasında bile her token'ı sıralı işlemek zorunda kalırdı. Maskeli Transformer kod çözücü tüm token'ları aynı anda işleyerek otoregresif özelliği maskeyle korur. 512 token'lık bir dizide bu 512× hızlanma demek.</p>
+<h2 id="parametreler-nerede-yaşar"><a class="header" href="#parametreler-nerede-yaşar">Parametreler Nerede Yaşar</a></h2>
+<p>Temel Transformer için hesabı yapalım (d_model = 512, d_ff = 2048, 8 baş, yığın başına 6 katman).</p>
+<p><strong>Bir kodlayıcı bloğu</strong> için:</p>
+<ul>
+<li>Öz-dikkat: 4 izdüşüm matrisi (Q, K, V ve çıktı), her biri 512×512 = 262.144 parametre × 4 = <strong>~1,05M</strong></li>
+<li>FFN: W₁ 512×2048, W₂ 2048×512, artı bias'lar = <strong>~2,1M</strong></li>
+<li>KatmanNorm: 2 × 512 × 2 (iki alt katmanın her biri için ölçek ve kayma) = <strong>~2K</strong></li>
+<li>Blok başına toplam: <strong>~3,15M</strong></li>
+</ul>
+<p>Altı kodlayıcı bloğu: <strong>~19M</strong></p>
+<p><strong>Bir kod çözücü bloğu</strong> için çapraz-dikkat ekleyin (~1,05M) = blok başına <strong>~4,2M</strong>, altısı için <strong>~25M</strong>.</p>
+<p>Artı gömmeler (~37.000 sözlük × 512) ve son çıktı izdüşümü: <strong>~19M</strong>.</p>
+<p>Genel toplam: kabaca <strong>65 milyon parametre</strong>. Modern standartlara göre minnacık — GPT-4'ün uzmanlar karışımı yapısında 1,7 trilyondan fazla parametresi olduğu söyleniyor. Ama orijinal Transformer'ın 65M parametresi makine çevirisinde en ileri sonuçları elde etmeye yetmişti. Her parametre çok çalışıyordu.</p>
+<p>Parametrelerin büyük kısmının nerede yaşadığına dikkat edin: ileri beslemeli katmanlarda. FFN her bloğun parametrelerinin yaklaşık üçte ikisini oluşturur (dikkat için 1,05M'e karşı 2,1M). Bu oran ölçekleme çağı boyunca şaşırtıcı biçimde sabit kalmıştır. GPT-3'ün 175 milyar parametresinde FFN katmanları hâlâ ağırlıkların kabaca üçte ikisini tutar. Bu, FFN katmanlarının modelin "bilgi deposu" olduğu görüşüyle tutarlıdır — dünyanın bilgisini ezberlemek için çok kapasiteye ihtiyacınız var.</p>
+<h2 id="yalnızca-kod-Çözücü-devrimi"><a class="header" href="#yalnızca-kod-Çözücü-devrimi">Yalnızca-Kod Çözücü Devrimi</a></h2>
+<p>İşte yapay zekâ tarihinin bir ironisi: Transformer'ın en başarılı uygulaması kodlayıcıyı hiç kullanmıyor.</p>
+<p>GPT-1 (2018) radikal bir sadeleştirme yaptı. OpenAI'dan Alec Radford ve meslektaşları sadece kod çözücü yığınını alıp kodlayıcıyı ve çapraz-dikkati attılar ve onu saf bir dil modeli olarak eğittiler: önceki tüm token'lar verildiğinde sonraki token'ı tahmin et. Çeviri çiftlerine gerek yok. Kaynak ve hedef dillere gerek yok. Sadece internetten ham metin.</p>
+<p>Bu yalnızca-kod çözücü mimarisi GPT-2, GPT-3, GPT-4, Claude, Llama, Mistral ve çoğu modern dil modelini güçlendirir. Kodlayıcı-kod çözücü mimarisi T5, BART ve Google'ın çeviri sisteminin orijinal versiyonunda varlığını sürdürüyor, ama amiral gemisi üretken yapay zekâ modelleri için yalnızca-kod çözücü kazandı.</p>
+<p>Neden? Üç sebep:</p>
+<p><strong>Basitlik.</strong> İki yerine tek yığın. Daha az tasarım kararı. Daha az ayarlanacak hiperparametre.</p>
+<p><strong>Birleşik ön eğitim hedefi.</strong> Nedensel dil modelleme (sonraki token'ı tahmin et) metin için en doğal öz-denetimli hedeftir. Paralel korpusa ya da özenle tasarlanmış görevlere ihtiyacınız yok — sadece metin atın.</p>
+<p><strong>Ölçekleme özellikleri.</strong> Yalnızca-kod çözücü modeller ampirik olarak daha düzgün ölçekleniyor. DeepMind 2022'de Chinchilla ölçekleme yasalarını yayınladığında, deneyler tamamen yalnızca-kod çözücü modeller üzerindeydi. Ölçekleme eğrileri dikkat çekici derecede temiz: parametreleri ikiye katla, kaybı yarıya indir, olağanüstü öngörülebilirlikle.</p>
+<p>BERT'in yaklaşımı da var — <strong>yalnızca-kodlayıcı</strong> — maskeli dil modelleme kullanır: token'ların %15'ini rastgele gizle ve çevreleyen bağlamdan tahmin et. BERT (340M parametre, 2018) anlama görevleri (sınıflandırma, soru yanıtlama, adlandırılmış varlık tanıma) için muazzam etkili oldu ama üretim için kullanılmaz. Cümlenin tamamını gören bir modeli sonraki kelimeyi yazmak için kullanamazsınız — cevaba zaten göz atıyor.</p>
+<p>Yani üç Transformer paradigması şöyle:</p>
+<div class="table-wrapper"><table><thead><tr><th>Mimari</th><th>Gördüğü</th><th>Kullanım Alanı</th><th>Örnekler</th></tr></thead><tbody>
+<tr><td>Yalnızca-kodlayıcı</td><td>Tam girdi (çift yönlü)</td><td>Anlama, sınıflandırma</td><td>BERT, RoBERTa</td></tr>
+<tr><td>Yalnızca-kod çözücü</td><td>Sadece geçmiş token'lar (nedensel)</td><td>Üretim, genel amaçlı</td><td>GPT, Claude, Llama</td></tr>
+<tr><td>Kodlayıcı-kod çözücü</td><td>Kodlayıcı: tam girdi; Kod çözücü: geçmiş çıktı</td><td>Çeviri, özetleme</td><td>T5, BART, mBART</td></tr>
+</tbody></table>
+</div>
+<p>Yalnızca-kod çözücü modeller bugün hakim, çünkü üretim daha zor ve daha genel bir problem olarak ortaya çıktı. Tutarlı metin üretebilen bir model aynı zamanda soruları yanıtlayabilir, duygu sınıflandırabilir, diller arası çeviri yapabilir ve kod yazabilir — hepsi "bu girdi verildiğinde, doğru çıktıyı üret" olarak çerçevelenir. Kodlayıcı-kod çözücü ayrımı çeviri için bir optimizasyondu ve genel durum için gereksiz olduğu ortaya çıktı.</p>
+<h2 id="Şaşırtıcı-basitlik"><a class="header" href="#Şaşırtıcı-basitlik">Şaşırtıcı Basitlik</a></h2>
+<p>İşte sizi gerçekten şaşırtması gereken gerçek: <strong>Transformer göreve özgü hiçbir bileşen içermez.</strong></p>
+<p>Mimari tanımını tekrar okuyun. Öz-dikkat: genel çiftli benzerlik hesaplaması. İleri beslemeli ağ: basit iki katmanlı MLP. Artık bağlantılar: görüntü sınıflandırmadan ödünç. Katman normalizasyonu: genel istatistiksel düzenleyici. Konumsal kodlamalar: sinüzoidal fonksiyonlar.</p>
+<p>Transformer'da "bu dil içindir" diyen <em>hiçbir şey</em> yok. Dilbilgisi kuralı yok. Ayrıştırma ağacı yok. Sözcük türü etiketi yok. Morfolojik analiz yok. Hiçbir türde dilbilimsel bilgi yok. Genel amaçlı bir dizi işleme makinesi — ve yine de ham metinden sözdizimi, anlambilim, edimbilim, muhakeme ve sağduyuyu öğrendi.</p>
+<p>Bu yüzden mimari görmeye (ViT görüntü yamalarını dizi olarak işler), sese (Whisper spektrogramları dizi olarak ele alır), protein yapısına (AlphaFold 2 amino asit zincirlerini dizi olarak ele alır) ve hatta havaya (Pangu-Weather atmosferik ızgara noktalarını dizi olarak ele alır) bu kadar zahmetsiz geçti. Transformer ne işlediğini bilmez. Sadece bir dizinin öğelerinin birbiriyle konuşmasını ve giderek daha rafine temsiller oluşturmasını bilir.</p>
+<p>Efsanevi oyun programcısı John Carmack bunu güzel ifade etti: Transformer "utanç verici derecede basit." Sihir bileşenlerde değil — bileşenlerin <em>kombinasyonunda</em> ve uygulandıkları <em>ölçekte</em>.</p>
+<h2 id="İşe-yaratan-eğitim-hileleri"><a class="header" href="#İşe-yaratan-eğitim-hileleri">İşe Yaratan Eğitim Hileleri</a></h2>
+<p>Orijinal makale, gözden kaçırması kolay ama hayati olan çeşitli eğitim ayrıntıları içeriyordu:</p>
+<p><strong>Isınma öğrenme hızı takvimi.</strong> Sabit bir öğrenme hızıyla başlamak yerine, Transformer ilk 4.000 adım boyunca öğrenme hızını doğrusal olarak artıran, sonra adım sayısının ters karekökü ile orantılı azaltan bir takvim kullanır. Bu ısınma, kayıp peyzajının iyi anlaşılmadığı erken eğitimde modelin aşırı büyük güncellemeler yapmasını engeller. Neredeyse her modern Transformer bir tür ısınma kullanır.</p>
+<p><strong>Bırakma (Dropout).</strong> Model, dikkat ağırlıklarına ve her alt katmandan sonra dropout (temel modelde 0,1 oranında) uygular. Bu, eğitim sırasında değerlerin %10'unu rastgele sıfırlayarak aşırı uyumu engeller ve modeli yedekli temsiller geliştirmeye zorlar.</p>
+<p><strong>Etiket yumuşatma.</strong> Modeli doğru sonraki token için 1,0, diğer her şey için 0,0 olasılık tahmin edecek şekilde eğitmek yerine, makale ε = 0,1 ile etiket yumuşatma kullanır — az miktarda olasılık kütlesini tüm token'lara eşit dağıtır. Bu aslında şaşkınlığa zarar verir (model tahminlerinde daha az "emin" hale gelir) ama BLEU puanlarını ve genellemeyi iyileştirir. Model aşırı özgüvenli olmak yerine uygun biçimde belirsiz olmayı öğrenir.</p>
+<p><strong>Özel β₂'li Adam optimize edici.</strong> Makale β₁ = 0,9, β₂ = 0,98 ve ε = 10⁻⁹ ile Adam kullanır. Alışılmadık derecede yüksek β₂ (standart 0,999), optimize edicinin öğrenme hızını son gradyan büyüklüklerine göre daha hızlı uyarladığı anlamına gelir ve bu Transformer'ın eğitim dinamiklerine uygundur.</p>
+<p>Bunlar gösterişli ayrıntılar değil. Ama eğitilen bir Transformer ile eğitilemeyenin farkı çoğunlukla tam olarak bu seçimlere gelir. Mimari gerekli ama yeterli değil — eğitim reçetesine de ihtiyacınız var.</p>
+<h2 id="bağlamda-rakamlar"><a class="header" href="#bağlamda-rakamlar">Bağlamda Rakamlar</a></h2>
+<p>Uzaklaşıp orijinal Transformer'ın ne başardığını takdir edelim:</p>
+<div class="table-wrapper"><table><thead><tr><th>Metrik</th><th>Temel Transformer</th><th>Önceki En İyi</th><th>İyileştirme</th></tr></thead><tbody>
+<tr><td>EN-DE BLEU</td><td>27,3</td><td>26,36</td><td>+0,94</td></tr>
+<tr><td>EN-FR BLEU</td><td>38,1</td><td>41,0 (topluluk)</td><td>Tekli model eşleşti</td></tr>
+<tr><td>EN-DE (büyük)</td><td>28,4</td><td>26,36</td><td>+2,04</td></tr>
+<tr><td>EN-FR (büyük)</td><td>41,8</td><td>41,0</td><td>+0,8</td></tr>
+<tr><td>Eğitim maliyeti (temel)</td><td>12 saat, 8 P100</td><td>Haftalarca eğitim</td><td>~10-50× ucuz</td></tr>
+</tbody></table>
+</div>
+<p>Büyük model, topluluk sistemlerini — birden fazla bağımsız eğitilmiş modelin kombinasyonlarını — tek bir modelle aştı. Ve bunu 3,5 günlük eğitimle yaptı. Önceki en ileri İngilizce-Fransızca sistem haftalarca eğitilmişti.</p>
+<p>2017 bulut fiyatlarıyla eğitim maliyeti: temel model için kabaca 150 dolar, büyük model için belki 800 dolar. Bugün GPT-4'ün eğitim maliyeti 50-100 milyon dolar olarak tahmin ediliyor. Mimari aynı. Değişen tek şey ölçek (parametreler, veri, hesaplama) ve bazı artımsal iyileştirmeler. Transformer hakkındaki en dikkat çekici gerçek bu: doğuşunda <em>zaten doğru mimari</em>ydi. Dokuz yıllık ilerleme onu yeniden icat etmek değil, büyütmek oldu.</p>
+<h2 id="bu-mimarinin-dayanıklılığı"><a class="header" href="#bu-mimarinin-dayanıklılığı">Bu Mimarinin Dayanıklılığı</a></h2>
+<p>Transformer'ın uzun ömürlülüğü makine öğrenmesinde neredeyse emsalsiz. Önceki baskın mimariler — algılayıcılar, vanilya RNN'ler, LSTM'ler, CNN'ler — her biri yerini almadan önce 3-5 yıl hüküm sürdü. Transformer tacı 2017'den beri tutuyor ve 2026'da ufukta ciddi bir rakip yok.</p>
+<p>Neden? Çünkü nadir bir denge noktasına isabet ediyor:</p>
+<ol>
+<li><strong>Matematiksel zarafet.</strong> Çekirdek işlemler (matris çarpımları, softmax) basit ve iyi anlaşılmış.</li>
+<li><strong>Donanım uyumu.</strong> Yoğun matris işlemleri için optimize edilmiş GPU/TPU mimarilerine mükemmel oturur.</li>
+<li><strong>Ölçekleme öngörülebilirliği.</strong> Parametre ve veri ekledikçe kayıp düzgün ve öngörülebilir biçimde azalır.</li>
+<li><strong>Modüler genişletilebilirlik.</strong> Bileşenleri (farklı dikkat kalıpları, farklı FFN mimarileri, farklı normalizasyon) tüm sistemi yeniden tasarlamadan değiştirebilirsiniz.</li>
+<li><strong>Ampirik sağlamlık.</strong> Temel değişiklik olmadan alan genelinde çalışır — dil, görme, ses, bilim.</li>
+</ol>
+<p>Baştan doğru olan nadir tasarımlardan biri. ML tarihindeki çoğu mimari yıllarca yinelemeli rafine gerektirdi. Transformer ölçek gerektirdi.</p>
+<hr />
+<p><em>Yarın, bir yapay zekâ sistemi kullandığınız her seferde karşılaştığınız ama muhtemelen hiç düşünmediğiniz bir şeye dalacağız: <strong>tokenizasyon</strong>. GPT-4 neden "tokenization"ı bir token olarak görüyor ama "token" da bir token? Kelimelerdeki harfleri saymakta neden zorlanıyor? İngilizce dışı dilleri işlemek neden daha pahalı? Cevaplar Byte Pair Encoding adlı büyüleyici bir algoritma ve metni bir Transformer'a beslemeden önce nasıl parçalara böldüğünüzün şaşırtıcı derecede derin sonuçlarını içerir.</em></p>
+<hr />
+<h2 id="anlayışınızı-test-edin"><a class="header" href="#anlayışınızı-test-edin">Anlayışınızı Test Edin</a></h2>
+<p>Öğrendiklerinizi kontrol etmeye hazır mısınız? Gün 4 quizini çözün:</p>
+<div id="quiz-day-04"></div>
+<script src="../quiz/quiz-embed.iife.js"></script>
+<link rel="stylesheet" href="../quiz/style.css">
+<script>
+QuizEmbed.createQuiz("quiz-day-04", "/quizzes/day-04.toml");
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-03.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-05.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-03.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-05.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In a Mixture of Experts Transformer with 16 experts and top-2 routing, approximately what fraction of total parameters are active for each token?"
+prompt.distractors = [
+    "Approximately 25%, since the router selects 4 out of 16 experts per token based on attention scores",
+    "Approximately 6.25%, since each expert processes one-sixteenth of tokens independently",
+    "Approximately 50%, since half the experts activate as primary and the rest provide residual context"
+]
+answer.answer = "Approximately 12.5%, since only 2 out of 16 expert FFN blocks process each token's representation"
+context = "With top-2 routing and 16 experts, each token passes through 2/16 = 12.5% of the expert parameters. The attention layers are shared across all tokens, but the expert FFN blocks (which constitute the bulk of parameters) are sparse."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What causes 'expert collapse' during MoE training, and what is the standard mitigation?"
+prompt.distractors = [
+    "Experts overfit to their assigned tokens, causing gradient explosion; mitigated by applying per-expert dropout rates that scale with utilization frequency",
+    "The gating network's softmax saturates for dominant experts, blocking gradient flow; mitigated by replacing softmax with sparsemax activation in the router",
+    "Experts receiving fewer tokens develop larger weight norms to compensate, destabilizing training; mitigated by applying weight decay proportional to expert utilization"
+]
+answer.answer = "A reinforcement dynamic where popular experts improve faster and attract even more tokens; mitigated by an auxiliary load-balancing loss that penalizes uneven token distribution"
+context = "Expert collapse occurs because experts that receive more tokens get more gradient signal, improve more, and become even more preferred by the router — a rich-get-richer dynamic. The auxiliary load-balancing loss adds a penalty term encouraging the router to distribute tokens more evenly across all experts."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Google's Switch Transformer (2021) simplify MoE routing compared to earlier approaches like Shazeer's 2017 model?"
+prompt.distractors = [
+    "It replaced the learned gating network with a deterministic hash function that assigned tokens to experts based on embedding locality",
+    "It introduced hierarchical routing where a coarse-grained router selected expert groups before a fine-grained router picked individual experts",
+    "It used random expert assignment during training with a learned routing network only at inference time to reduce training communication"
+]
+answer.answer = "It used top-1 routing instead of top-2, sending each token to exactly one expert, reducing communication overhead and simplifying load balancing"
+context = "The Switch Transformer showed that top-1 routing (each token goes to exactly one expert) worked as well or better than top-2 for many tasks, while cutting communication costs and simplifying the capacity management. It also introduced a capacity factor to cap tokens per expert."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Mixtral 8x7B has approximately 46.7B total parameters but matches or beats LLaMA 2 70B. What explains this apparent contradiction?"
+prompt.distractors = [
+    "Mixtral's 8 experts collectively store more diverse knowledge representations than a single 70B dense model can learn from identical data",
+    "Mixtral uses a more advanced tokenizer with 32K vocabulary that compresses information more efficiently per parameter than LLaMA 2's tokenizer",
+    "Mixtral's training data was significantly higher quality and more recent, giving it a data advantage that compensated for fewer total parameters"
+]
+answer.answer = "With top-2 routing activating ~12.9B parameters per token, Mixtral runs at roughly 13B-dense cost while its 46.7B total parameters store knowledge rivaling much larger dense models"
+context = "MoE's key advantage is that total parameter count determines knowledge capacity while active parameter count determines compute cost. Mixtral's ~47B parameters give it the storage of a large model, but its ~13B active parameters keep inference costs low. The comparison is about quality-per-FLOP, not quality-per-parameter."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "Who published the foundational 2017 paper 'Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer' that revived MoE for modern deep learning?"
+answer.answer = "Noam Shazeer"
+answer.alternatives = ["Shazeer", "Noam Shazeer et al"]
+context = "Noam Shazeer, also a co-author of the original Transformer paper ('Attention Is All You Need'), led the 2017 work at Google that integrated MoE layers into deep networks at scale, building models with up to 137 billion parameters."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Research into what MoE experts actually specialize in has revealed which surprising finding about expert specialization?"
+prompt.distractors = [
+    "Experts specialize primarily by language, with each expert handling tokens from a specific language family in multilingual models",
+    "Experts specialize by training data source, with each expert effectively memorizing patterns from specific subsets of the training corpus",
+    "Experts specialize by output task type, with distinct experts handling classification, generation, and translation respectively"
+]
+answer.answer = "Experts tend to specialize more by syntactic structure and token position than by semantic topic or subject matter"
+context = "Analysis of models like Mixtral 8x7B shows that expert specialization is more syntactic and positional than semantic. The same expert might process tokens in math problems and poetry if they share structural roles. Some experts act as generalists while others handle specific grammatical patterns."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why are MoE models described as 'more parameter-efficient but less sample-efficient' than equivalent dense models?"
+prompt.distractors = [
+    "MoE experts interfere with each other during backpropagation, requiring more gradient steps to converge to the same loss as dense models",
+    "The router's load-balancing loss diverts optimization capacity away from the primary language modeling objective during early training phases",
+    "MoE models require larger batch sizes to ensure each expert receives enough tokens per step, effectively needing more total data to fill batches"
+]
+answer.answer = "Each expert only sees the fraction of tokens routed to it, so with top-2 routing and 8 experts each expert effectively trains on about one-quarter of the data"
+context = "Because tokens are routed to only k of N experts, each expert sees roughly k/N of the total training data. With 8 experts and top-2 routing, each expert sees about 25% of tokens. This data dilution means MoE models need more total training tokens to reach the same quality, which is why models like DeepSeek-V2 train on 8.1 trillion tokens."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What innovation did DeepSeek-V3 introduce to solve the tension between load balancing and routing quality in MoE?"
+prompt.distractors = [
+    "A curriculum-based routing schedule that gradually increased the number of active experts from 1 to the full count over training",
+    "A dual-router architecture where one router optimized for quality and another for balance, with outputs merged via learned interpolation",
+    "A reinforcement learning reward signal that directly optimized router decisions for downstream task performance instead of using proxy losses"
+]
+answer.answer = "A dynamic per-expert bias term adjusted during training that promotes even load distribution without requiring an auxiliary loss function"
+context = "DeepSeek-V3 introduced 'auxiliary-loss-free load balancing' where each expert has a learnable bias added to the routing logits. These biases are dynamically adjusted to steer token distribution toward uniformity without the traditional auxiliary loss, eliminating the hyperparameter tension between routing quality and balance."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "How many total parameters and active parameters does DeepSeek-V3 have? (Format: XB total, YB active)"
+answer.answer = "671B total, 37B active"
+answer.alternatives = ["671B, 37B", "671 billion total, 37 billion active"]
+context = "DeepSeek-V3 has 671 billion total parameters with only 37 billion active per token, using 256 routed experts plus 1 shared expert. Despite its enormous total parameter count, the sparse activation makes it efficient enough that training cost only $5.6 million."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why doesn't MoE's reduction in active parameters proportionally reduce the number of GPUs needed for inference serving?"
+prompt.distractors = [
+    "The router network itself requires significant compute that scales with the total number of experts regardless of how many are selected",
+    "MoE models require additional GPUs dedicated to inter-expert communication and token shuffling between expert-hosting devices",
+    "The attention layers in MoE models are typically wider than in dense models to compensate for sparse expert activation patterns"
+]
+answer.answer = "All expert parameters must still be stored in GPU memory even though only a fraction activate per token, so memory requirements remain proportional to total parameter count"
+context = "MoE saves on compute (FLOPs per forward pass) but not on memory — all expert weights must be resident in VRAM for fast access. A 1.8T parameter MoE model still needs ~3.6TB of VRAM at FP16 to hold all weights, even if only ~280B parameters activate per token. MoE reduces compute time per query, not GPU count."

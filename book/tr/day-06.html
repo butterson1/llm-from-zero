@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 6: Ön Eğitim — Modeller Dili İnternetten Nasıl Öğrenir - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-6-Ön-eğitim--modeller-dili-İnternetten-nasıl-Öğrenir"><a class="header" href="#gün-6-Ön-eğitim--modeller-dili-İnternetten-nasıl-Öğrenir">Gün 6: Ön Eğitim — Modeller Dili İnternetten Nasıl Öğrenir</a></h1>
+<p><em>Artık mimariyi anlıyorsunuz — Transformer'lar, dikkat, tokenizasyon. Ama mimari sadece iskelet. Büyük bir dil modelini gerçekten kullanışlı yapan şey ön eğitimdir: rastgele başlatılmış bir kayan nokta sayılar yığınının yüz milyarlarca token metin görerek bir şekilde şiir yazmayı, Python hatası ayıklamayı ve kuantum mekaniğini açıklamayı bilerek ortaya çıkması süreci. Bu nasıl çalışıyor? Ve iki temelden farklı yaklaşım — maskeli dil modelleme ve nedensel dil modelleme — neden bu kadar radikal biçimde farklı türde zekâ üretiyor?</em></p>
+<hr />
+<h2 id="İşe-yaramaması-gereken-mucize"><a class="header" href="#İşe-yaramaması-gereken-mucize">İşe Yaramaması Gereken Mucize</a></h2>
+<p>Ön eğitimin aslında ne olduğuyla başlayalım, tüm mistisizmden arınmış: rastgele ağırlıklara sahip bir sinir ağı alıyorsunuz, devasa miktarda metin gösteriyorsunuz ve eksik ya da gelecek kelimeleri tahmin etmesini istiyorsunuz. Bu kadar. Kimse veriyi "bu kimyayla ilgili bir gerçek" ya da "bu cümle dilbilgisi olarak doğru" diye etiketlemiyor. Kimse ders planı hazırlamıyor ya da bilgiyi konuya göre organize etmiyor. Sadece interneti döküp gradyan inişinin işini yapmasına izin veriyorsunuz.</p>
+<p>Sonuç? GPT-4 baro sınavını geçebiliyor (90. yüzdelik). BERT 2018'de geldiğinde her NLP ölçütünde devrim yarattı. PaLM 2 100'den fazla dil arasında çeviri yapabiliyor. Hepsi aynı temel reçeteden: metin tahmin et, ağırlıkları güncelle, tekrarla.</p>
+<p>Düşünürseniz bu gerçekten tuhaf. Bir cümledeki sonraki kelimeyi tahmin etmek önemsiz, neredeyse mekanik bir görev gibi görünüyor — telefonunuzdaki otomatik tamamlamanın kötü yaptığı bir şey. Bunu büyütmek nasıl <em>muhakeme yapıyor</em> gibi görünen bir şey üretiyor?</p>
+<p>Cevap, ilk kez OpenAI'daki Alec Radford ve Ilya Sutskever tarafından 2018 civarında açıkça dile getirilen ince bir kavrayışta yatıyor: <strong>sonraki kelimeyi yeterince iyi tahmin etmek için, yeterince çeşitli bir korpus boyunca, bir model metnin tanımladığı dünyanın iç temsillerini inşa etmek zorundadır.</strong> Eğitim verisi yörünge mekaniği hakkında binlerce pasaj içeriyorsa, model sadece yüzey kalıplarını ezberleyemez — uzay hakkındaki yeni bağlamlarda tutarlı biçimde doğru sonraki token'ı tahmin etmek için yerçekimi, hız ve eliptik yörüngelerin bir tür sıkıştırılmış anlayışını geliştirmek zorundadır.</p>
+<p>Bunun "gerçek anlama" teşkil edip etmediği felsefi bir tartışma. Tartışılmayan, işe yaradığı.</p>
+<h2 id="İki-tahmin-felsefesi"><a class="header" href="#İki-tahmin-felsefesi">İki Tahmin Felsefesi</a></h2>
+<p>Ön eğitim iki ana çeşit gelir ve aradaki farkı anlamak, aynı temel Transformer mimarisini paylaşmalarına rağmen BERT ve GPT'nin neden bu kadar farklı olduğunu anlamanın anahtarıdır.</p>
+<h3 id="maskeli-dil-modelleme-boşluk-doldur"><a class="header" href="#maskeli-dil-modelleme-boşluk-doldur">Maskeli Dil Modelleme: Boşluk Doldur</a></h3>
+<p>2018'de Google araştırmacıları Jacob Devlin, Ming-Wei Chang, Kenton Lee ve Kristina Toutanova BERT'i (Transformer'lardan Çift Yönlü Kodlayıcı Temsilleri) tanıttı. Temel fikirleri zarifti: bir cümle al, token'ların %15'ini rastgele maskele ve modeli eksik olanı tahmin etmek için eğit.</p>
+<p>Verilen: <code>Kedi minder üzerinde [MASK] ve mırıldandı</code></p>
+<p>Model <code>[MASK]</code>'ın muhtemelen "oturdu" ya da "uzandı" ya da "durdu" olduğunu tahmin etmeli. Bunu yapmak için <em>tüm</em> çevreleyen bağlama bakabilir — hem sola ("Kedi minder üzerinde") hem de sağa ("ve mırıldandı"). Bu çift yönlü bağlam BERT'in dili anlamadaki süper gücü.</p>
+<p>Ama ayrıntılar önemli. BERT aslında seçilen token'ların hepsini maskelemez. Zekice bir tasarım seçimiyle, tahmin için seçilen token'ların:</p>
+<ul>
+<li>%80'i <code>[MASK]</code> ile değiştirilir</li>
+<li>%10'u rastgele bir token'la değiştirilir</li>
+<li>%10'u değiştirilmeden bırakılır</li>
+</ul>
+<p>Neden bu garip görünen karışım? Saf maskeleme bir eğitim-test uyumsuzluğu yaratır: ince ayar sırasında model hiç <code>[MASK]</code> token'ı görmez, yani eğitilmediği girdilerle çalışması istenir. Rastgele değiştirme modeli <em>her</em> konum için iyi temsiller tutmaya zorlar (herhangi bir konum bozulmuş olabilir) ve değiştirilmemiş token'lar her şeyin şüpheli olmadığını öğretir.</p>
+<p>BERT-base 110 milyon parametreye sahiptir ve yaklaşık 3,3 milyar token üzerinde eğitildi (BooksCorpus artı İngilizce Wikipedia). BERT-large 340 milyon parametreye ölçeklenir. BERT-base'i eğitmek 16 TPU çipinde 4 gün sürdü — bugünün standartlarıyla önemsiz. Google'ın toplam hesaplama maliyeti 2018 bulut fiyatlarıyla muhtemelen 10.000 doların altındaydı.</p>
+<p>Eğitim ayrıca ikinci bir hedef içeriyordu: <strong>sonraki cümle tahmini (NSP)</strong>. İki cümle verildiğinde, B cümlesinin kaynak belgede A cümlesini gerçekten takip edip etmediğini ya da rastgele bir cümle olduğunu tahmin et. Fikir, modele cümleler arası ilişkileri öğretmekti. Sonraki araştırmalar (RoBERTa, 2019) NSP'nin aslında performansı <em>düşürdüğünü</em> gösterdi — çok kolay bir görevdi ve eğitim sinyalini seyreltiyordu. RoBERTa NSP'yi bıraktı, 10 kat daha fazla veriyle (160GB metin) eğitildi, dinamik maskeleme kullandı (her dönemde farklı maskeler) ve her ölçütte BERT'i geçti.</p>
+<h3 id="nedensel-dil-modelleme-sıradakini-tahmin-et"><a class="header" href="#nedensel-dil-modelleme-sıradakini-tahmin-et">Nedensel Dil Modelleme: Sıradakini Tahmin Et</a></h3>
+<p>GPT zıt yaklaşımı benimser. Cümlenin tamamını görüp boşlukları doldurmak yerine, model metni soldan sağa görür ve her konumda sonraki token'ı tahmin eder. Bu <strong>nedensel</strong> (ya da <strong>otoregresif</strong>) dil modellemedir — model sadece mevcut konumdan önce gelen token'lara dikkat edebilir.</p>
+<p>Verilen: <code>Kedi minder üzerinde</code>
+Tahmin: <code>oturdu</code> (ya da <code>uzandı</code>, <code>durdu</code>, vb.)</p>
+<p>Ama sadece tek bir sonraki token'ı tahmin etmez — eğitim sırasında <em>her konumda aynı anda</em> tahmin yapar. <em>n</em> token'lık bir dizi verildiğinde, model <em>n - 1</em> tahmin üretir (token 1'den token 2'yi tahmin et, token 1-2'den token 3'ü tahmin et, vb.). Bu hesaplama açısından verimlidir: bir dizi üzerinde tek bir ileri geçiş size birçok eğitim sinyali verir.</p>
+<p>Orijinal GPT (Haziran 2018, BERT'ten iki ay önce) 117 milyon parametreye sahipti ve BookCorpus — kabaca 985 milyon token — üzerinde eğitildi. GPT-2 (Şubat 2019) 1,5 milyar parametreye ölçeklendi ve en az 3 karma alan Reddit gönderilerinden bağlanan web sayfalarından oluşan 40GB'lık WebText veri kümesi üzerinde eğitildi (zekice bir kalite filtresi). GPT-3 (Mayıs 2020) 175 milyar parametreye sıçradı, 300 milyar token üzerinde tahmini 4,6 milyon dolarlık hesaplama maliyetiyle eğitildi. GPT-4 (Mart 2023), kesin boyutu açıklanmamış olsa da, 1 trilyonun üzerinde parametreli uzmanlar karışımı modeli olduğu tahmin edilmekte ve yaklaşık 13 trilyon token üzerinde 100 milyon doları aşan maliyetle eğitildi.</p>
+<p>Nedensel DM'nin kilit sınırlaması modelin sadece geriye bakabilmesi. "Kedi ___'yi kovaladı" cümlesindeki eksik kelimeyi tahmin ederken, soldan sağa işleyen nedensel bir model henüz "kovaladı"yı görmemiştir — dolayısıyla cümlenin tamamını gören BERT'ten daha az bilgiyle çalışmak zorundadır. Bu, nedensel modelleri çift yönlü bağlamın önemli olduğu <em>anlama</em> görevlerinde doğası gereği daha zayıf kılar.</p>
+<p>Peki nedensel DM neden kazandı?</p>
+<h2 id="gpt-neden-kazandı-ve-bert-neden-kazanamadı"><a class="header" href="#gpt-neden-kazandı-ve-bert-neden-kazanamadı">GPT Neden Kazandı ve BERT Neden Kazanamadı</a></h2>
+<p>Bu, yapay zekâ tarihindeki en önemli stratejik ayrışmalardan biri ve cevap yanıltıcı biçimde basit: <strong>üretim yapmak zordur ama sınıflandırmadan daha yararlıdır.</strong></p>
+<p>BERT anlamada parlıyor: duygu analizi, soru yanıtlama, adlandırılmış varlık tanıma, doğal dil çıkarımı. 2018'den yaklaşık 2022'ye kadar geçen dönemde BERT ve torunları (RoBERTa, ALBERT, DeBERTa, ELECTRA) NLP ölçütlerine hâkim oldu. Metin sınıflandırmanız, bilgi çıkarmanız ya da sorguları belgelerle eşleştirmeniz gerekiyorsa, BERT ailesi modeller cevaptı.</p>
+<p>Ama BERT yazamaz. Mimarisi metni çift yönlü görür, bu da metni otoregresif biçimde üretemeyeceği anlamına gelir — birbiri ardına token üretmenin doğal bir yolu yoktur. Üretim görevlerine zorlayabilirsiniz (ve T5 gibi modeller bu boşluğu köprüleyen kodlayıcı-kod çözücü yapı kullanır), ama saf yalnızca-kodlayıcı modeller temelde mevcut metni <em>analiz etmekle</em> ilgilidir, yeni metin yaratmakla değil.</p>
+<p>GPT ise doğal bir metin üretecidir. Ve metin üretmenin — sohbet botları, yazma asistanları, kod tamamlama, çeviri — tüketicilerin ve işletmelerin gerçekten ödeme yapmak istediği şey olduğu ortaya çıktı. Kasım 2022'de ChatGPT'nin lansmanı iki ayda 100 milyon kullanıcıya ulaştı. BERT ile ChatGPT inşa edemezsiniz.</p>
+<p>Daha derin bir teknik neden de var. <strong>Nedensel dil modelleri ölçeklendikçe anlamada daha iyi olur, ama maskeli dil modelleri ne kadar büyürse büyüsün üretimde daha iyi olmaz.</strong> Bunun nedeni, muazzam ölçekte otoregresif eğitimin modeli dilin öyle detaylı tahmin modelleri öğrenmeye zorlamasıdır ki anlama bir yan ürün haline gelir. GPT-4 duygu analizi gayet iyi yapabilir — doğal dilde sormanız yeter. Ama BERT'in hiçbir versiyonu, ne kadar büyük olursa olsun, tutarlı bir makale yazamaz.</p>
+<p>Bu yüzden alan öncü modeller için yalnızca-kod çözücü Transformer'larda (GPT-3, PaLM, Chinchilla, LLaMA, Claude, Gemini) yakınsarken, BERT ailesi modeller sınıflandırma ve bilgi erişimi için verimli, uzmanlaşmış araçlar olarak niş bir role yerleşti.</p>
+<h2 id="kodlayıcı-kod-Çözücü-orta-yol"><a class="header" href="#kodlayıcı-kod-Çözücü-orta-yol">Kodlayıcı-Kod Çözücü Orta Yol</a></h2>
+<p>Üçüncü bir yol da var. Google'ın T5'i (Metinden-Metine Transfer Transformer, 2019) <em>her</em> NLP görevini metinden-metine olarak yeniden çerçeveledi: sınıflandırma "sınıfla: [girdi]" → "olumlu" olur, çeviri "İngilizce'den Fransızca'ya çevir: [girdi]" → "[çıktı]" olur. T5 tam kodlayıcı-kod çözücü Transformer mimarisini kullanır — kodlayıcı girdiyi çift yönlü (BERT gibi) işler, kod çözücü çıktıyı otoregresif (GPT gibi) üretir.</p>
+<p>T5, <strong>span bozma</strong> adlı maskeli dil modelleme varyantıyla eğitildi: bireysel token'ları maskelemek yerine bitişik metin aralıklarını maskeler ve her aralığı bir nöbetçi token'la değiştirir. Model daha sonra eksik aralıkları üretmek zorundadır. Bu, tekli token maskelemeden daha zorludur ve modele uzun menzilli bağımlılıklar öğretir.</p>
+<p>T5-11B (11 milyar parametre) Colossal Clean Crawled Corpus (C4) üzerinde eğitildi — yaklaşık 750GB temizlenmiş İngilizce web metni, yaklaşık 156 milyar token. Yayınlandığında çok sayıda ölçütte en ileri sonuçları elde etti.</p>
+<p>Google daha sonra bu yaklaşımı PaLM'a (540 milyar parametre) ölçekledi, ancak PaLM yalnızca-kod çözücü, nedensel DM yaklaşımına geçti — BERT ve T5'in doğduğu Google'da bile alanın otoregresif eğitimde yakınsadığının kanıtı.</p>
+<h2 id="Ön-eğitim-sırasında-gerçekte-ne-olur"><a class="header" href="#Ön-eğitim-sırasında-gerçekte-ne-olur">Ön Eğitim Sırasında Gerçekte Ne Olur</a></h2>
+<p>Mekaniğe yakından bakalım. Büyük bir dil modelini ön eğitmek çeşitli aşamaları içerir ve her biri kendi başına bir mühendislik kabusudur.</p>
+<h3 id="adım-1-veri-hazırlama"><a class="header" href="#adım-1-veri-hazırlama">Adım 1: Veri Hazırlama</a></h3>
+<p>Herhangi bir gradyan akmadan önce veriye ihtiyacınız var. Modern öncü modeller trilyonlarca token ölçüsünde veri kümeleri üzerinde eğitilir. LLaMA 3 (Nisan 2024) 15 trilyon token üzerinde eğitildi. Bu veri kümeleri web taramalarından (Common Crawl petabaytlarca ham HTML sağlar), kitaplardan, akademik makalelerden, kod depolarından (GitHub, Stack Overflow) ve Wikipedia gibi derlenmiş kaynaklardan oluşturulur.</p>
+<p>Ham veri kapsamlı filtrelemeden geçer: tekilleştirme (tam ve yakın-kopya kaldırma), dil tanımlama, kalite filtreleme ("yüksek kaliteli" metni "düşük kaliteli"den ayırt etmek için eğitilmiş sınıflandırıcılar kullanarak), kişisel tanımlayıcı bilgilerin kaldırılması ve içerik filtreleme. Dolma veri kümesi (OLMo için kullanılan) bu sürecin ayrıntılı belgelendirmesini yayınladı — hatları temizlemeden sonra 5,4 trilyon token'ı 3 trilyona indirdi.</p>
+<p>Veri karışım oranları muazzam önem taşır. LLaMA 1 kabaca %67 web verisi, %15 kod, %4,5 Wikipedia, %4,5 kitap ve daha küçük ArXiv ve Stack Exchange bölümleri kullandı. Bu oranları yanlış tutmak modeli felce uğratabilir: çok fazla kod ve her şeyi programcı gibi yazar; çok az ve kod yazamaz; çok fazla Wikipedia ve ansiklopedi gibi konuşur.</p>
+<h3 id="adım-2-ağırlık-başlatma"><a class="header" href="#adım-2-ağırlık-başlatma">Adım 2: Ağırlık Başlatma</a></h3>
+<p>Modelin parametreleri rastgele başlatılır — tipik olarak özenle seçilmiş standart sapmalarla kırpılmış normal dağılımdan çekilir. Başlatma şeması önemlidir: çok büyük olursa gradyanlar patlar; çok küçük olursa söner. GPT tarzı modeller genellikle 1/√(n) olarak ölçeklenen bir varyans kullanır (n katman boyutu), artık bağlantılar için ek bir 1/√(2N) ölçeklemesiyle (N katman sayısı).</p>
+<p>Bu noktada model tamamen saçmalık üretir. Tahminleri esasen tüm sözlük boyunca düzgün dağılımlıdır — her token eşit derecede olasıdır. Çapraz entropi kaybı yaklaşık log(V)'dir, V sözlük boyutu. 100.000 token'lık bir sözlük için bu yaklaşık 11,5 nat'tır.</p>
+<h3 id="adım-3-eğitim-döngüsü"><a class="header" href="#adım-3-eğitim-döngüsü">Adım 3: Eğitim Döngüsü</a></h3>
+<p>Eğitim veriyi gruplar halinde işler. Modern LLM'ler devasa grup boyutları kullanır: GPT-3, 3,2 milyon token'lık bir grup boyutu kullandı (dinamik, küçük başlayıp artan). LLaMA 2, 4 milyon token'lık grup boyutu kullandı. Her grup bir ileri geçiş (tahminleri hesapla), kayıp hesaplama (tahminler ne kadar yanlıştı) ve geri geçiş (her parametre için gradyanları hesapla) gerektirir.</p>
+<p>Optimize edici neredeyse her zaman AdamW — ayrıştırılmış ağırlık azalması ile Adam. Öğrenme hızı bir takvim izler: ilk ~2.000 adım için doğrusal ısınma (erken istikrarsızlıktan kaçınmak için), ardından tepe öğrenme hızının yaklaşık %10'una kadar kosinüs azalması. Tipik tepe öğrenme hızları büyük modeller için yaklaşık 3 × 10⁻⁴, çok büyük olanlar için 1 × 10⁻⁴.</p>
+<p>LLaMA 2 70B'yi eğitmek A100 80GB GPU'larda yaklaşık 1,7 milyon GPU-saat aldı. GPU-saat başına kabaca 2 dolarla (2023 bulut fiyatları), bu yaklaşık 3,4 milyon dolarlık hesaplama — ve bu başarısız denemeleri, hiperparametre aramalarını ve mühendislik maliyetlerini saymıyor.</p>
+<h3 id="adım-4-kayıp-düşer-zekâ-yükselir"><a class="header" href="#adım-4-kayıp-düşer-zekâ-yükselir">Adım 4: Kayıp Düşer, Zekâ Yükselir</a></h3>
+<p>Eğitim ilerledikçe kayıp, olağanüstü öngörülebilir bir kuvvet yasası eğrisinde düzgün biçimde azalır. 10 milyar token'da bir modelin kaybı 3,5 olabilir; 100 milyar token'da 2,8; 1 trilyonda 2,3. Bu öngörülebilirlik ölçekleme yasalarını mümkün kılan şeydir — 10 kat daha büyük bir eğitim sürecinin performansını daha küçük deneylerden tahmin edebilirsiniz.</p>
+<p>Ama bu düzgün kayıp düşüşünden ortaya çıkan yetenekler hiç de düzgün değildir. Bir noktada, tamamen sonraki-token tahmini üzerinde eğitilmiş bir model aritmetik yapmaya başlar. Sonra çok adımlı muhakeme. Sonra kod üretimi. Sonra açıkça çeviri öğretilmemiş diller arasında çeviri. Kayıp eğrisi bu yeteneklerin ne zaman ortaya çıkacağına dair ipucu vermez — belirli ölçeklerde aniden açılıyor gibi görünürler.</p>
+<p>İşte hâlâ araştırmacıları şaşırtan sezgiye aykırı gerçek: <strong>sadece sonraki token'ı tahmin etmek için eğitilmiş bir model tıp lisans sınavlarını geçebilir, hukuki sözleşmeler yazabilir ve yarışma matematik problemlerini çözebilir.</strong> Kimse bunları yapması için tasarlamadı. Kimse eğitim verisini "tıbbi bilgi" ya da "hukuki muhakeme" olarak etiketlemedi. Model bu görevler için yeterli iç yapıyı tamamen metni iyi tahmin etmenin istatistiksel baskısından öğrendi.</p>
+<h2 id="hiçbir-Şeyi-unutmamak"><a class="header" href="#hiçbir-Şeyi-unutmamak">Hiçbir Şeyi Unutmamak</a></h2>
+<p>Ön eğitimin olağandışı bir özelliği var: model her eğitim verisini çok az kez görür. GPT-3 eğitim verisi üzerinde kabaca bir geçiş yaptı. LLaMA çoğu veri üzerinde 1-2 dönem eğitildi. Bu, insanların öğrenme şeklinden temelden farklı — biz tekrar okur, pratik yapar ve pekiştiririz. Yine de bu modeller dikkat çekici bir hafıza sergiliyor.</p>
+<p>Diğer yüzü, ön eğitim sırasında modelin öğrendiği her şeyin ağırlıklarına kalıcı olarak işlenmesidir. Güncel olmayan bilgiyi seçici olarak unutamaz, eğitim sonrası bilgisini güncelleyemez ve üzerinde eğitildiği güvenilir kaynaklarla güvenilmez kaynakları ayırt edemez. Eğitim verisi ABD başkanının Joe Biden olduğunu söylüyorsa (veri 2023'te toplandığı için), model 2026'da bile bunu güvenle iddia edecektir. Bu, bilgi kesme problemidir ve ön eğitim paradigmasının temel bir sınırlamasıdır.</p>
+<p>Bu yüzden ön eğitim sadece başlangıç. Ham ön eğitimli model tuhaf bir yaratık — herhangi bir metin kalıbını tamamlayabilir, ama <em>yardımcı</em> olmayı bilmez. Bir soru sorun, sorunuzu başka bir soruyla tamamlayabilir ya da Wikipedia makalesi yazıyormuş gibi devam edebilir. Bu kalıp-tamamlama motorunu kullanışlı bir asistana dönüştürmek, hattın sonraki adımlarını gerektirir: ince ayar ve hizalama — ki buraya doğru ilerliyoruz.</p>
+<hr />
+<h2 id="temel-Çıkarımlar"><a class="header" href="#temel-Çıkarımlar">Temel Çıkarımlar</a></h2>
+<ul>
+<li><strong>Maskeli DM (BERT)</strong> metni çift yönlü görür ve maskeli token'ları tahmin eder — anlama için harika, üretim yapamaz</li>
+<li><strong>Nedensel DM (GPT)</strong> metni soldan sağa görür ve sonraki token'ı tahmin eder — doğal biçimde üretir ve anlama ölçekte kendiliğinden ortaya çıkar</li>
+<li><strong>Nedensel DM kazandı</strong> çünkü üretim kullanıcıların istediği şey ve anlama ölçekte bedavaya gelir</li>
+<li><strong>Ön eğitim verisi</strong> trilyonlarca token'la ölçülür, web taramalarından, kitaplardan, koddan ve derlenmiş kaynaklardan oluşturulur</li>
+<li><strong>Eğitim döngüsü</strong> öğrenme hızı ısınması ve kosinüs azalmasıyla AdamW optimizasyonu kullanır, grup başına milyonlarca token işler</li>
+<li><strong>Ortaya çıkan yetenekler</strong> — muhakeme, çeviri, kod — sonraki-token tahmininin istatistiksel baskısından kendiliğinden belirir</li>
+<li><strong>Bilgi donmuştur</strong> ön eğitim sonrası, RAG ve ince ayarın çözmeye çalıştığı kesme problemini yaratır</li>
+</ul>
+<hr />
+<p><em>Yarın: <strong>Ölçekleme Yasaları</strong> — probleme daha fazla veri ve hesaplama atmak neden çalışmaya devam ediyor? Kaplan ve Chinchilla makaleleri model boyutu, veri ve performans arasındaki kesin matematiksel ilişkileri ortaya çıkardı. Bu kuvvet yasalarının neden geçerli olduğunu, gelecek modeller için ne tahmin ettiğini ve kimsenin bulamadığı bir tavan olup olmadığını keşfedeceğiz.</em></p>
+<div style="margin-top: 2em;">
+<p><a href="quizzes/day-06.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Gün 6 Quizini Çöz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-05.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-07.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-05.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-07.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

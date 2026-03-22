@@ -1,0 +1,105 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What practical problem was RAG primarily invented to solve for large language models?"
+prompt.distractors = [
+    "The inability of decoder-only transformers to perform multi-step reasoning without adding extra recurrent state at inference time",
+    "The tendency of instruction-tuned models to overfit to human preference data and lose broad world knowledge from pretraining",
+    "The high latency caused by autoregressive decoding when models are forced to generate long answers from compressed internal representations"
+]
+answer.answer = "The fact that model knowledge is frozen after training, making it difficult to answer with fresh, private, or rapidly changing information"
+context = "RAG moves volatile knowledge out of model weights and into an external store that can be searched at query time. That lets systems use up-to-date documents without retraining the foundation model."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why doesn't an extremely large context window eliminate the need for retrieval in most real systems?"
+prompt.distractors = [
+    "Because long-context transformers must disable rotary position encoding beyond training length, which removes their ability to track document structure reliably",
+    "Because current APIs only permit one document source per request, forcing applications to choose between breadth of evidence and conversational continuity",
+    "Because large contexts make the model re-encode every token on each step, which destroys the KV cache advantage that short prompts usually provide"
+]
+answer.answer = "Because stuffing everything into context increases cost and distraction, and relevant evidence can be buried or ignored inside a very long prompt"
+context = "Context is expensive working memory, not free long-term memory. Long prompts raise inference cost and can worsen accuracy through effects like lost-in-the-middle, where relevant information gets overlooked."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the main tradeoff in choosing chunk size for a RAG corpus?"
+prompt.distractors = [
+    "Small chunks improve citation formatting while large chunks improve multilingual alignment because embeddings preserve cross-lingual syntax more effectively",
+    "Small chunks reduce embedding dimensionality while large chunks improve ANN recall because vector indexes perform better on longer passages",
+    "Small chunks increase lexical overlap while large chunks reduce tokenization error because BPE vocabularies fragment technical terminology less severely"
+]
+answer.answer = "Small chunks improve precision but may lose context, while large chunks preserve meaning better but often dilute relevance and waste prompt budget"
+context = "Chunking defines the unit of retrieval. If chunks are too small, the answering context gets fragmented; if too large, each retrieved chunk contains too much unrelated material and hurts efficiency."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What advantage does dense retrieval have over a purely lexical method like BM25?"
+prompt.distractors = [
+    "It guarantees exact matching on identifiers and rare strings because cosine distance preserves token frequency more faithfully than inverted indexes",
+    "It can search compressed archives directly because embeddings remove the need to tokenize documents before indexing them for retrieval",
+    "It prevents stale results automatically because embedding models encode document timestamps into the vector space without explicit metadata filtering"
+]
+answer.answer = "It can retrieve semantically related passages even when the query and the answer use different words or phrasing for the same concept"
+context = "Dense retrieval uses embeddings, so a query about billing-cycle changes can find a passage about proration rules even when the exact keywords do not overlap strongly."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do strong RAG systems often add a reranking stage after first-pass retrieval?"
+prompt.distractors = [
+    "Because rerankers quantize document vectors into smaller codebooks, allowing the final answer prompt to include more passages under the same token limit",
+    "Because rerankers rewrite low-quality source documents into cleaner synthetic passages that match the language model's pretraining distribution more closely",
+    "Because rerankers estimate user sentiment and adjust retrieval order to favor documents whose tone aligns with the expected conversational style"
+]
+answer.answer = "Because first-pass retrieval is a rough shortlist, and rerankers can score query-document relevance more precisely using richer token-level interactions"
+context = "Embedding search is efficient but coarse. A reranker, often a cross-encoder or late-interaction model, reads the query and passage together and is much better at separating merely similar text from actually useful evidence."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Which failure mode describes a RAG system retrieving documents that look relevant but come from the wrong version or policy set?"
+prompt.distractors = [
+    "Synthesis failure, where the model blends multiple retrieved documents into a coherent answer before determining which source is authoritative",
+    "Approximation failure, where the nearest-neighbor index returns lower-quality vectors because HNSW graph traversal terminates early under memory pressure",
+    "Compression failure, where the embedding model collapses several related concepts into one vector neighborhood and erases timestamp distinctions"
+]
+answer.answer = "Retrieval pollution, where the system surfaces plausible but inappropriate evidence such as deprecated or out-of-scope documents"
+context = "Retrieval pollution happens when the evidence is superficially relevant but wrong for the user's exact task, such as pulling 2024 pricing when the question is about the 2026 policy."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What classic lexical ranking algorithm is still commonly paired with dense retrieval in hybrid RAG systems?"
+answer.answer = "BM25"
+answer.alternatives = ["bm25"]
+context = "BM25 remains valuable for exact names, acronyms, codes, and rare strings. Many production systems combine dense semantic search with BM25 because the two methods fail in different ways."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "[Review — Day 21] What was the core architectural idea behind the LLaVA-style vision encoder bridge approach?"
+prompt.distractors = [
+    "Train a single autoregressive transformer from scratch on image patches and text tokens using one shared vocabulary and one next-token loss",
+    "Replace the language model's attention layers with cross-modal convolutional blocks that jointly process spatial regions and word sequences from the start",
+    "Convert every image into a sequence of discrete VQ-VAE tokens and fine-tune the decoder to alternate between visual and textual generation modes"
+]
+answer.answer = "Use a pre-trained vision encoder, project its visual features into the language model's embedding space, and let the LLM attend over them as tokens"
+context = "LLaVA-style models keep the vision encoder and language model mostly separate, then connect them with a learned projection layer that turns visual features into tokens the LLM can process."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "[Review — Day 20] What does LoRA change during fine-tuning?"
+prompt.distractors = [
+    "It removes low-magnitude neurons from each feed-forward layer and retrains the surviving pathways with a sparsity-aware optimizer schedule",
+    "It quantizes the base model to 4-bit weights and then updates the quantization codebook directly instead of storing any extra trainable matrices",
+    "It freezes attention weights but fully retrains the embedding matrix so new task vocabulary can be added without catastrophic forgetting"
+]
+answer.answer = "It freezes the original weights and learns small low-rank adapter matrices whose product approximates the task-specific weight update"
+context = "LoRA assumes fine-tuning updates lie in a low-rank subspace. Instead of changing the full weight matrix, it learns two small matrices whose product is added to the frozen base weights."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "[Review — Day 14] Why did self-consistency improve chain-of-thought prompting on reasoning tasks?"
+prompt.distractors = [
+    "It compresses intermediate reasoning into shorter latent summaries, allowing the model to spend more tokens on the final answer distribution",
+    "It forces the model to reuse one verified reasoning trace across multiple prompts, reducing variance caused by stochastic decoding during arithmetic steps",
+    "It fine-tunes a reward model online to penalize logically inconsistent intermediate tokens before they are emitted to the user"
+]
+answer.answer = "It samples multiple reasoning paths and selects the most common final answer, reducing dependence on any single brittle chain of thought"
+context = "Self-consistency improves reasoning by marginalizing over several sampled chains rather than trusting one trajectory. If different paths converge on the same answer, reliability rises."

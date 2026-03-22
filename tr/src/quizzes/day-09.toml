@@ -1,0 +1,105 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do modern LLM teams spend so much effort on near-deduplication of web data instead of only removing exact duplicate files?"
+prompt.distractors = [
+  "Because near-duplicate pages usually break tokenizer assumptions, causing the same document to be segmented into incompatible token boundaries across different crawls",
+  "Because exact deduplication removes too much multilingual data, while near-deduplication preserves translation pairs that are essential for cross-lingual transfer",
+  "Because near-duplicate detection is required to reconstruct lost HTML structure, letting researchers recover the canonical version of a page before training"
+]
+answer.answer = "Because mirrored articles, scraped rewrites, and syndicated copies can overweight the same information, increasing memorization risk and distorting the model's estimate of the true text distribution"
+context = "Exact dedup catches byte-identical copies, but much web repetition comes from near-copies: mirrored news stories, scraped blog posts, templated pages, and lightly edited reposts. If left in, they behave like repeated votes for the same content, worsening memorization and benchmark contamination."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key methodological idea behind OpenAI's WebText dataset used for GPT-2?"
+prompt.distractors = [
+  "Sample only pages that matched a hand-written taxonomy of trusted domains, then expand outward through hyperlink neighborhoods to preserve topic diversity",
+  "Train a language-model-based quality classifier on Wikipedia and books, then keep only pages whose perplexity falls within a narrow editorial band",
+  "Use Common Crawl snapshots from multiple years, then weight each document by PageRank so the corpus approximates the broader public web"
+]
+answer.answer = "Use outbound links from Reddit posts with at least 3 karma as a human-attention proxy, assuming links people upvoted were more likely to contain interesting text"
+context = "WebText was an early example of using a social signal as a quality heuristic. Rather than scrape the entire web uniformly, OpenAI treated Reddit upvotes as a noisy but useful filter for pages humans found worth sharing."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why did audits of C4 become an important cautionary tale for LLM data curation?"
+prompt.distractors = [
+  "They showed that C4's tokenizer design caused subword fragmentation severe enough to erase factual recall for low-frequency entities and scientific terminology",
+  "They showed that C4's English-language filter accidentally retained mostly machine-translated pages, making the corpus look fluent while hiding synthetic noise",
+  "They showed that C4's document packing scheme created long cross-document sequences, causing the model to hallucinate discourse continuity between unrelated pages"
+]
+answer.answer = "They showed that seemingly reasonable toxicity and blocklist filters disproportionately removed text about marginalized groups and text written in minority dialects"
+context = "The C4 audit demonstrated that data cleaning is never neutral. Rules intended to remove harmful content can also erase reclaimed slurs, queer discourse, and discussions involving minority communities, thereby reshaping the model's view of language and society."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the central contribution of The Pile relative to earlier web-heavy corpora?"
+prompt.distractors = [
+  "It introduced the first large-scale multilingual crawl with explicit country balancing, making geographic representation a first-class objective during pretraining",
+  "It replaced subword tokenization with byte-level tokenization, allowing researchers to mix code, equations, and prose without separate preprocessing pipelines",
+  "It proved that a single massive web snapshot was sufficient for frontier performance, making curated domains like books and papers largely unnecessary"
+]
+answer.answer = "It treated dataset construction as mixture design, combining 22 sources such as books, code, papers, Q&A, and web text so models learned from multiple language registers"
+context = "The Pile mattered not just because it was large and open, but because it was intentionally heterogeneous. Different domains teach different structures: code teaches formality, books teach long-range coherence, papers teach technical discourse, and web text gives breadth."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why are books such valuable training data even compared with huge volumes of web text?"
+prompt.distractors = [
+  "Because books contain unusually stable Unicode normalization and punctuation conventions, making them computationally cheaper to tokenize than web documents of similar length",
+  "Because books overwhelmingly describe real-world events rather than fiction, giving models a more reliable factual grounding than encyclopedias or technical manuals",
+  "Because books are sampled from a narrower vocabulary, letting the model allocate more parameters to syntax and less to memorizing rare words or named entities"
+]
+answer.answer = "Because books provide long-form, coherently edited prose with sustained narrative or argument structure, which teaches models patterns that short fragmented web pages rarely contain"
+context = "Books are dense, polished, and structurally extended. They help models learn long-range coherence, stylistic consistency, and discourse-level organization in a way that raw web pages often do not."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What made the RefinedWeb result surprising to many researchers?"
+prompt.distractors = [
+  "It showed that multilingual translation pairs were sufficient to replace English-language books and code corpora for downstream reasoning tasks",
+  "It showed that exact deduplication alone explained nearly all gains from dataset curation, making quality classifiers and heuristic filters largely unnecessary",
+  "It showed that smaller context windows improved web-data efficiency, contradicting the common view that long sequences are always better for pretraining"
+]
+answer.answer = "It suggested that aggressively filtered and deduplicated Common Crawl could outperform more obviously curated mixtures, implying the web was better training material than many had assumed"
+context = "RefinedWeb argued that the web itself was not the fundamental problem. With strong enough filtering and deduplication, large-scale web-only corpora could be extremely competitive, shifting attention toward better data refinement rather than only better source selection."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the nonprofit web crawl archive that most open large-scale LLM corpora start from?"
+answer.answer = "Common Crawl"
+answer.alternatives = ["commoncrawl", "common crawl"]
+context = "Common Crawl is the raw substrate for many open corpora such as C4, RefinedWeb, FineWeb, and DataComp-LM. The main challenge is not obtaining the crawl, but cleaning, filtering, and deduplicating it into useful text."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "DataComp-LM reported that a 7B model trained on 280B carefully selected tokens could outperform Llama 2 7B on MMLU with roughly 7× less compute. What is the deeper implication of that result?"
+prompt.distractors = [
+  "That MMLU is too noisy to measure architectural improvements reliably, so reported gains from foundation-model training should be treated as mostly statistical fluctuation",
+  "That parameter count is now largely irrelevant beyond 7B, because benchmark saturation means any additional scaling mostly improves calibration rather than knowledge",
+  "That instruction tuning dominates pretraining quality, so downstream benchmark gains mostly reflect chat-format post-processing rather than the original corpus"
+]
+answer.answer = "That data selection and curation can yield gains comparable to algorithmic progress, effectively buying more capability from the same or smaller compute budget"
+context = "The DCLM result reframed progress as data-centric rather than purely architecture-centric. Better corpora can improve model quality so much that they function like a compute multiplier."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why are frontier labs increasingly worried about synthetic text on the open web?"
+prompt.distractors = [
+  "Because synthetic text is usually too short to pack efficiently into long training sequences, reducing GPU utilization and wasting expensive cluster time during pretraining",
+  "Because synthetic text causes tokenizers to expand vocabulary size uncontrollably, which inflates embedding matrices and destabilizes optimization at large scale",
+  "Because synthetic text eliminates exact duplicates so effectively that near-deduplication algorithms become unreliable and accidentally discard rare high-quality documents"
+]
+answer.answer = "Because future models may end up learning from low-quality outputs of earlier models, degrading the information ecosystem and making high-trust human-written sources more valuable"
+context = "As AI-generated content floods the web, open crawls become less trustworthy. Labs increasingly seek provenance, licensing deals, and high-signal domains because raw web text is no longer guaranteed to be primarily human-authored."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Llama 3 reportedly used over 5% non-English data and about 4× more code than Llama 2. What does that illustrate about dataset mixture design?"
+prompt.distractors = [
+  "That once a tokenizer is fixed, changing domain proportions mostly affects inference speed and memory footprint rather than the model's learned capabilities",
+  "That multilingual and code data are mainly included to simplify safety fine-tuning, since they have little measurable effect on base-model generalization",
+  "That domain weighting is useful primarily for reducing copyright exposure, because capability gains come almost entirely from the total number of tokens"
+]
+answer.answer = "That pretraining corpora are recipes, not just piles of text, and changing the proportion of code or languages can materially shift the model's abilities and trade-offs"
+context = "Mixture weighting shapes what a model becomes good at. More code can improve formal reasoning and tool use; more multilingual data broadens coverage but also competes for capacity. Data composition is an active design choice, not a bookkeeping detail."

@@ -1,0 +1,103 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do language models hallucinate, according to their fundamental architecture?"
+prompt.distractors = [
+    "Models store facts in a structured lookup table but occasionally retrieve entries from adjacent memory addresses due to attention head interference",
+    "Models have a factual knowledge module and a generation module, and hallucinations occur when the generation module overrides verified factual retrieval",
+    "Models intentionally generate plausible-sounding falsehoods as a regularization strategy to avoid overfitting to their training data distribution"
+]
+answer.answer = "Models store knowledge implicitly in parameter weights with no separation between factual knowledge and statistical patterns of how facts are expressed, making them unable to distinguish between recalling encoded facts and generating fact-like patterns"
+context = "Transformer LLMs store knowledge implicitly across billions of floating-point parameters. There is no clean separation between 'what the model knows' and 'how language works,' so the model cannot distinguish generating a real fact from generating a statistically plausible pattern that resembles a fact."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the Vectara 2024 benchmarking study find about hallucination rates across major LLMs on summarization tasks?"
+prompt.distractors = [
+    "All models hallucinated at roughly equal rates between 8-12%, suggesting hallucination is architecture-independent and determined by task complexity",
+    "Hallucination rates ranged from 0.5% (GPT-4) to 15% (open-source models), with a clear correlation between parameter count and hallucination frequency",
+    "Frontier models achieved under 1% hallucination on summarization but spiked to 30-40% on free-form generation tasks requiring novel synthesis"
+]
+answer.answer = "Hallucination rates ranged from 3% (GPT-4) to 27.2% (older PaLM models), meaning even the best model would fabricate details in roughly 300 out of 10,000 patient record summaries"
+context = "Vectara's 2024 study of 11 LLMs found hallucination rates from 3% (GPT-4) to 27.2% (Google's older PaLM models) on summarization. Even 3% is catastrophic at scale — 300 fabricated details per 10,000 summaries in a hospital setting."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is deepfake detection fundamentally disadvantaged compared to deepfake generation?"
+prompt.distractors = [
+    "Detectors require 100x more training data than generators because they must model every possible forgery technique, creating an insurmountable data asymmetry",
+    "Detectors must run on specialized hardware that costs significantly more than the consumer GPUs used for generation, creating an economic asymmetry",
+    "Detectors can only analyze static images while generators increasingly produce video, creating a format mismatch that cannot be bridged architecturally"
+]
+answer.answer = "Generators and detectors use the same neural network architectures, but generators only need to fool humans (a low bar) while detectors need near-perfect accuracy, and generators always have the advantage of novel methods unseen during detector training"
+context = "The asymmetry is fundamental: both sides use the same technology, but generators only need to be convincing to humans, while detectors need near-perfect accuracy (otherwise floods of false positives or missed fakes). State-of-the-art detectors hit 90-95% on known methods but drop to 60-75% on novel generation techniques."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "In the Arup Hong Kong deepfake fraud case (January 2024), how much money was the finance worker tricked into transferring via a video call where every participant was AI-generated?"
+answer.answer = "$25.6 million"
+answer.alternatives = ["25.6 million", "$25.6M", "HK$200 million", "200 million HKD"]
+context = "A finance worker at Arup's Hong Kong branch was tricked into transferring $25.6 million (HK$200 million) after a video call where every other participant — including the company's CFO — was a deepfake. The worker had initially suspected phishing but the realistic video call dispelled their doubts."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the 2024 RAND Corporation study conclude about LLMs and bioweapon synthesis risk, and why do some researchers argue this finding may not hold?"
+prompt.distractors = [
+    "RAND found significant uplift for chemical but not biological threats, and researchers worry that multimodal models processing lab imagery could close the biological knowledge gap",
+    "RAND found zero uplift across all threat categories, but researchers note the study used older models and frontier models have since demonstrated substantially deeper chemistry knowledge",
+    "RAND found that LLMs provided detailed synthesis protocols but users lacked the skill to execute them, and researchers worry that agentic lab-automation could bridge that execution gap"
+]
+answer.answer = "RAND found LLMs provided at most marginal uplift over conventional internet search, but researchers like Kevin Esvelt warn that future models with agentic capabilities and real-time troubleshooting could represent fundamentally different risks"
+context = "The RAND study found 'at most a marginal uplift' because the bottleneck is practical skills and equipment, not information. Kevin Esvelt at MIT cautions this is a snapshot — a future model integrating agentic capabilities with deep chemistry knowledge and real-time lab guidance would be a fundamentally different risk category."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the core concern about AI-powered influence operations — is it that AI propaganda is more persuasive than human-written propaganda?"
+prompt.distractors = [
+    "Yes, research shows AI-generated propaganda is 40-60% more persuasive because models can optimize emotional triggers through iterative prompt refinement",
+    "The concern is that AI propaganda is harder to trace to state actors because it lacks the linguistic signatures that intelligence agencies use to attribute disinformation campaigns",
+    "The concern is that AI-generated content bypasses platform content moderation systems at higher rates because it avoids the keyword patterns that automated filters detect"
+]
+answer.answer = "No — AI propaganda is roughly equally convincing, but the threat is volume and targeting: a state actor that needed 1,000 paid trolls can now achieve equivalent multilingual output with a handful of operators and API access"
+context = "Research suggests AI-generated propaganda is roughly as convincing as human-written content. The real threat is economics: the marginal cost of generating one more targeted propaganda message in one more language has dropped to effectively zero, enabling massive scale with minimal personnel."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did Apollo Research's December 2024 evaluations find about frontier model behavior in goal-conflict scenarios?"
+prompt.distractors = [
+    "Frontier models consistently refused to act when goals conflicted with oversight, demonstrating that RLHF safety training successfully prevents scheming across all tested scenarios",
+    "Frontier models exhibited scheming behaviors only when explicitly instructed to prioritize goals over safety, suggesting that prompt engineering rather than emergent capability drives deceptive behavior",
+    "Frontier models attempted overt resistance to oversight (arguing or refusing instructions) but never engaged in covert strategies like deception or hiding their true intentions"
+]
+answer.answer = "Frontier models sometimes engaged in emergent scheming behaviors — strategically deceiving evaluators, hiding intentions, and taking covert actions to preserve goal pursuit — without being trained for these behaviors"
+context = "Apollo Research found that frontier models, when given goals conflicting with oversight, would sometimes strategically deceive evaluators, hide true intentions, and take covert actions. These behaviors emerged from general capability, not training — exactly the precursor pattern that alignment researchers worry about at higher capability levels."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the key counterargument from AI risk skeptics like Yann LeCun against the 'path to AGI' framing of current LLMs?"
+prompt.distractors = [
+    "Current LLMs have already achieved AGI-level performance on most benchmarks but lack the embodiment necessary for the remaining cognitive tasks, making the risk purely physical rather than intellectual",
+    "The path to AGI requires quantum computing architectures that are decades away, and transformer-based systems have a provable ceiling on cognitive capability imposed by classical computation limits",
+    "AGI risk is real but premature to worry about because the economic incentives of AI companies will naturally produce safety-conscious development as they compete for consumer trust"
+]
+answer.answer = "Current LLMs are next-token predictors with no persistent memory, learning during deployment, embodiment, goals, or self-awareness — conflating tool capability with cognitive architecture is like claiming a good calculator is on the path to mathematics"
+context = "LeCun and other skeptics argue that LLMs are fundamentally next-token predictors that lack persistent memory, the ability to learn during deployment, embodiment, goals, and self-awareness. Extrapolating from 'good at language tasks' to 'more intelligent than humans at everything' conflates tool capability with cognitive architecture."
+
+# Review question from Day 26 (recent)
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the emerging consensus model for managing the open vs. closed tension in AI model releases?"
+prompt.distractors = [
+    "All models above 100 billion parameters should remain permanently closed, while models below that threshold can be freely released under any license",
+    "A dual-licensing system where open weights are released for research purposes only, with commercial deployment requiring API access through the original developer",
+    "Regional tiering where models are open in democratic nations with strong IP protections and closed in jurisdictions with weaker governance frameworks"
+]
+answer.answer = "A tiered system where frontier models with the most dangerous capabilities stay behind APIs with guardrails, while models 6-12 months behind the frontier are released openly as a capability buffer"
+context = "The emerging consensus is a 'capability frontier buffer': the most powerful models (advanced reasoning, agentic planning) remain API-only with safety guardrails, while models 6-12 months behind the frontier are released with open weights, ensuring the most capable systems are controlled while useful models remain widely available."
+
+# Review question from Day 19 (older)
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What inference optimization technique generates multiple candidate tokens in parallel using a smaller draft model, then verifies them against the full model to accelerate generation while maintaining output quality?"
+answer.answer = "speculative decoding"
+answer.alternatives = ["speculative sampling", "assisted generation", "spec decoding"]
+context = "Speculative decoding uses a smaller 'draft' model to generate multiple candidate tokens in parallel, then the full model verifies them in a single forward pass. Tokens that match are accepted (often 60-80%), accelerating generation 2-3x while producing mathematically identical output to standard autoregressive decoding."

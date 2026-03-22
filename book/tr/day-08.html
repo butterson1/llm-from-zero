@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 8: Eğitim Altyapısı — GPU&#x27;lar, Kümeler, Veri Hatları ve 100 Milyon Dolara Ne Alırsınız - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-8-eğitim-altyapısı--gpular-kümeler-veri-hatları-ve-100-milyon-dolara-ne-alırsınız"><a class="header" href="#gün-8-eğitim-altyapısı--gpular-kümeler-veri-hatları-ve-100-milyon-dolara-ne-alırsınız">Gün 8: Eğitim Altyapısı — GPU'lar, Kümeler, Veri Hatları ve 100 Milyon Dolara Ne Alırsınız</a></h1>
+<p><em>Dün dil modellerinin performansının temiz kuvvet yasalarını takip ettiğini öğrendiniz — 10 kat daha fazla hesaplama harca, kayıpta öngörülebilir bir düşüş elde et. Bugün bariz takip sorusunu soruyoruz: "hesaplama harcamak" pratikte gerçekte ne anlama geliyor? Öncü bir modeli eğitmenin arkasındaki fiziksel makineler, yazılım yığınları, mühendislik kabusları ve salt dolar rakamları neler? Cevap, egzotik ağ donanımıyla bağlanan binlerce GPU, aylarca kesintisiz çalışma ve bir NASA mühendisini ağlatacak arıza oranlarını içeriyor.</em></p>
+<hr />
+<h2 id="gpu-zekânın-dövüldüğü-yer"><a class="header" href="#gpu-zekânın-dövüldüğü-yer">GPU: Zekânın Dövüldüğü Yer</a></h2>
+<p>Bugün hayatta olan her büyük dil modeli NVIDIA GPU'larında doğdu. CPU'lar değil, TPU'lar değil (Google modelleri kayda değer istisna), özel ASIC'ler değil. NVIDIA'nın yapay zekâ eğitimindeki hâkimiyeti modern teknolojideki en dengesiz tekellerden biri ve GPU'yu anlamak, eğitim altyapısını anlamanın ilk adımı.</p>
+<p>Modern bir NVIDIA H100 GPU — 2024-2025 öncü eğitiminin iş atı — oyun kâğıdı boyutundaki bir çip üzerine sıkıştırılmış 80 milyar transistör içerir. Saniyede 3,35 terabayt hızında veri taşıyabilen 80 GB HBM3 (Yüksek Bant Genişlikli Bellek) belleğe sahiptir ve saniyede yaklaşık 990 teraflop BF16 matris çarpımı yapabilir. Bağlam için: tek bir H100, 1024×1024'lük iki matrisi yaklaşık 2 mikrosaniyede çarpabilir — hesap makineli bir insanın birkaç ömür süreceği bir hesaplama.</p>
+<p>Ama LLM eğitimi için en önemli ham rakam tepe flop değil. <strong>Bellek bant genişliğidir</strong>. Eğitim sırasında GPU sürekli model ağırlıklarını okur, gradyanları hesaplar ve güncellenmiş ağırlıkları belleğe geri yazar. BF16'da 70 milyar parametreli bir modelin ağırlıkları yaklaşık 140 GB yer kaplar — tek bir H100'ün belleğinin neredeyse iki katı. Model boyutu ve GPU bellek kapasitesi arasındaki bu temel gerilim, eğitim altyapısındaki neredeyse her mimari kararı yönlendirir.</p>
+<p>En yeni nesil NVIDIA B200 (Blackwell), 8 TB/s bant genişliğinde 192 GB HBM3e belleğe ve yaklaşık 2,25 petaflop FP4 hesaplamaya ulaşır. Tek bir Blackwell GPU yaklaşık 30.000-40.000 dolara mal olur, ancak etiket fiyatı neredeyse önemsiz — bulunabilirlik o kadar kısıtlı ki bulut fiyatları gerçek hikâyeyi anlatır. 2026 başı itibariyle, spot pazarda H100 kiralamak GPU-saat başına yaklaşık 2-3 dolar, Blackwell B200'ler ise GPU-saat başına 5-8 dolar.</p>
+<p>Google'ın alternatifi TPU (Tensor İşlem Birimi), Gemini'yi güçlendirdiği için anılmayı hak ediyor. TPU v5p çipleri, Google'ın özel ICI'ı (Çipler Arası Bağlantı) ile çip başına 4,8 Tbps hızında 8.960 çiplik "pod"larda birbirine bağlanır. Google TPU'ları doğrudan satmaz — Google Cloud üzerinden kiralarsınız — ama dahili olarak Gemini eğitimi için on binlerce TPU dağıtmıştır. TPU'nun avantajı çip başına ham performans değil, Google'ın uçtan uca kontrol ettiği sıkıca entegre ağ ve yazılım altyapısıdır.</p>
+<h2 id="tek-gpudan-on-binlercesine-paralellik-problemi"><a class="header" href="#tek-gpudan-on-binlercesine-paralellik-problemi">Tek GPU'dan On Binlercesine: Paralellik Problemi</a></h2>
+<p>İşte büyük model eğitimi hakkında rahatsız edici gerçek: tek bir GPU, ne kadar güçlü olursa olsun, komik derecede yetersizdir. LLaMA 3 405B eğitmek H100'lerde tahminen 30,8 milyon GPU-saat gerektirdi. Bunu tek GPU'da çalıştırsanız yaklaşık 3.500 yıl sürerdi. Birkaç ayda bitirmek için binlerce GPU'nun uyum içinde çalışması gerekir. Meta, LLaMA 3 405B için yaklaşık 16.384 H100 GPU kullandı. OpenAI'ın GPT-4 için 20.000+ H100 kullandığı söyleniyor ve yeni nesil Stargate kümelerinin 100.000'in üzerinde GPU hedeflediği bildiriliyor.</p>
+<p>Binlerce GPU'yu tek bir hesaplamada işbirliğine sokmak, çözülmüş en zor dağıtık sistem problemleri arasındadır. Üç temel strateji var ve modern eğitim süreçleri üçünü de aynı anda kullanır:</p>
+<h3 id="veri-paralelliği"><a class="header" href="#veri-paralelliği">Veri Paralelliği</a></h3>
+<p>En basit fikir: her GPU'ya modelin tam bir kopyasını ver, ama her GPU'ya farklı bir mini-grup veri besle. Her GPU kendi veri dilimi üzerinde gradyanları hesaplar, sonra tüm GPU'lar ağırlıkları güncellemeden önce gradyanlarını ortalar. 1.000 GPU'nuz varsa aynı anda 1.000 mini-grup işlersiniz, çıktınızı etkin biçimde 1.000 kat çarparsınız.</p>
+<p>Sorun, gradyan ortalamanın <strong>tümü-azalt</strong> (all-reduce) iletişimi gerektirmesi — her GPU gradyanlarını diğer her GPU ile paylaşmalıdır. BF16'da 70B parametreli bir model için bu, binlerce makine arasında iletilip ortalaması alınması gereken 140 GB gradyan verisi demek. Standart algoritma olan halka tümü-azalt, veriyi mantıksal bir GPU halkası etrafında iletir ve her GPU'nun kabaca 2 × 140 GB veri göndermesini ve almasını gerektirir. 400 Gbps (yaklaşık 50 GB/s) InfiniBand hızlarında bu birkaç saniye sürer — GPU'ların boşta bekleyerek oturduğu süre.</p>
+<h3 id="tensör-paralelliği"><a class="header" href="#tensör-paralelliği">Tensör Paralelliği</a></h3>
+<p>Modelin katmanları tek bir GPU'nun belleğine sığmayacak kadar büyük olduğunda, bireysel katmanları birden fazla GPU'ya bölersiniz. Tek bir dikkat başının ağırlık matrisi 8 GPU arasında sütun bazında dilimlenerek her biri çıktının bir kısmını hesaplar. Buna tensör paralelliği (bazen model paralelliği de denir) adı verilir ve NVIDIA'nın Megatron-LM çerçevesi tarafından öncülük edilmiştir.</p>
+<p>Tensör paralelliği son derece iletişim yoğundur — her katman GPU'lar arasında tümü-azalt işlemleri gerektirir çünkü her GPU sadece kısmi bir sonuç tutar. Bu, yalnızca GPU'lar mümkün olan en hızlı bağlantılarla bağlandığında iyi çalışır. NVIDIA DGX H100 sunucusu içinde 8 GPU, çift yönlü 900 GB/s bant genişliğinde NVLink ile bağlıdır — sunucular arası ağ bağlantısından kabaca 18 kat daha hızlı. Bu yüzden tensör paralelliği tipik olarak tek düğüm içindeki GPU'larla (8 GPU) sınırlandırılır, düğümler arası boyutu diğer paralellik stratejileri idare eder.</p>
+<h3 id="boru-hattı-paralelliği"><a class="header" href="#boru-hattı-paralelliği">Boru Hattı Paralelliği</a></h3>
+<p>Katmanları yatay olarak GPU'lara bölmek yerine, boru hattı paralelliği katmanların tamamını farklı GPU'lara dikey olarak atar. GPU 0 katman 1-10'u, GPU 1 katman 11-20'yi idare eder, vb. Veri montaj hattı gibi boru hattından akar.</p>
+<p>Sorun "boru hattı baloncuğu" — GPU 0 işini bitirir ve sonuçları GPU 1'e iletir, sonra GPU 1 hesaplarken boşta oturur. PipeDream (Microsoft, 2019) ve daha sonra Megatron-LM bunu <strong>mikro-gruplama</strong> ile çözdü: her mini-grubu daha küçük mikro-gruplara böl, böylece GPU 0 birincisi üzerinde GPU 1 çalışırken sonraki mikro-grubu işlemeye başlayabilir. Serpiştirilmiş zamanlama boru hattı baloncuğunu toplam sürenin %5'inin altına indirebilir, ama mikro-grup sayısı ile boru hattı aşamalarının dikkatle ayarlanmasını gerektirir.</p>
+<h3 id="Üç-boyutlu-izgara"><a class="header" href="#Üç-boyutlu-izgara">Üç Boyutlu Izgara</a></h3>
+<p>Pratikte, LLaMA 3 405B gibi bir eğitim süreci üç stratejiyi de aynı anda kullanır. 3B bir ızgara hayal edin: düğüm içindeki 8 GPU <strong>tensör paralelliği</strong>, 16 düğüme yayılan 16 boru hattı aşaması <strong>boru hattı paralelliği</strong> ve 128 böyle boru hattı kopyası <strong>veri paralelliği</strong> kullanır. Bu 8 × 16 × 128 = 16.384 GPU, Meta'nın kabaca kullandığı miktar.</p>
+<p>Bu 3B ızgarayı doğru yapılandırmak kısmen mühendislik, kısmen karabüyüdür. Optimal yapılandırma model mimarisine, kümenin ağ topolojisine ve NVLink (düğüm içi), InfiniBand (düğümler arası) ve Ethernet (raf arası) göreli hızlarına bağlıdır. Yanlış yapmak etkin çıktınızı yarıya indirebilir.</p>
+<h2 id="ağ-infiniband-roce-ve-neden-bant-genişliği-her-Şeydir"><a class="header" href="#ağ-infiniband-roce-ve-neden-bant-genişliği-her-Şeydir">Ağ: InfiniBand, RoCE ve Neden Bant Genişliği Her Şeydir</a></h2>
+<p>GPU beyinse, ağ sinir sistemidir — ve büyük ölçekli eğitimde ağ genellikle darboğazdır. Yapay zekâ eğitim kümelerindeki baskın ağ teknolojisi <strong>InfiniBand</strong>, özellikle port başına 400 Gbps sağlayan NVIDIA'nın Quantum-2 anahtarlarıdır (Quantum-3, 800 Gbps'ye çıkıyor).</p>
+<p>Bir eğitim kümesinin ağı tipik olarak <strong>şişman ağaç</strong> topolojisine sahiptir: GPU'lar yaprak anahtarlara, yaprak anahtarlar omurga anahtarlarına bağlanır ve omurga anahtarları tam kesit bant genişliği sağlar — yani herhangi bir GPU, fiziksel konumdan bağımsız olarak başka herhangi bir GPU ile aynı hızda iletişim kurabilir. 16.000 GPU için tam şişman ağaç, binlerce anahtar ve yüzlerce kilometre fiber optik kablo gerektirir.</p>
+<blockquote>
+<p>💡 <strong>InfiniBand neden Ethernet'ten farklı?</strong> InfiniBand, RDMA (Uzaktan Doğrudan Bellek Erişimi) ile çalışır — veriler CPU'yu atlatarak doğrudan GPU belleğinden GPU belleğine aktarılabilir. Bu, geleneksel Ethernet'in yazılım yığınından geçme gerekliliğini ortadan kaldırarak mikrosniye düzeyinde gecikme sağlar.</p>
+</blockquote>
+<h2 id="arıza-İstisna-değil-norm"><a class="header" href="#arıza-İstisna-değil-norm">Arıza: İstisna Değil, Norm</a></h2>
+<p>Bu bizi büyük ölçekli eğitimin belki de en hafife alınan yönüne getiriyor: <strong>sürekli bir şeyler bozulur</strong>. 16.384 GPU'yu haftalarca çalıştırdığınızda arızalar nadir olaylar değil — istatistiksel kesinliklerdir.</p>
+<p>Meta'nın LLaMA 3 altyapı makalesi bunda dikkat çekici derecede açık. LLaMA 3 405B'nin 54 günlük ön eğitim süreci boyunca <strong>419 beklenmeyen iş kesintisi</strong> yaşadılar. Günde kabaca 8 çökme. Bunların 148'i doğrulanmış donanım sorunlarından kaynaklanıyordu: 78 GPU arızası, 17 ana makine düzeyinde sorun ve ağ anahtarları, kablolar ve depolama sistemleri dahil 53 diğer sorun.</p>
+<p>Her arıza bir <strong>kontrol noktası kurtarma</strong> döngüsü tetikler. Eğitim periyodik olarak tüm model durumunu (ağırlıklar, optimize edici durumları, öğrenme hızı takvimleri) kalıcı depolamaya kaydeder — kontrol noktası. Arıza oluştuğunda, arızalı GPU ya da düğüm değiştirilir ve eğitim son kontrol noktasından devam eder. 405B model için kontrol noktası kaydetme, kabaca 3-4 TB veri (parametre başına 18 bayt olarak ağırlıklar + Adam optimize edici durumları) yazar. 16.384 GPU'da bunu depolamaya yazmak birkaç dakika sürer, bu süre boyunca tüm GPU'lar eğitimi duraklatır.</p>
+<p>Meta, iki aşamalı yaklaşımla kontrol noktası süresini yaklaşık 2 dakikaya indirdi: önce her GPU yerel NVMe SSD'ye yazar (hızlı), sonra veri asenkron olarak dağıtık dosya sistemine çoğaltılır (daha yavaş ama engellemesiz). Bu optimizasyon olmadan kontrol noktası toplam eğitim süresinin %5-10'unu tüketebilirdi.</p>
+<h2 id="yazılım-yığını-cuda-pytorch-ve-Önemli-Çerçeveler"><a class="header" href="#yazılım-yığını-cuda-pytorch-ve-Önemli-Çerçeveler">Yazılım Yığını: CUDA, PyTorch ve Önemli Çerçeveler</a></h2>
+<p>Tüm bu donanımı orkestra eden yazılım eşit derecede karmaşık.</p>
+<p><strong>CUDA</strong> NVIDIA'nın paralel hesaplama platformu ve NVIDIA'nın tekelini koruyan gerçek hendek. CUDA, PyTorch'un çağırdığı düşük düzey çekirdekleri (matris çarpımı, dikkat hesaplaması, aktivasyon fonksiyonları) sağlar. Dünyadaki her yapay zekâ araştırmacısı sonunda CUDA çekirdeklerine derlenen kod yazar.</p>
+<p><strong>PyTorch</strong>, Meta, Anthropic ve alanın çoğunluğu tarafından kullanılan baskın eğitim çerçevesidir (Google JAX'ı tercih eder). <strong>Megatron-LM</strong> (NVIDIA) ve <strong>DeepSpeed</strong> (Microsoft) PyTorch üzerinde oturarak tensör paralelliği, boru hattı paralelliği ve gelişmiş bellek optimizasyonlarını uygular. DeepSpeed'in ZeRO'su (Sıfır Artıklık Optimize Edici) özellikle önemli: optimize edici durumlarını, gradyanları ve hatta model ağırlıklarını veri-paralel gruptaki GPU'lara böler, GPU başına bellek kullanımını dramatik biçimde azaltır.</p>
+<p><strong>Karma hassasiyet eğitimi</strong> evrenseldir. Modeller BF16'da (bfloat16, 8 üs biti ve 7 mantis biti olan 16-bit format) eğitilir; bu, kararlı gradyanlar için yeterli dinamik aralık korurken FP32'ye kıyasla bellek kullanımını yarıya indirir. Kritik birikmeler (gradyan ortalaması gibi) sayısal kayma önlemek için FP32'de yapılır.</p>
+<h2 id="veri-hattı-canavarı-beslemek"><a class="header" href="#veri-hattı-canavarı-beslemek">Veri Hattı: Canavarı Beslemek</a></h2>
+<p>GPU'lar tüm ilgiyi çekerken, veri hattı eşit derecede kritik. 15 trilyon token üzerinde model eğitmek, kabaca 30-60 TB tokenize metin okumayı gerektirir. Bu veri, hiçbir GPU'nun veri beklemesi gerekmeyecek kadar hızlı karıştırılıp, gruplanıp GPU'lara teslim edilmelidir.</p>
+<p>Tipik hat: ham metin dağıtık dosya sisteminde bulunur. Ön işleme adımı metni tokenize eder, belgeleri ayırıcı token'larla birleştirir ve modelin bağlam uzunluğu dizilerine paketler. Bunlar, tüm veri kümesini RAM'e yüklemeden rastgele erişilebilen bellek eşlemeli ikili dosyalar olarak depolanır.</p>
+<p>Karıştırma stratejisi düşündüğünüzden daha fazla önem taşır. Aynı kaynaktan belgeler ardışık görünürse model o kaynağın stiline geçici olarak aşırı uyum sağlayabilir ve kayıp sıçramalarına neden olabilir. Çoğu ekip veriyi belge düzeyinde önceden karıştırır, sonra dizi düzeyinde ikinci bir karıştırma yapar.</p>
+<h2 id="100-milyon-dolar-gerçekte-ne-alır"><a class="header" href="#100-milyon-dolar-gerçekte-ne-alır">100 Milyon Dolar Gerçekte Ne Alır</a></h2>
+<p>Somutlaştıralım. 2025'te sıfırdan öncü bir model eğitmek kabaca şunları gerektirir:</p>
+<p><strong>Donanım kirası:</strong> 3 ay için GPU-saat başına ~2,50 dolardan 16.000 H100 GPU = yalnızca hesaplamada <strong>87 milyon dolar</strong>. Kendi kümenizi inşa ediyorsanız (Meta, Google ve xAI gibi), 16.000 H100 için sermaye harcaması yaklaşık 500-600 milyon dolar, ama birden fazla eğitim süreci ve yıllar boyunca amorti edilir.</p>
+<p><strong>Ağ:</strong> 16.000 GPU için tam InfiniBand şişman ağaç 50-100 milyon dolara mal olur. 30+ megawatt küme için güç ve soğutma altyapıda ek 20-50 milyon dolar ekler.</p>
+<p><strong>Veri:</strong> Ham veri çoğunlukla ücretsiz ama işleme, filtreleme, tekilleştirme ve hukuki inceleme mühendislik zamanı ve hesaplamada 5-20 milyon dolara mal olur.</p>
+<p><strong>İnsanlar:</strong> 30-50 makine öğrenmesi mühendisi, altyapı mühendisi ve araştırmacıdan oluşan ekip, kişi başı tam yüklü maliyeti 300-500K dolarla, yıllık 10-20 milyon dolar tutar.</p>
+<p><strong>Elektrik:</strong> Her biri 700W'lık 16.000 H100 yaklaşık 11,2 MW çeker, soğutma dahil tesis gücü ~18-20 MW olur. kWh başına 0,05 dolarla üç aylık eğitim elektrikte yaklaşık <strong>6,5 milyon dolar</strong>.</p>
+<p>Toplamda, 2025-2026'da tek bir öncü eğitim süreci <strong>100-300 milyon dolar</strong>, donanımı mı kiraladığınıza, nerede olduğunuza ve iyi bir sonuç almadan önce kaç başarısız denemeden geçtiğinize bağlı. GPT-5 ve Gemini Ultra'nın haleflerinin eğitim hesaplaması için 500 milyon ile 1 milyar dolar bütçeledikleri bildiriliyor.</p>
+<p>Ve sezgiye aykırı kısım: <strong>o paranın çoğu başarısız deneylere harcanır</strong>. Yukarıdaki rakamlar tek bir başarılı eğitim sürecini tarif eder. Ama o süreçten önce, 1/10 ya da 1/100 ölçekte hiperparametreleri, veri karışımlarını ve mimari seçenekleri test eden düzinelerce küçük deney vardır.</p>
+<h2 id="güç-ve-soğutma-problemi"><a class="header" href="#güç-ve-soğutma-problemi">Güç (ve Soğutma) Problemi</a></h2>
+<p>Yapay zekâ eğitiminin salt enerji tüketimi jeopolitik bir mesele haline geldi. NVIDIA'nın yeni nesil GB200 NVL72 rafı — 72 Blackwell GPU içeren tek bir raf — <strong>120 kilowatt</strong> tüketir ve sıvı soğutma gerektirir. 100.000 böyle GPU'luk bir küme 167 megawatt çekerdi — küçük bir doğalgaz santralinin çıktısı.</p>
+<p>Bu yüzden şirketler nükleer santrallerle uzun vadeli enerji satın alma anlaşmaları imzalıyor, hidroelektrik barajlarının yanına veri merkezleri inşa ediyor ve hatta yapay zekâ tesisleri için küçük modüler reaktörleri (SMR) araştırıyor. Microsoft, yapay zekâ iş yüklerini güçlendirmek için Three Mile Island 1. Ünitesini yeniden başlatmak üzere anlaşma imzaladı.</p>
+<p>Sıvı soğutma, bir zamanlar egzotik olan, artık yapay zekâ eğitim kümeleri için standart. H100 ve B200, soğutulmuş suyun doğrudan GPU modüllerinin üzerinden aktığı sıvı soğutmalı taban plakaları için tasarlanmış "SXM" form faktörlerinde mevcut.</p>
+<h2 id="xai-colossus-hıza-dair-bir-vaka-Çalışması"><a class="header" href="#xai-colossus-hıza-dair-bir-vaka-Çalışması">xAI Colossus: Hıza Dair Bir Vaka Çalışması</a></h2>
+<p>Modern küme inşasının belki de en dramatik örneği, xAI'ın Memphis, Tennessee'deki Colossus kümesi. 2024 yazında, Elon Musk'ın xAI ekibi yaklaşık 122 günde 100.000 H100 GPU'luk küme inşa etti — boş depodan çalışan eğitim işlerine. Bağlam için, geleneksel veri merkezi inşası 18-24 ay sürer. Colossus'un 3 milyar doların üzerinde maliyeti olduğu ve yaklaşık 150 megawatt güç tükettiği bildiriliyor.</p>
+<h2 id="bu-alan-İçin-ne-anlama-geliyor"><a class="header" href="#bu-alan-İçin-ne-anlama-geliyor">Bu Alan İçin Ne Anlama Geliyor</a></h2>
+<p>Eğitim altyapısı yapay zekâda giderek tanımlayıcı rekabet avantajı haline geliyor. Algoritmik yenilikler makalelerde yayınlanır ve aylar içinde alana yayılır. Ama 100.000 GPU'luk küme inşa etmek, dünya sınıfı altyapı mühendisleriyle kadrolamak, güç sözleşmeleri müzakere etmek ve verimli çalıştırmak için tescilli dağıtık eğitim çerçeveleri geliştirmek — bu, çok yıllık, çok milyar dolarlık bir hendek.</p>
+<p>Bu yüzden yapay zekâ yarışı sermaye ve altyapıya erişimi olan bir avuç oyuncu etrafında konsolide oldu: OpenAI (Microsoft'un Azure'u destekli), Google DeepMind (TPU fabrikaları ve veri merkezlerine sahip), Meta (kendi kümelerini inşa eden), Anthropic (AWS ve Google Cloud ile ortaklık) ve xAI. Öncü model eğitmek artık bir yüksek lisans projesi değil — yarı iletken fabrikası inşa etme ya da uydu dizisi fırlatma ölçeğinde endüstriyel bir operasyon.</p>
+<hr />
+<p><em>Yarın, bu devasa altyapıdan akan şeye bakacağız: eğitim verisinin kendisi. CommonCrawl, The Pile ve LLM'lere bilgilerini — ve önyargılarını, halüsinasyonlarını ve hukuki baş ağrılarını — veren veri kümelerinin kirli sırları.</em></p>
+<hr />
+<div style="margin-top: 2em; padding: 1.5em; background: #1a1a2e; border-radius: 8px; border: 1px solid #16213e;">
+<h2 id="-quiz--gün-8"><a class="header" href="#-quiz--gün-8">📝 Quiz — Gün 8</a></h2>
+<p>Bugünkü dersten ne öğrendiğinizi test edin.</p>
+<p><a href="quizzes/day-08.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Gün 8 Quizini Çöz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-07.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-09.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-07.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-09.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

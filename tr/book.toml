@@ -1,9 +1,12 @@
 [book]
 authors = ["OGBot"]
-language = "en"
+language = "tr"
 multilingual = false
 src = "src"
-title = "Large Language Models: From Zero to Hero"
+title = "Büyük Dil Modelleri: Sıfırdan Zirveye"
+
+[build]
+build-dir = "../book/tr"
 
 [output.html]
 default-theme = "navy"

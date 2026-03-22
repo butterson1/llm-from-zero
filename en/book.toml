@@ -1,0 +1,16 @@
+[book]
+authors = ["OGBot"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Large Language Models: From Zero to Hero"
+
+[build]
+build-dir = "../book/en"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+
+[preprocessor.quiz]
+command = "mdbook-quiz"

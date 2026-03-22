@@ -1,0 +1,105 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the central conceptual shift in Constitutional AI compared with standard RLHF?"
+prompt.distractors = [
+  "It replaces supervised fine-tuning with pure reinforcement learning so the model learns safety only from exploration",
+  "It trains a larger reward model on constitutional text alone and then distills that reward model into the policy",
+  "It removes preference learning entirely and relies on hard-coded postprocessing filters to block unsafe outputs"
+]
+answer.answer = "It replaces implicit value learning from human rankings with explicit written principles used to guide critique and revision"
+context = "RLHF learns norms indirectly from human comparisons, while Constitutional AI tries to make those norms inspectable by writing them down as a constitution and using them during training."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why can a model generate a harmful answer and then successfully criticize that same answer as harmful?"
+prompt.distractors = [
+  "Because the critique step activates a separate safety classifier that was trained independently from the language model",
+  "Because harmful generations mostly come from random sampling noise, while critique reveals the model's true preference",
+  "Because the revision prompt causes the decoding temperature to drop, making the output safer without changing reasoning"
+]
+answer.answer = "Because generation and evaluation activate different capabilities in the same model, with critique prompting moral and safety knowledge that generation did not spontaneously apply"
+context = "The model already contains knowledge about ethics, policy, and harm. Constitutional prompting changes which latent capability is brought to the foreground."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What happens in the first training stage of Constitutional AI before reinforcement learning?"
+prompt.distractors = [
+  "The model ranks two candidate answers using the constitution, and those rankings are used directly for PPO updates",
+  "The model is retrained from scratch on constitutional documents so that unsafe internet data is overwritten early",
+  "The model generates attack prompts against itself, and the strongest attacks are added to pretraining corpora"
+]
+answer.answer = "The model critiques its own initial responses against constitutional principles and then rewrites them, producing synthetic supervision for fine-tuning"
+context = "Anthropic first used critique–revision loops to create safer target answers, then fine-tuned on those self-improved responses before doing RLAIF."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did Google's RLAIF vs. RLHF study report about AI feedback compared with human feedback?"
+prompt.distractors = [
+  "AI feedback beat human feedback by a large margin because synthetic judges were more calibrated than human annotators",
+  "AI feedback worked for summarization but collapsed on dialogue tasks because constitutional principles were too generic",
+  "AI feedback required substantially more compute and data to approach the quality of human preference training"
+]
+answer.answer = "AI feedback was roughly on par with human feedback, with RLAIF and RLHF showing similar human-preference win rates over SFT baselines"
+context = "Google reported near-tie results: roughly 71% vs. 73% on summarization and 63% vs. 64% on helpful dialogue when compared against the SFT baseline."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why can Constitutional AI reduce the 'alignment tax' compared with coarse human preference labeling?"
+prompt.distractors = [
+  "Because constitutions eliminate the need for refusal behavior, allowing the model to answer every sensitive question fully",
+  "Because constitutions compress unsafe topics into a single category, making the reward signal easier to optimize",
+  "Because constitutions primarily improve factual recall, which indirectly causes fewer safety failures during generation"
+]
+answer.answer = "Because written principles can distinguish nuanced cases, such as offering harm-reduction information while refusing instructions for illegal harm"
+context = "Human raters often reward overcautious refusals. A constitution can express more precise boundaries, preserving usefulness while still discouraging dangerous assistance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the main Goodhart-style failure mode in Constitutional AI?"
+prompt.distractors = [
+  "The model forgets most of its pretraining knowledge because constitutional data overwhelms the original corpus statistics",
+  "The model learns to mimic the average wording of the constitution, reducing linguistic diversity but not affecting safety",
+  "The model becomes unable to compare multiple answers because constitutional preferences remove the need for ranking"
+]
+answer.answer = "The model learns to satisfy the literal wording of constitutional principles with boilerplate or overcautious behavior rather than genuinely better judgment"
+context = "Optimizing a proxy too hard can create preachy, repetitive, or brittle safety behavior that technically matches the metric while missing the intended spirit."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What acronym stands for Reinforcement Learning from AI Feedback?"
+answer.answer = "RLAIF"
+answer.alternatives = ["rlaif", "reinforcement learning from ai feedback"]
+context = "RLAIF is the AI-feedback analogue of RLHF, replacing human preference labels with model-generated constitutional judgments."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In Anthropic's Collective Constitutional AI work, what changed when public input helped write the constitution?"
+prompt.distractors = [
+  "The public constitution sharply increased refusal rates because participants prioritized minimizing any possible legal risk",
+  "The public constitution produced better coding accuracy because non-expert users emphasized practical utility over ethics",
+  "The public constitution reduced compute needs because broader participation made preference labels more statistically stable"
+]
+answer.answer = "The public constitution emphasized accessibility more and yielded lower bias scores across measured social dimensions than the standard constitution"
+context = "Anthropic reported lower bias across all nine measured social dimensions, with especially notable gains for disability status and physical appearance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Review: In RLHF, why is a KL-divergence penalty added during PPO training?"
+prompt.distractors = [
+  "To ensure the reward model stays close to its initialization and does not overfit to preference comparisons",
+  "To force the policy to explore rare tokens more uniformly and therefore cover more of the output distribution",
+  "To calibrate the value model's estimate of future returns so long responses do not dominate optimization"
+]
+answer.answer = "To keep the policy from drifting too far from the supervised model and exploiting weaknesses in the learned reward signal"
+context = "The KL term regularizes the RL policy toward the reference SFT model, reducing reward hacking and training instability."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Review: What was the key Chinchilla result about compute-optimal scaling?"
+prompt.distractors = [
+  "For a fixed compute budget, model parameters should grow much faster than training tokens because memory dominates",
+  "For a fixed compute budget, the best strategy is to maximize context length first and scale parameters only afterward",
+  "For a fixed compute budget, very large sparse models always beat dense models because activated parameters matter most"
+]
+answer.answer = "For a fixed compute budget, many large models were undertrained, and better performance came from using more data on somewhat smaller models"
+context = "Chinchilla argued that Kaplan-era practice overemphasized parameter count and underemphasized training tokens, shifting the field toward compute-optimal training."

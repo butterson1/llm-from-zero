@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key architectural choice that distinguished GPT-1 from BERT, and why did it ultimately matter more?"
+prompt.distractors = [
+    "GPT-1 used an encoder-only architecture optimized for classification, while BERT used decoder-only for generation — BERT's approach scaled better",
+    "GPT-1 used bidirectional attention with causal masking, while BERT used standard bidirectional — the masking strategy proved more parameter-efficient",
+    "GPT-1 used a hybrid encoder-decoder with shared weights, while BERT separated encoding and decoding — the hybrid approach trained faster at scale"
+]
+answer.answer = "GPT-1 used a decoder-only autoregressive architecture optimized for generation, while BERT used bidirectional encoder-only — generation turned out to be useful for everything"
+context = "GPT-1's decoder-only, autoregressive approach was designed for text generation, while BERT was designed for understanding via bidirectional encoding. Generation proved more scalable and more universally applicable across tasks."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was GPT-2's training data, and what clever heuristic was used to curate it?"
+prompt.distractors = [
+    "CommonCrawl filtered by perplexity score from a smaller language model, retaining only pages below a quality threshold",
+    "Wikipedia articles combined with BookCorpus, filtered by article length and citation count to ensure factual density",
+    "A curated mix of academic papers and news articles, selected using tf-idf similarity scoring against reference documents"
+]
+answer.answer = "WebText — about 8 million web pages scraped by following outbound links from Reddit posts with at least 3 karma points"
+context = "GPT-2 was trained on WebText, which used Reddit karma as a proxy for human curation. Pages linked from Reddit posts with 3+ karma were assumed to be interesting enough that a human had found and shared them."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What happened when OpenAI initially withheld the full GPT-2 model, citing safety concerns about misuse?"
+prompt.distractors = [
+    "The safety community praised the decision and it became the standard practice for all subsequent model releases at major labs",
+    "Governments intervened with temporary export controls on large language models, validating OpenAI's caution about misuse",
+    "Competitors immediately stopped their own open releases, creating an industry-wide norm of restricted model access"
+]
+answer.answer = "Critics ridiculed it as a publicity stunt, and independent researchers replicated the full model within months using publicly available data"
+context = "Aaron Gokaslan and Vanya Cohen independently replicated GPT-2 within months. OpenAI eventually released the full model in November 2019, saying they'd seen 'no strong evidence of misuse so far.' The episode was widely seen as more PR than genuine safety measure."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How much training compute did GPT-3 require, and approximately what did it cost?"
+prompt.distractors = [
+    "364 petaflop/s-days of compute, costing approximately $460,000 in GPU rental using a cluster of A100 GPUs",
+    "36,400 petaflop/s-days of compute, costing approximately $46 million using a dedicated cluster of TPU v4 pods",
+    "3,640 petaflop/s-days of compute, costing approximately $46 million using a mixed cluster of A100 and H100 GPUs"
+]
+answer.answer = "3,640 petaflop/s-days of compute, costing approximately $4.6 million using a cluster of NVIDIA V100 GPUs"
+context = "GPT-3 required 3,640 petaflop/s-days — equivalent to running a petaflop machine for about 10 years. The compute cost was estimated at roughly $4.6 million, with total development costs likely $10-30 million including experimentation."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the InstructGPT finding that directly led to ChatGPT's development?"
+prompt.distractors = [
+    "A 13-billion-parameter model fine-tuned with RLHF matched GPT-3's performance at one-thirteenth the cost per inference call",
+    "A 175-billion-parameter model with RLHF was preferred 85% of the time over the same model without alignment training",
+    "A 1.3-billion-parameter model trained with supervised fine-tuning alone outperformed GPT-3 on standardized benchmarks"
+]
+answer.answer = "A 1.3-billion-parameter model fine-tuned with RLHF was preferred by human labelers over the raw 175B GPT-3 model 85% of the time"
+context = "InstructGPT showed that a model 135× smaller, when properly aligned with RLHF, was judged better by humans than the unaligned giant. This proved alignment is a capability multiplier, not just a safety feature."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "According to widely corroborated leaks, what is GPT-4's architecture and how does it manage inference costs?"
+prompt.distractors = [
+    "A dense 1.8T parameter model that uses aggressive quantization to INT4 precision, reducing memory by 4× at inference time",
+    "A sparse 1.8T parameter model using 16 experts where 8 experts activate per token, achieving 2× compute savings over dense models",
+    "A dense 220B parameter model with 120 layers using grouped-query attention, sometimes incorrectly reported as 1.8T due to KV cache size"
+]
+answer.answer = "A Mixture of Experts model with ~1.8T total parameters across 16 experts of ~111B each, routing only 2 experts per token for ~220B effective compute"
+context = "GPT-4's MoE architecture routes only 2 of 16 experts per token, making inference cost roughly equivalent to a 220B dense model while retaining 1.8T parameters of knowledge capacity — an ~8× compute reduction versus a dense model of the same size."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "How many monthly active users did ChatGPT reach within two months of its November 2022 launch?"
+answer.answer = "100 million"
+answer.alternatives = ["100M", "100 million users"]
+context = "ChatGPT reached 100 million monthly active users within two months of launch, making it the fastest-growing consumer application in history at the time."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was GPT-4's performance on the Uniform Bar Exam compared to GPT-3.5?"
+prompt.distractors = [
+    "GPT-4 scored in the 75th percentile while GPT-3.5 scored in the 25th percentile, showing steady but moderate improvement",
+    "GPT-4 scored in the 90th percentile while GPT-3.5 scored in the 50th percentile, demonstrating consistent capability scaling",
+    "GPT-4 scored in the 99th percentile while GPT-3.5 scored in the 10th percentile, the largest ever gap between model generations"
+]
+answer.answer = "GPT-4 scored in the 90th percentile while GPT-3.5 scored around the 10th percentile, a dramatic 80-percentile-point jump"
+context = "GPT-4 passed the bar exam at the 90th percentile versus GPT-3.5's roughly 10th percentile — an extraordinary leap demonstrating that the capability gap between generations was qualitative, not just quantitative."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What fundamental strategic shift does OpenAI's o-series (o1, o3) represent compared to the traditional GPT scaling approach?"
+prompt.distractors = [
+    "Shifting from transformer architectures to state-space models that can process longer sequences with linear rather than quadratic cost",
+    "Shifting from English-centric training to multilingual training with equal token allocation across the top 50 languages globally",
+    "Shifting from autoregressive pre-training to diffusion-based generation that produces all tokens simultaneously in parallel"
+]
+answer.answer = "Shifting from scaling pre-training compute (more parameters and data) to scaling inference-time compute (longer reasoning chains during generation)"
+context = "The o-series scales test-time compute — the model 'thinks' longer on hard problems by generating internal reasoning chains before answering. This is a fundamentally different scaling axis from the traditional approach of making models bigger during training."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "Approximately how much did the final training run for GPT-4 cost in compute, according to widely cited estimates?"
+answer.answer = "$100 million"
+answer.alternatives = ["100 million", "$100M", "100M"]
+context = "GPT-4's final training run is estimated at roughly $100 million in compute costs, using approximately 25,000 A100 GPUs over 90-100 days. Total development costs including experiments and failed runs were likely several times higher."

@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "An NVIDIA H100 GPU has 80 GB of HBM3 memory. A 70B-parameter model in BF16 requires about 140 GB just for weights. What is the primary architectural consequence of this mismatch?"
+prompt.distractors = [
+  "Training must use mixed-precision with FP32 master weights stored on CPU RAM, swapping weight shards to GPU memory during forward passes via PCIe 5.0 transfers",
+  "The model must use sparse attention patterns to reduce the effective parameter count below 80B, ensuring weights fit within a single GPU's memory capacity",
+  "Training requires gradient accumulation across at least four sequential micro-batches per GPU, reducing peak memory by spreading activation storage over time"
+]
+answer.answer = "The model's layers must be split across multiple GPUs using tensor or pipeline parallelism, since no single GPU can hold the complete model weights simultaneously"
+context = "When model weights exceed a single GPU's memory, you must distribute the model itself across GPUs. Tensor parallelism splits individual layers across GPUs within a node (connected by fast NVLink), while pipeline parallelism assigns entire layers to different GPUs. Most large training runs use both."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is tensor parallelism typically confined to GPUs within a single node (8 GPUs) rather than spread across multiple nodes?"
+prompt.distractors = [
+  "Tensor parallelism requires shared memory access between GPUs for atomic gradient updates, which is only possible through NVLink's unified memory architecture within a node",
+  "The NCCL communication library only supports tensor-parallel all-reduce operations on GPUs that share a PCIe root complex, limiting it to intra-node configurations",
+  "Pipeline parallelism is strictly more efficient than tensor parallelism for inter-node communication, making tensor parallelism redundant beyond a single node boundary"
+]
+answer.answer = "Tensor parallelism requires all-reduce communication after every layer, and intra-node NVLink bandwidth (900 GB/s) is roughly 18× faster than inter-node InfiniBand (50 GB/s)"
+context = "Tensor parallelism splits individual layers across GPUs, requiring all-reduce after each layer's computation. This frequent communication pattern demands the highest possible bandwidth, which only NVLink provides. Inter-node InfiniBand is too slow for this fine-grained communication."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "During the 54-day pre-training run for LLaMA 3 405B, Meta reported 419 unexpected job interruptions. What engineering approach did they use to minimize the impact of these frequent failures?"
+prompt.distractors = [
+  "They used redundant GPU pairs in lockstep execution, so when one GPU failed its mirror could continue without interruption, reducing effective cluster size by 50%",
+  "They implemented elastic training that automatically shrank the data-parallel dimension when GPUs failed, continuing at reduced throughput without checkpointing",
+  "They ran three identical training jobs simultaneously on separate cluster partitions, selecting the one with the best loss curve and discarding the others"
+]
+answer.answer = "They used two-phase checkpointing — fast writes to local NVMe SSDs followed by asynchronous replication to distributed storage — reducing checkpoint overhead to about 2 minutes"
+context = "Fast checkpointing is critical at scale because failures happen roughly 8 times per day. Meta's approach first writes to fast local storage (non-blocking for training), then replicates to durable shared storage in the background. This minimized the training time lost to checkpointing overhead."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "DeepSpeed ZeRO Stage 3 enables training a 100B-parameter model on GPUs that could individually hold only ~1B parameters. What is the fundamental trade-off of this approach?"
+prompt.distractors = [
+  "It requires FP32 precision for all computations to maintain numerical stability when weights are reconstructed from distributed shards, doubling compute requirements",
+  "It limits the effective batch size to one micro-batch per GPU since all available memory is consumed by the partitioned optimizer states and weight shards",
+  "It requires synchronous checkpointing after every training step to ensure distributed weight partitions remain consistent across GPU failures"
+]
+answer.answer = "It dramatically increases inter-GPU communication volume because weights, gradients, and optimizer states must be gathered from other GPUs whenever they are needed for computation"
+context = "ZeRO Stage 3 partitions weights, gradients, AND optimizer states across data-parallel GPUs. This means each GPU holds only a fraction of the model, but must gather the full weights for each layer during forward/backward passes — trading memory savings for increased communication."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of NVIDIA's library that implements GPU-to-GPU collective communication patterns (all-reduce, all-gather, reduce-scatter) used in distributed training?"
+answer.answer = "NCCL"
+answer.alternatives = ["nccl", "NVIDIA NCCL", "NVIDIA Collective Communications Library"]
+context = "NCCL (NVIDIA Collective Communications Library) is the critical software layer that implements efficient multi-GPU communication. It's used by PyTorch's distributed module and is essential for data parallelism (gradient all-reduce) and tensor parallelism (activation all-reduce)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "A 16,000 H100 GPU training cluster running at 700W per GPU draws about 11.2 MW. What is the approximate total facility power requirement when cooling is included?"
+prompt.distractors = [
+  "About 12-13 MW total, because modern liquid cooling for H100 SXM modules operates at over 95% efficiency, adding minimal overhead to the GPU power draw",
+  "About 30-35 MW total, because air cooling at these densities requires massive fan arrays and chiller plants that consume roughly 2× the GPU power draw",
+  "About 45-50 MW total, because the networking infrastructure (thousands of InfiniBand switches) and storage systems consume power comparable to the GPUs"
+]
+answer.answer = "About 18-20 MW total, because cooling, networking, storage, and facility overhead typically add 60-80% on top of raw GPU power consumption at this scale"
+context = "The PUE (Power Usage Effectiveness) of modern AI data centers ranges from 1.1 (best liquid-cooled) to 1.6+ (air-cooled). At PUE 1.6-1.8, a cluster drawing 11.2 MW of GPU power needs 18-20 MW total for cooling, networking, storage, lighting, and other overhead."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the 'pipeline bubble' problem in pipeline parallelism, and how is it mitigated?"
+prompt.distractors = [
+  "It's the memory overhead from storing intermediate activations for all pipeline stages simultaneously, mitigated by activation recomputation during the backward pass",
+  "It's the synchronization delay when pipeline stages have different compute times due to layer heterogeneity, mitigated by load-balancing layer assignments across stages",
+  "It's the bandwidth bottleneck at pipeline stage boundaries where activation tensors must traverse the inter-node network, mitigated by compressing activations before transmission"
+]
+answer.answer = "It's the idle time when GPUs wait for earlier/later stages to finish before receiving work, mitigated by splitting mini-batches into micro-batches so stages can overlap processing"
+context = "In naive pipeline parallelism, GPU 0 computes and passes results to GPU 1, then sits idle. Micro-batching (introduced by PipeDream) splits work into smaller chunks so GPU 0 can start the next micro-batch while GPU 1 processes the first, reducing idle time to under 5%."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why has NVIDIA maintained such a dominant monopoly in AI training hardware despite competition from AMD (ROCm) and Intel (OneAPI)?"
+prompt.distractors = [
+  "NVIDIA GPUs have 3-5× higher raw floating-point throughput than competing hardware at the same price point, making alternatives economically unviable for any training workload",
+  "NVIDIA holds essential patents on transformer-specific matrix multiplication circuits that prevent competitors from implementing efficient attention computation in hardware",
+  "NVIDIA's GPUs are the only hardware that supports bfloat16 precision, which is required for stable mixed-precision training of large language models"
+]
+answer.answer = "CUDA's software ecosystem — including optimized kernels, libraries like NCCL and cuDNN, and deep PyTorch integration — creates a switching cost that competitors' hardware can't overcome with raw performance alone"
+context = "NVIDIA's moat is primarily software, not hardware. Every AI researcher writes code targeting CUDA. Libraries like NCCL (communication), cuDNN (neural network primitives), and cuBLAS (linear algebra) are deeply optimized and tightly integrated with PyTorch. AMD and Intel have capable hardware but can't replicate decades of CUDA ecosystem development."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What 16-bit floating point format is universally used for LLM training because it has 8 exponent bits (wide dynamic range) and 7 mantissa bits?"
+answer.answer = "BF16"
+answer.alternatives = ["bfloat16", "bf16", "brain floating point 16", "brain float 16"]
+context = "BF16 (bfloat16 or 'brain floating point') was developed by Google Brain. Its 8 exponent bits match FP32's range, preventing overflow/underflow during training, while its 7 mantissa bits provide sufficient precision for gradient computation. It halves memory versus FP32 and gets 2× throughput on Tensor Cores."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "xAI built the 100,000 H100 GPU Colossus cluster in Memphis in approximately 122 days. Traditional data center construction takes 18-24 months. What is a commonly cited concern about this accelerated timeline?"
+prompt.distractors = [
+  "The rushed construction violated NVIDIA's DGX warranty terms by using non-certified cooling systems, voiding hardware support for all 100,000 GPUs in the cluster",
+  "The cluster's InfiniBand network was only partially deployed, limiting actual training to 25,000 interconnected GPUs while the remaining 75,000 operated as isolated nodes",
+  "The 122-day timeline only included hardware installation; the software stack required an additional 8 months of development before any model training could begin"
+]
+answer.answer = "Running 100,000 GPUs at high efficiency requires months of software tuning after hardware installation, so the rapid build may not have translated to optimal computational utilization"
+context = "Building a cluster and running it efficiently are very different challenges. Configuring the 3D parallelism grid, tuning NCCL parameters, optimizing data pipelines, and debugging failure recovery at 100K GPU scale takes months of iteration. The impressive construction speed doesn't guarantee the cluster achieved high MFU (Model FLOPs Utilization)."

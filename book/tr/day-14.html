@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 14: Ortaya Çıkan Yetenekler — Düşünce Zinciri, Araç Kullanımı ve Kimsenin Öngöremediği Şeyler - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-14-ortaya-Çıkan-yetenekler--düşünce-zinciri-araç-kullanımı-ve-kimsenin-Öngöremediği-Şeyler"><a class="header" href="#gün-14-ortaya-Çıkan-yetenekler--düşünce-zinciri-araç-kullanımı-ve-kimsenin-Öngöremediği-Şeyler">Gün 14: Ortaya Çıkan Yetenekler — Düşünce Zinciri, Araç Kullanımı ve Kimsenin Öngöremediği Şeyler</a></h1>
+<p><em>Büyük dil modelleriyle ilgili en tuhaf şey, yapmalarını tasarladığımız şey değil — kendi başlarına yapmayı öğrendikleri. Ve yapay zekâdaki en şiddetli tartışma şu anda bu "öğrenme"nin gerçek olup olmadığı.</em></p>
+<hr />
+<h2 id="alanı-sarsan-keşif"><a class="header" href="#alanı-sarsan-keşif">Alanı Sarsan Keşif</a></h2>
+<p>2022'de Google'dan Jason Wei ve ark., bir dizi dikkat çekici gözlemi belgeleyen "Emergent Abilities of Large Language Models" makalesini yayınladı. Belirli görevlerde küçük modeller şansa yakın performans gösterirken, belirli bir ölçeğin üstünde modeller aniden ve dramatik biçimde yetkinleşiyordu. Çok adımlı aritmetik, analojik muhakeme, talimat takibi — bu yeteneklerin hiçbiri açıkça eğitilmemişti ama belirli parametresayılarında "açılıyor" gibiydi.</p>
+<p>Gün 7'de gördüğümüz gibi, bu "ortaya çıkış" aslında düzgün kayıp iyileşmesinin göreve özgü eşikleri aşmasının sonucu olabilir. Ama fenomen gerçek: ölçek yetenekler yaratır.</p>
+<h2 id="sürprizler-kataloğu"><a class="header" href="#sürprizler-kataloğu">Sürprizler Kataloğu</a></h2>
+<p>Ortaya çıkan yeteneklerin bazıları:</p>
+<ul>
+<li><strong>Çok adımlı aritmetik:</strong> ~100B parametreden sonra modeller dört işlemi tutarlı biçimde yapabilir hale geldi</li>
+<li><strong>Düşünce zinciri muhakemesi:</strong> "Adım adım düşünelim" sihirli kelimeleri büyük modellerde doğruluğu dramatik artırırken küçük modellerde hiç etki göstermiyordu</li>
+<li><strong>Analojik muhakeme:</strong> "A, B'ye, C ise ___'a" yapılarında tutarlı genelleme</li>
+<li><strong>Çeviri:</strong> Hiç paralel çeviri verisi görmemiş modellerin diller arası çeviri yapabilmesi</li>
+<li><strong>Araç kullanımı:</strong> Hesap makinesi, arama motoru ya da API çağırmayı öğrenme</li>
+</ul>
+<h2 id="sıfır-Örnekli-düşünce-zinciri-beş-kelimelik-devrim"><a class="header" href="#sıfır-Örnekli-düşünce-zinciri-beş-kelimelik-devrim">Sıfır-Örnekli Düşünce Zinciri: Beş Kelimelik Devrim</a></h2>
+<p>Belki de en çarpıcı ortaya çıkış, Kojima ve ark.'nın (2022) keşfi: bir istemin sonuna sadece <strong>"Adım adım düşünelim"</strong> ("Let's think step by step") eklemek, sıfır-örnekli muhakeme performansını dramatik biçimde artırıyordu. MultiArith ölçütünde doğruluk %18'den %79'a fırladı.</p>
+<p>Bu neden çalışır? Otoregresif modeller çıktı token'ı başına sabit miktarda hesaplama yapar. Ara adımlar üretmesini istediğinizde, modele çok-adımlı bir problem üzerinde <em>daha fazla hesaplama adımı</em> vermiş olursunuz. Her ara token potansiyel olarak bilgiyi rafine eder ve sonraki adım için bağlam oluşturur.</p>
+<blockquote>
+<p>📐 <strong>Diyagram notu:</strong> Burada standart istem vs düşünce zinciri istemi karşılaştırmasını gösteren bir akış diyagramı çok faydalı olurdu — standart istemde doğrudan cevap, CoT'ta ara adımlar zinciri ve nihai cevap.</p>
+</blockquote>
+<h2 id="Öz-tutarlılık-ve-kalabalıkların-bilgeliği"><a class="header" href="#Öz-tutarlılık-ve-kalabalıkların-bilgeliği">Öz-Tutarlılık ve Kalabalıkların Bilgeliği</a></h2>
+<p>Wang ve ark. (2023) düşünce zincirini genişleten <strong>öz-tutarlılık</strong> (self-consistency) yöntemini tanıttı: aynı soruyu yüksek sıcaklıkla birden çok kez çözün, her seferinde farklı muhakeme yolları alın ve en çok oy alan cevabı seçin. Bu, GSM8K gibi matematik ölçütlerinde doğruluğu %5-15 daha artırdı.</p>
+<p>Sezgisel açıklama basit: doğru cevaba birden fazla bağımsız yoldan ulaşmak, tek bir yoldan ulaşmaktan daha güvenilir. Bu, istatistikteki topluluk (ensemble) yöntemlerinin doğrudan muhakemeye uygulanması.</p>
+<h2 id="araç-kullanımı-modeller-telefon-açmayı-Öğrendiğinde"><a class="header" href="#araç-kullanımı-modeller-telefon-açmayı-Öğrendiğinde">Araç Kullanımı: Modeller Telefon Açmayı Öğrendiğinde</a></h2>
+<p>2023'te Schick ve ark.'nın <strong>Toolformer</strong> makalesi önemli bir kavrayış sundu: dil modelleri hangi token dizisinin bir araç çağrısı temsil ettiğini ve sonucu nereye ekleneceğini <em>kendi kendine öğrenebilir</em>. Model, hesap makinesi çağrısı eklemenin kaybı azaltacağı yerleri tespit eder ve otomatik olarak eğitim verisi üretir.</p>
+<p>Modern uygulamada araç kullanımı şöyle çalışır:</p>
+<ol>
+<li>Model bir fonksiyon çağrısı üretir (örn. <code>search("Türkiye'nin başkenti")</code>)</li>
+<li>Sistem çağrıyı yürütür ve sonucu modele döndürür</li>
+<li>Model sonucu yanıtına entegre eder</li>
+</ol>
+<p>Bu, Gün 23'te derinlemesine inceleyeceğimiz "ajanlar"ın temelidir.</p>
+<h2 id="serap-tartışması-ortaya-Çıkan-yetenekler-gerçek-mi"><a class="header" href="#serap-tartışması-ortaya-Çıkan-yetenekler-gerçek-mi">Serap Tartışması: Ortaya Çıkan Yetenekler Gerçek mi?</a></h2>
+<p>2023'te Stanford'dan Schaeffer ve ark. kışkırtıcı bir karşı-argüman sundu: ortaya çıkış, modellerin ölçeklenme özelliği değil, <em>ölçüm yönteminin</em> bir eseri. Kesikli metrikler (doğru/yanlış) kullandığınızda düzgün iyileştirmeler keskin geçişler gibi görünür. Sürekli metrikler (kısmi kredi) kullandığınızda "ortaya çıkış" kaybolur ve düzgün, kademeli iyileştirme görürsünüz.</p>
+<p>Bu tartışma devam ediyor. Orta yol görüşü: altta yatan iyileştirme düzgün (Gün 7'deki ölçekleme yasaları), ama pratik etkisi — belirli görevleri yapabilme veya yapamama — gerçekten süreksiz olabilir, çünkü görevler genellikle her şey-ya-da-hiç niteliktedir.</p>
+<h2 id="modellerin-bildiği-ama-gösteremediği-Şeylerin-bilimi"><a class="header" href="#modellerin-bildiği-ama-gösteremediği-Şeylerin-bilimi">Modellerin Bildiği Ama Gösteremediği Şeylerin Bilimi</a></h2>
+<p>Belki de en derin çıkarım şu: ölçütler modellerin yeteneklerini sistematik olarak hafife alır. Bir modelin belirli bir ölçütteki puanı "bu model bu konuda ne kadar iyi" değildir. "Bu model bu konuda <em>bu özel istem stratejisiyle</em> ne kadar iyi"dir. İstem stratejisini değiştirin ve puanı, bazen dramatik biçimde, değiştirirsiniz.</p>
+<p>Bu, modellerin prensipte yapabildiği ile pratikte yaptığı arasındaki uçurumun muazzam olduğu anlamına gelir — ve bu uçurumu kapatmak daha büyük modeller inşa etmek kadar önemlidir. Test zamanı hesaplama ölçeklemesi, muhakeme token'ları ve genişletilmiş düşünme bu temanın varyasyonlarıdır: modellere zaten bildiklerini ifade etmeleri için daha fazla hesaplama pisti vermek.</p>
+<hr />
+<p><em>Yarın bu alandaki ticari açıdan en başarılı hikâyeye yakınlaşıyoruz: <strong>GPT-1'den GPT-4'e GPT serisi</strong>. Küçük bir ekibin "sadece daha büyük yap" bahsinin nasıl karşılık verdiğini ve tüm teknoloji endüstrisini nasıl yeniden şekillendirdiğini izleyeceğiz.</em></p>
+<hr />
+<h2 id="-quiz-zamanı"><a class="header" href="#-quiz-zamanı">📝 Quiz Zamanı</a></h2>
+<p><a href="quizzes/day-14.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Gün 14 Quizini Çöz →</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-13.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-15.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-13.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-15.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

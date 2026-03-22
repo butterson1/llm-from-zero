@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the core limitation of pre-attention encoder-decoder models that Bahdanau's 2014 paper addressed?"
+prompt.distractors = [
+  "The decoder could only generate outputs in the same word order as the source language, preventing reordering during translation",
+  "The encoder required quadratic computation with respect to sequence length, making long sentences too slow to process",
+  "The training procedure required aligned parallel corpora with explicit word-level alignment annotations for each sentence pair"
+]
+answer.answer = "The encoder compressed the entire source sentence into a single fixed-length vector, losing critical information for longer sequences"
+context = "Pre-attention seq2seq models encoded the full input into one vector (typically 256-512 dimensions). This information bottleneck caused BLEU scores to drop sharply as sentences exceeded 20-30 words, since all meaning had to fit through this single bottleneck."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does Bahdanau's attention mechanism compute the context vector for each decoder step?"
+prompt.distractors = [
+  "It selects the single encoder hidden state with the highest relevance score and passes it directly to the decoder",
+  "It concatenates all encoder hidden states into a fixed matrix and applies a convolutional filter to extract relevant features",
+  "It averages all encoder hidden states uniformly and scales the result by the decoder's current confidence score"
+]
+answer.answer = "It computes learned relevance scores between the decoder state and all encoder states, normalizes them via softmax, and takes a weighted sum"
+context = "Bahdanau attention computes a score between the current decoder state and every encoder hidden state, normalizes these into attention weights (summing to 1 via softmax), and produces a context vector as the weighted combination. Each decoder step gets its own custom view of the input."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In self-attention, what are the three roles each token simultaneously plays?"
+prompt.distractors = [
+  "Encoder, decoder, and classifier — each token encodes its local context, decodes neighboring representations, and classifies its syntactic role",
+  "Subject, predicate, and modifier — each token represents a grammatical function learned through attention weight specialization",
+  "Input, hidden, and output — each token maintains three separate representations corresponding to different stages of processing"
+]
+answer.answer = "Query, key, and value — each token generates a search signal, an index for being found, and content to contribute when found relevant"
+context = "In self-attention, each token is projected into three vectors via learned weight matrices: a query (what am I looking for?), a key (what do I contain?), and a value (what information do I provide?). Attention scores are computed as dot products between queries and keys."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does scaled dot-product attention divide scores by √d_k before the softmax?"
+prompt.distractors = [
+  "To normalize the scores to unit length so that attention weights are invariant to the absolute magnitude of the embedding dimensions",
+  "To compensate for the reduction in dimensionality when keys are split across multiple attention heads during multi-head attention",
+  "To ensure the gradient magnitude during backpropagation remains proportional to the number of tokens in the sequence"
+]
+answer.answer = "To prevent large dot products from pushing softmax into saturated regions with extremely small gradients, which stalls training"
+context = "When d_k is large, dot products tend to have large magnitudes (variance scales with d_k). This pushes softmax outputs toward 0 or 1, creating near-zero gradients. Dividing by √d_k keeps the variance at roughly 1, maintaining healthy gradient flow during training."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the original Transformer's multi-head attention achieve compared to a single attention head of the same total dimensionality?"
+prompt.distractors = [
+  "It reduced the total parameter count by sharing key and value projections across heads while keeping queries separate",
+  "It increased the effective sequence length the model could handle by distributing positions across different attention heads",
+  "It enabled the model to process multiple input sequences in parallel, increasing training throughput by a factor equal to the head count"
+]
+answer.answer = "It allowed the model to attend to different types of relationships simultaneously, with each head specializing in distinct linguistic patterns"
+context = "Multi-head attention splits the d_model dimensions into h parallel heads (e.g., 8 heads of 64 dims each from 512 total). Each head learns different W_Q, W_K, W_V matrices, specializing in different relationship types — some track syntax, others semantics, others positional patterns — at essentially the same computational cost."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "How long did it take to train the base Transformer model from 'Attention Is All You Need' on 8 NVIDIA P100 GPUs?"
+answer.answer = "12 hours"
+answer.alternatives = ["12h", "half a day", "twelve hours"]
+context = "The base Transformer (65M parameters, 6 layers, 8 heads, d_model=512) was trained in just 12 hours on 8 P100 GPUs. The big model (213M parameters) took 3.5 days. Both achieved state-of-the-art results at a fraction of the training cost of competing systems."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the fundamental computational advantage of self-attention over recurrent networks like LSTMs for processing sequences?"
+prompt.distractors = [
+  "Self-attention uses fewer total floating-point operations per sequence because it avoids redundant recomputation of hidden states",
+  "Self-attention maintains constant memory usage regardless of sequence length by discarding intermediate attention scores after each layer",
+  "Self-attention eliminates the need for backpropagation through time by computing gradients in a single forward pass"
+]
+answer.answer = "Self-attention computes all pairwise token interactions via matrix multiplication in parallel, while recurrence requires sequential step-by-step processing"
+context = "An LSTM must process words one at a time — word 500 can't begin until words 1-499 are done. Self-attention computes all interactions as a single QK^T matrix multiplication, fully exploiting GPU parallelism. This makes training dramatically faster, even though self-attention is O(n²) versus recurrence's O(n)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What surprising property of self-attention requires the addition of positional encodings to the Transformer?"
+prompt.distractors = [
+  "Self-attention cannot distinguish between tokens that share the same embedding vector, so positional encodings break ties for repeated words",
+  "Self-attention assigns equal weight to all tokens by default, so positional encodings create an initial bias toward attending to nearby words",
+  "Self-attention outputs are not normalized, so positional encodings provide a fixed reference scale for the magnitude of each token's representation"
+]
+answer.answer = "Self-attention is inherently position-agnostic — it treats input as an unordered set, so it cannot distinguish 'dog bites man' from 'man bites dog'"
+context = "The QK^T dot product depends only on token content, not position. Without positional encodings, scrambling word order would produce identical attention scores. The original Transformer uses sinusoidal positional encodings added to input embeddings to inject order information."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What BLEU score did the big Transformer achieve on the WMT 2014 English-to-German translation benchmark?"
+answer.answer = "28.4"
+answer.alternatives = ["28.4 BLEU"]
+context = "The big Transformer scored 28.4 BLEU on WMT 2014 English-to-German, improving over the previous best results (including ensemble systems) by more than 2 BLEU points. On English-to-French, it achieved 41.8 BLEU."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did probing experiments on BERT reveal about how information is organized across Transformer layers?"
+prompt.distractors = [
+  "All layers encode approximately the same mix of syntactic and semantic features, with no clear specialization across depth",
+  "Even-numbered layers specialize in syntactic processing while odd-numbered layers handle semantic reasoning in an alternating pattern",
+  "The first layer captures the most abstract semantic relationships, with progressively lower layers refining surface-level syntax"
+]
+answer.answer = "Lower layers concentrate syntactic information like POS tags and dependencies, while upper layers concentrate semantic information like entity types"
+context = "Tenney et al. (2019) found that Transformer layers spontaneously organize into a processing pipeline: lower layers capture syntax (part-of-speech, dependencies), upper layers capture semantics (entity types, relations). This emergence happens without explicit programming — it arises from gradient descent on the language modeling objective."

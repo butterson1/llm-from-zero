@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the GPT-3 paper, what was the approximate few-shot accuracy on TriviaQA compared to the fine-tuned state-of-the-art at the time?"
+prompt.distractors = [
+    "Few-shot GPT-3 achieved 58.4%, falling short of the fine-tuned SOTA of 68.0%",
+    "Few-shot GPT-3 achieved 68.0%, exactly matching the fine-tuned SOTA benchmark",
+    "Few-shot GPT-3 achieved 82.5%, vastly surpassing the fine-tuned SOTA of 68.0%"
+]
+answer.answer = "Few-shot GPT-3 achieved 71.2%, surpassing the fine-tuned SOTA of 68.0%"
+context = "On TriviaQA, few-shot GPT-3 hit 71.2% accuracy, surpassing the fine-tuned state-of-the-art of 68.0% — a remarkable result for a frozen model with no task-specific training."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did Akyürek et al. (2022) discover about the mechanism underlying in-context learning in transformers?"
+prompt.distractors = [
+    "Transformers store few-shot examples in residual connections and retrieve them during the final layer's output projection",
+    "Transformers use feed-forward layers to memorize prompt examples and replay them as cached key-value activations",
+    "Transformers implement a nearest-neighbor search across the context window to classify new inputs by token similarity"
+]
+answer.answer = "Transformers performing in-context learning implement something resembling gradient descent on an implicit internal model"
+context = "Akyürek et al. at MIT and Google showed that transformers doing in-context learning on linear regression tasks internally approximate gradient descent, effectively constructing a temporary model within the forward pass."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What are 'induction heads' as described by Olsson, Elhage, and colleagues at Anthropic?"
+prompt.distractors = [
+    "Attention head pairs where head A identifies the task type from examples and head B selects the appropriate pre-trained behavior mode",
+    "Attention head pairs where head A compresses example inputs into a task embedding and head B uses it to modulate feed-forward outputs",
+    "Attention head pairs where head A scores token relevance against a learned template and head B applies a gating function to filter noise"
+]
+answer.answer = "Attention head pairs where head A finds a previous occurrence of the current token and head B copies the token that followed it"
+context = "Induction heads implement a simple but powerful pattern: head A searches backward for a previous occurrence of the current token, and head B copies whatever token came after that previous occurrence — enabling pattern completion from context."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the accuracy improvement when adding 'Let's think step by step' (zero-shot CoT) to InstructGPT-175B on the GSM8K math benchmark?"
+prompt.distractors = [
+    "From 32.3% to 56.5%, roughly a 24 percentage point improvement with zero-shot chain-of-thought prompting",
+    "From 17.7% to 32.4%, roughly a 15 percentage point improvement with zero-shot chain-of-thought prompting",
+    "From 42.0% to 74.4%, roughly a 32 percentage point improvement with zero-shot chain-of-thought prompting"
+]
+answer.answer = "From 17.7% to 58.1%, roughly a 40 percentage point improvement with zero-shot chain-of-thought prompting"
+context = "Kojima et al. showed that simply appending 'Let's think step by step' to InstructGPT-175B's prompt improved GSM8K accuracy from 17.7% to 58.1% — a roughly 40 percentage point gain from just five words."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What counterintuitive finding did Webson and Pavlick (2022) demonstrate about prompt templates?"
+prompt.distractors = [
+    "Semantically precise templates consistently outperformed vague ones by 15-20 percentage points across all NLI tasks tested",
+    "Templates with grammatical errors degraded model performance more severely than templates with semantic mismatches",
+    "Templates written in a foreign language performed equally well as English templates when the task examples were in English"
+]
+answer.answer = "Irrelevant and even misleading prompt templates sometimes performed nearly as well as correctly worded templates on NLI tasks"
+context = "Webson and Pavlick found that semantically wrong templates (e.g., asking 'does the passage contain the answer?' for an NLI task) performed within a few points of correct templates, suggesting models respond more to structural format than semantic content."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the Google DeepMind many-shot ICL paper (2024), what happened to Gemini 1.5 Pro's accuracy on the MATH benchmark when scaling from 3-shot to 125-shot?"
+prompt.distractors = [
+    "Accuracy improved from 62.1% to 68.3%, showing modest gains that began plateauing around 50 examples in the context",
+    "Accuracy improved from 48.7% to 71.8%, with the largest gains occurring in the first 20 examples before tapering off",
+    "Accuracy improved from 56.4% to 63.2%, confirming the conventional wisdom that few-shot learning plateaus at 10 examples"
+]
+answer.answer = "Accuracy improved from 56.4% to 71.8%, a 15.4 percentage point gain that challenged the assumption of early plateaus"
+context = "Google DeepMind showed that scaling from 3-shot to 125-shot improved Gemini 1.5 Pro's MATH accuracy from 56.4% to 71.8%, demonstrating that in-context learning continues improving well beyond the traditional 5-10 example range."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What is the name of the technique where multiple chain-of-thought reasoning paths are sampled and a majority vote determines the final answer?"
+answer.answer = "self-consistency"
+answer.alternatives = ["self-consistency decoding", "self consistency", "self consistency decoding"]
+context = "Self-consistency decoding, proposed by Xuezhi Wang et al. at Google, samples multiple reasoning paths and takes a majority vote on the final answer. On GSM8K with PaLM-540B, it improved accuracy from 74.4% (single CoT) to 83.0%."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does chain-of-thought prompting improve performance from a computational perspective?"
+prompt.distractors = [
+    "It forces the model to access deeper feed-forward layers that encode factual knowledge, bypassing shallow pattern matching",
+    "It triggers a special reasoning mode in the transformer where attention weights are recalculated using a secondary objective",
+    "It allows the model to store intermediate computations in the KV cache, effectively expanding the working memory capacity"
+]
+answer.answer = "It gives the model more sequential computation steps, trading output tokens for computational depth beyond O(1) per token"
+context = "Autoregressive models can only do O(1) computation per output token. Chain-of-thought lets the model generate intermediate reasoning steps, effectively giving it more computation per problem by producing additional tokens that serve as working memory."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What phenomenon, documented by Liu et al. (2023), describes how information in the middle of long contexts receives less attention from language models?"
+answer.answer = "lost in the middle"
+answer.alternatives = ["lost-in-the-middle", "the lost in the middle problem", "lost in the middle phenomenon"]
+context = "Liu, Lin, Hewitt, and colleagues documented the 'lost in the middle' phenomenon: models pay disproportionate attention to information at the beginning and end of long contexts, with information in the middle receiving measurably less attention."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "According to research by Lu et al. (2022), how much could the ordering of few-shot examples affect model accuracy on some tasks?"
+prompt.distractors = [
+    "Example ordering could shift accuracy by up to 5 percentage points, a minor but statistically significant effect on most tasks",
+    "Example ordering could shift accuracy by up to 15 percentage points, primarily affecting tasks involving numerical reasoning",
+    "Example ordering could shift accuracy by up to 50 percentage points, though this was observed only on adversarial benchmarks"
+]
+answer.answer = "Example ordering could shift accuracy by as much as 30 percentage points, swinging a 90% model down to 60% on some tasks"
+context = "Lu et al. (2022) showed that simply reordering the same few-shot examples could swing accuracy by up to 30 percentage points. This extreme sensitivity has no obvious explanation — a human would extract the same information regardless of order."

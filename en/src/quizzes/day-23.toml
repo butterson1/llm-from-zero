@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key innovation of the ReAct (Reason + Act) framework published by Yao et al. in 2022?"
+prompt.distractors = [
+    "Fine-tuning a language model on paired examples of tool documentation and correct API calls to learn when tools should be invoked",
+    "Training a separate reward model to score proposed action sequences and selecting the highest-scoring plan before execution",
+    "Using a retrieval system to fetch relevant tool descriptions at each step and appending them to the model's context window"
+]
+answer.answer = "Interleaving reasoning traces with action steps in a single generation, allowing the model to think and act in alternation"
+context = "ReAct fused chain-of-thought reasoning with action execution, letting the model generate Thought/Action/Observation traces. On HotpotQA with PaLM-540B, this achieved 35.1% exact match vs 29.4% for chain-of-thought alone."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Meta's Toolformer (2023) train a GPT-J 6.7B model to decide when to insert API calls during text generation?"
+prompt.distractors = [
+    "Collecting human annotations of 50,000 passages marking where tool calls would be helpful, then fine-tuning with standard cross-entropy loss",
+    "Using reinforcement learning with a reward signal based on task completion rate across five different tool APIs during interactive rollouts",
+    "Training a separate classifier to predict tool-use positions, then distilling that classifier's predictions into the language model's weights"
+]
+answer.answer = "Prompting the model to annotate a text corpus with candidate API calls, filtering to keep only annotations that reduced the loss on subsequent tokens, then fine-tuning on the filtered data"
+context = "Toolformer's self-supervised approach was key: it generated candidate API call annotations, then kept only those where the tool output actually reduced perplexity on the following text, creating high-quality training data without human labels."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does the 'compound error' problem make long-horizon agent tasks fundamentally harder than short ones?"
+prompt.distractors = [
+    "Each tool call adds latency that causes the model's attention mechanism to degrade, reducing reasoning quality for later steps in the sequence",
+    "The KV cache grows linearly with each action step, eventually exceeding GPU memory limits and forcing lossy context compression mid-task",
+    "Language models have a fixed maximum context window, and each action-observation pair consumes tokens until the model loses access to the original task description"
+]
+answer.answer = "Per-step success rates compound multiplicatively, so a 90% per-step rate yields only 35% success over 10 steps and 12% over 20 steps, making reliability drop exponentially with task length"
+context = "Even with 90% reliability per step, 10 sequential steps succeed only 0.9^10 ≈ 35% of the time. This exponential decay is why current agents handle 3-5 step tasks well but struggle with genuinely complex multi-step workflows."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What score did Claude 3.5 Sonnet achieve on the OSWorld computer use benchmark in its October 2024 beta launch, and why was this significant?"
+prompt.distractors = [
+    "It scored 22.3% in the screenshot-only setting, notable because it was the first model to surpass the 20% threshold that researchers considered baseline human-level performance",
+    "It scored 8.7% on the full benchmark, significant because it was the first commercial model to attempt computer use tasks across three different operating systems simultaneously",
+    "It scored 31.5% on web-only tasks within OSWorld, remarkable because previous models had been limited to text-based terminal interactions without visual understanding"
+]
+answer.answer = "It scored 14.9% in the screenshot-only setting, significant because the previous best AI score was 12.24% and the tasks involve complex multi-application workflows challenging even for unfamiliar humans"
+context = "While 14.9% sounds low, OSWorld tasks are genuinely difficult multi-step workflows across real operating systems. The previous best was 12.24%, making Claude's result a meaningful advance in AI computer interaction."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What open-source AI agent project, released in March 2023, became the fastest-growing GitHub repository in history by wrapping GPT-4 in a persistent loop with internet access and file management?"
+answer.answer = "AutoGPT"
+answer.alternatives = ["Auto-GPT", "Auto GPT"]
+context = "AutoGPT by Toran Bruce Richards accumulated over 100,000 GitHub stars within weeks. Despite being unreliable in practice, it demonstrated the concept of autonomous agents and catalyzed a wave of more sophisticated successors."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why is computer use (screenshot-based GUI interaction) described as 'often the wrong approach' even when the model can perform it successfully?"
+prompt.distractors = [
+    "GUI-based interaction requires the model to process images, which activates a separate vision encoder that doubles the inference latency for every action step taken",
+    "Screenshots contain personal information like email addresses and passwords, creating privacy liability that makes computer use unsuitable for enterprise deployment",
+    "The mouse coordinate prediction is only accurate to within 15-20 pixels, causing frequent misclicks that require error recovery loops and reduce end-to-end task completion rates"
+]
+answer.answer = "Each GUI interaction step costs 5-10x more tokens than an equivalent API call, making it far more expensive while serving best as a universal fallback for systems without direct API access"
+context = "Computer use processes screenshots and reasons about pixel coordinates, consuming far more tokens per action than structured API calls. It's most valuable as a fallback for systems lacking APIs, not as the primary interaction mechanism."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What capability of the Gorilla model (Patil et al., 2023) demonstrated the value of training LLMs specifically on API documentation?"
+prompt.distractors = [
+    "Gorilla fine-tuned LLaMA-13B on 5,200 API pages and achieved 35% better latency than GPT-4 by generating optimized batched API call sequences",
+    "Gorilla fine-tuned LLaMA-7B on 3,000 Stack Overflow API examples and reduced hallucinated function parameters by 40% compared to Claude 2",
+    "Gorilla fine-tuned LLaMA-30B on 800 cloud service APIs and achieved 15% better error handling than GPT-4 by predicting API failure modes"
+]
+answer.answer = "Gorilla fine-tuned LLaMA-7B on 1,645 API documentation pages from TorchHub, TensorHub, and HuggingFace, achieving 20% better API call accuracy than GPT-4 with far fewer hallucinated APIs"
+context = "Gorilla showed that a 7B model trained specifically on API documentation could outperform the much larger GPT-4 on API call accuracy while hallucinating APIs far less often, demonstrating that domain-specific training can overcome scale disadvantages."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In Stanford's Generative Agents experiment (Park et al., 2023), what emergent social behavior did the 25 LLM-powered characters in Smallville exhibit without being explicitly programmed to do so?"
+prompt.distractors = [
+    "They established a democratic voting system to resolve resource conflicts, with agents forming political coalitions based on shared neighborhood proximity",
+    "They developed a barter economy by assigning relative values to items in their environment and negotiating trades through structured dialogue protocols",
+    "They created a shared written language for leaving messages, evolving symbolic shorthand that other agents learned to interpret through repeated exposure"
+]
+answer.answer = "They spontaneously organized a Valentine's Day party, formed social groups based on interactions, and spread information through gossip networks across the simulated town"
+context = "Without any explicit programming of social behaviors, the 25 agents with memory, schedules, and interaction abilities naturally organized social events, formed friend groups, and propagated information through casual conversations."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What coding benchmark, introduced by Carlos Jimenez and colleagues at Princeton in October 2023, presents real GitHub issues and asks models to generate patches that pass the repository's test suite?"
+answer.answer = "SWE-bench"
+answer.alternatives = ["SWE-Bench", "SWEbench", "swe-bench"]
+context = "SWE-bench became the standard benchmark for evaluating agentic coding capabilities. Its curated 500-task subset, SWE-bench Verified, saw scores climb from ~10-15% in early 2024 to over 80% by late 2025."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the key distinction between the 'human-in-the-loop' and 'human-on-the-loop' autonomy models for agent systems?"
+prompt.distractors = [
+    "Human-in-the-loop uses a reward model trained on human preferences to score actions, while human-on-the-loop uses constitutional AI principles to self-evaluate proposed actions",
+    "Human-in-the-loop requires the human to write explicit tool-use instructions for each task, while human-on-the-loop lets the model select tools autonomously from a predefined registry",
+    "Human-in-the-loop applies to single-step tasks where the human verifies the final output, while human-on-the-loop applies to multi-step tasks where the human reviews intermediate results"
+]
+answer.answer = "Human-in-the-loop requires the human to approve each proposed action before execution, while human-on-the-loop lets the agent act autonomously but allows the human to intervene at any point"
+context = "Human-in-the-loop is safe but slow (every action needs approval). Human-on-the-loop is like a self-driving car with a steering wheel — the agent acts independently but the human can take over. Most production systems today use one of these two models."

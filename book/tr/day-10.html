@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 10: İnce Ayar ve Transfer Öğrenme — Temel Modeli Uyarlama - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-10-İnce-ayar-ve-transfer-Öğrenme--temel-modeli-uyarlama"><a class="header" href="#gün-10-İnce-ayar-ve-transfer-Öğrenme--temel-modeli-uyarlama">Gün 10: İnce Ayar ve Transfer Öğrenme — Temel Modeli Uyarlama</a></h1>
+<p><em>Dün sosis yapımını izlediniz: trilyonlarca token kazınıp, filtrelenip, tekilleştirilip, devasa maliyetle transformer'lara beslendi. Sonuç bir temel model — insan metninin dev bir istatistiksel aynası. Ama mesele şu: o ayna her şeyi yansıtıyor, yani hiçbir şeyi özel olarak yansıtmıyor. Ham ön eğitimli bir modele tıbbi soru sorun ve bir Wikipedia makalesi yazmaya devam edebilir, ya da bir Reddit dizisi üretebilir, ya da bir alıntı halüsinasyonu yapabilir, ya da şiir üretebilir. Bilgisi var. Yönü yok. Bugün alanın bu canavarları nasıl yönlendirmeyi öğrendiğini keşfediyoruz — ucuzca, hızlıca ve çarpıcı bir etkililikle — ince ayar ve transfer öğrenme aracılığıyla.</em></p>
+<hr />
+<h2 id="her-Şeyi-değiştiren-kavrayış-Özellikler-transfer-olur"><a class="header" href="#her-Şeyi-değiştiren-kavrayış-Özellikler-transfer-olur">Her Şeyi Değiştiren Kavrayış: Özellikler Transfer Olur</a></h2>
+<p>LLM'lerden bahsetmeden önce 2014'e ve Cornell'deki Jason Yosinski adlı doktora öğrencisine dönmemiz gerekiyor. Yosinski ImageNet üzerinde eğitilmiş evrişimli sinir ağlarıyla bir deney yaptı. Bir ağı ikiye böldü ve sordu: alt katmanları dondurur ve sadece üsttekileri yeniden eğitirseniz performans ne kadar düşer? Cevap dikkat çekiciydi. <strong>İlk katmanlar neredeyse evrensel özellikler öğrenmişti</strong> — kenar algılayıcılar, renk lekeleri, doku kalıpları — çılgınca farklı görevlere aktarılabilen. Sonraki katmanlar uzmanlaştı. Köpek fotoğrafları üzerinde eğitilmiş bir ağı sadece son katmanları değiştirerek uydu görüntüleri için kullanabilirdiniz.</p>
+<p>Bu transfer öğrenme idi: bir görevde öğrenilen temsillerin diğerlerine aktarıldığı farkındalık. Bilgisayarlı görmede neredeyse bir gecede standart uygulama oldu. Sıfırdan eğitmek yerine ön eğitimli modeli ince ayar yapardınız. Eğitim maliyetleri 10-100 kat düştü.</p>
+<p>Ama dil bu tedaviye yıllarca direndi. Atılım 2018'de geldi: <strong>ULMFiT</strong>, <strong>ELMo</strong> ve <strong>BERT</strong> — üçü de dil modellerinin ham metin üzerinde ön eğitilip bin kadar etiketli örnekle belirli görevlere ince ayar yapılabileceğini kanıtladı.</p>
+<p>Alan "görev başına 100.000 etiketli örneğe ihtiyacınız var"dan "1.000 örnek ve bir ön eğitimli modele ihtiyacınız var"a geçti. Bu, iki yıldan kısa sürede tüm NLP endüstrisini yeniden şekillendiren muazzam bir verimlilik kazanımı.</p>
+<h2 id="İnce-ayar-ağırlıklara-gerçekte-ne-yapar"><a class="header" href="#İnce-ayar-ağırlıklara-gerçekte-ne-yapar">İnce Ayar Ağırlıklara Gerçekte Ne Yapar</a></h2>
+<p>Ön eğitimli bir dil modeli dikkat başları ve ileri beslemeli ağ katmanlarına dağılmış milyarlarca parametreye sahiptir. Ön eğitim sırasında bu parametreler dilin sıkıştırılmış bir temsilini kodlar: sözdizimi, olgular, muhakeme kalıpları, ton, stil. İnce ayar yaptığınızda, bu kontrol noktasının tamamını alıp çok daha küçük, çok daha hedefli bir veri kümesi üzerinde çok daha düşük öğrenme hızıyla eğitime devam edersiniz.</p>
+<p>Şöyle düşünün. Ön eğitim araziyi inşa eder: dilbilgisi dağları, sağduyu vadileri, olgusal çağrışım nehirleri. İnce ayar araziyi buldozerlemez. Yol döşer. Dağ silsilesi kalır. Nehirler kalır. Ama artık modelin davranışını belirli hedeflere yönlendiren patikalar var — soruları yanıtlama, talimatları takip etme, belirli bir stilde kod yazma.</p>
+<p>Pratik sonuç: ince ayar ucuzdur. Llama 3.1 405B'nin ön eğitimi Meta'ya tahminen <strong>30,84 milyon GPU-saat</strong> maliyete ulaşırken, aynı modeli birkaç yüz bin talimat örneği üzerinde ince ayar yapmak <strong>birkaç yüz GPU-saat</strong> sürebilir — ön eğitim bütçesinin kabaca %0,001'i. 7B modeli tek bir A100'de bir öğleden sonrada ince ayar yapabilirsiniz.</p>
+<h2 id="denetimli-İnce-ayar-talimat-devrimi"><a class="header" href="#denetimli-İnce-ayar-talimat-devrimi">Denetimli İnce Ayar: Talimat Devrimi</a></h2>
+<p>Modern LLM'ler için en erken ve en sonuç doğuran ince ayar biçimi <strong>denetimli ince ayardır (SFT)</strong>, bazen <strong>talimat ayarı</strong> da denir. Fikir: (istem, istenen yanıt) çiftlerinden oluşan bir veri kümesi toplayın ve modeli istem verildiğinde yanıtı üretmek için eğitin.</p>
+<p>Temel çalışma Google'dan 2021'deki <strong>FLAN</strong>'dı (İnce Ayarlanmış Dil Ağı). 137B parametreli LaMDA modelini doğal dil talimatları olarak ifade edilmiş <strong>62 NLP veri kümesi</strong> üzerinde ince ayar yaptılar. İnce ayarlı model ham ön eğitimli modeli <strong>hiç görmediği görevlerde</strong> — üzerinde ince ayar yapılmamış görevlerde — geçti. Bu kilit sürprizdi: talimat ayarı modele sadece o 62 belirli görevi çözmeyi öğretmedi. Modele talimatları takip etme <em>meta-becerisini</em> öğretti.</p>
+<p>OpenAI bunu 2022 başında <strong>InstructGPT</strong> ile daha ileri taşıdı. 40 insan etiketçi tutup gerçek kullanıcıların göndereceği türde sorguları kapsayan on binlerce istem-yanıt çifti yazdırdılar. Bu veri üzerinde ince ayar yapılmış 1,3B InstructGPT modeli, insan değerlendiriciler tarafından ham 175B GPT-3'e tercih edildi. Tekrar okuyun: <strong>135 kat daha küçük bir model, yön almayı öğrenerek devi yendi.</strong> Sektörün ön eğitimli modelin motor, ince ayarın ise direksiyon olduğunu fark ettiği an buydu.</p>
+<h2 id="lora-devrimi-parametrelerin-001i-ile-İnce-ayar"><a class="header" href="#lora-devrimi-parametrelerin-001i-ile-İnce-ayar">LoRA Devrimi: Parametrelerin %0,01'i ile İnce Ayar</a></h2>
+<p>Tam ince ayar modeldeki her parametreyi günceller. 70B model için 16-bit hassasiyette bu, bellekte iki kopya tutmak — parametreler ve gradyanları — artı optimize edici durumları, toplam kabaca <strong>560 GB VRAM</strong> demek.</p>
+<p>2021'de Microsoft'tan Edward Hu ve meslektaşları <strong>LoRA</strong>'yı — Düşük-Rank Uyarlama — tanıttı. Temel kavrayış güzel biçimde basit. Büyük bir modele ince ayar yaptığınızda ağırlık güncellemeleri <strong>düşük-ranklıdır</strong>: tam parametre uzayının minik bir alt uzayını kaplar. Dolayısıyla W ağırlık matrisini doğrudan güncellemek yerine LoRA W'yi dondurur ve küçük bir dolambaç ekler: W + BA, burada B ve A rank r'li (tipik olarak 8-64) ince matrislerdir. 4096×4096 boyutlu bir ağırlık matrisi (yaklaşık 16,7 milyon parametre) için rank-16 LoRA sadece 2 × 4096 × 16 = <strong>131.072 eğitilebilir parametre</strong> ekler — orijinalin %1'inden az.</p>
+<p>Sonuçlar şok ediciydi. LoRA ince ayarı, modelin parametrelerinin sadece <strong>%0,01-0,1'ini</strong> eğitirken neredeyse her ölçütte tam ince ayar performansına eşleşti. Bellek gereksinimleri 3-10 kat düştü. Eğitim süresi orantılı olarak düştü.</p>
+<blockquote>
+<p>💡 <strong>LoRA neden önemli?</strong> Bu, yapay zekâ demokratikleşmesinin en somut adımlarından biri. Eskiden trilyonlarca parametreli modeli özelleştirmek dev kümelere ihtiyaç duyarken, LoRA sayesinde tek bir GPU'da birkaç saatte özelleştirebilirsiniz. Bu, küçük ekiplerin ve bireylerin yapay zekâ geliştirmesinin önünü açtı.</p>
+</blockquote>
+<p>LoRA bir varyant ailesi doğurdu. <strong>QLoRA</strong> (2023) LoRA'yı donmuş temel ağırlıkların 4-bit nicelemesiyle birleştirerek 65B modelin <strong>tek bir 48GB GPU'da</strong> ince ayarını mümkün kıldı. <strong>DoRA</strong> (2024) ağırlık güncellemelerinin büyüklük ve yönünü ayırır ve genellikle vanilya LoRA'yı geçer.</p>
+<p>Adaptör paradigması aynı zamanda uzmanlıkları yığabileceğiniz anlamına gelir. Hem hukuk analizi HEM de tıbbi soru-cevapda harika bir model mi istiyorsunuz? İki ayrı LoRA adaptörü eğitip çıkarım zamanında değiştirin. Temel model donmuş kalır.</p>
+<h2 id="İnce-ayarın-yapabildiği-ve-yapamadığı"><a class="header" href="#İnce-ayarın-yapabildiği-ve-yapamadığı">İnce Ayarın Yapabildiği ve Yapamadığı</a></h2>
+<p><strong>İnce ayarın başarılı olduğu:</strong></p>
+<ul>
+<li><strong>Format ve stil.</strong> JSON'da yanıt verme, belirli şablon takip etme, kişilik benimseme, marka sesi eşleme.</li>
+<li><strong>Talimat takibi.</strong> Ham dil modelini asistana dönüştüren SFT adımı.</li>
+<li><strong>Alan uzmanlığı.</strong> Med-PaLM 2 tıbbi soru-cevap üzerinde ince ayar yapılarak ABD Tıp Lisans Sınavı'nda %86,5 elde etti. BloombergGPT finansal metin üzerinde eğitildi.</li>
+<li><strong>Davranışsal hizalama.</strong> RLHF hattının ilk adımı olan SFT.</li>
+</ul>
+<p><strong>İnce ayarın zorlandığı:</strong></p>
+<ul>
+<li><strong>Tamamen yeni bilgi ekleme.</strong> Temel model tescilli bir iç sistem hakkında hiçbir şey görmediyse, birkaç bin örnek üzerinde ince ayar o sistemin ayrıntılarını güvenilir biçimde öğretmez. RAG (Gün 22) belirli bilgi enjeksiyonu için genellikle daha iyidir.</li>
+<li><strong>Derin kodlanmış önyargıları kaldırma.</strong> İnce ayar belirli çıktıları bastırabilir ama altta yatan temsilleri silmez.</li>
+<li><strong>Güçlü öncülleri geçersiz kılma.</strong> Model milyonlarca örnekten "Avustralya'nın başkenti Sidney'dir" öğrendiyse (yaygın bir web yanlış bilgisi), birkaç yüz "Kanberra" diyen ince ayar örneği yetmeyebilir.</li>
+</ul>
+<p>Yararlı bir zihinsel model: ince ayar <strong>çıktılar üzerindeki olasılık dağılımını</strong> ayarlar, bazı davranışları güçlendirir ve bazılarını bastırır. Yumuşak bir yeniden ağırlıklandırmadır, yeniden yazma değil.</p>
+<h2 id="lima-daha-azı-daha-fazladır"><a class="header" href="#lima-daha-azı-daha-fazladır">LIMA: Daha Azı Daha Fazladır</a></h2>
+<p>2023'te Microsoft ve Pekin Üniversitesi'nden çığır açıcı bir makale olan <strong>LIMA</strong>, Llama 65B'yi sadece <strong>1.000 özenle derlenmiş örnek</strong> üzerinde ince ayar yaparak insan değerlendiricilerin zamanın %43'ünde GPT-3.5'a (DaVinci003) tercih ettiği bir model üretti. Bin örnek. Tüm hizalama veri kümesi tek bir elektronik tabloya sığdı.</p>
+<p>LIMA, SFT için <strong>birkaç harika örneğin milyonlarca vasat olanı geçtiğini</strong> kanıtladı. Pratik çıkarım: veri kümesi boyutuna takılmak yerine veri kümesi <em>kalitesine</em> takılmak gerekir.</p>
+<h2 id="bugünkü-ekosistem"><a class="header" href="#bugünkü-ekosistem">Bugünkü Ekosistem</a></h2>
+<p>İnce ayar bir sektör haline geldi. Hugging Face <strong>800.000'den fazla model kontrol noktası</strong> barındırıyor. OpenAI, JSONL dosyası yükleyip yaklaşık <strong>milyon eğitim token'ı başına 3 dolar</strong> karşılığında özelleştirilmiş GPT-4o-mini alan bir ince ayar API'si sunuyor. Açık kaynak topluluğu <strong>Axolotl</strong>, <strong>LLaMA-Factory</strong> ve Hugging Face'in <strong>TRL</strong> kütüphanesi gibi hazır ince ayar hatları sağlıyor. Tek bir RTX 4090'da (24GB VRAM) Llama 3 8B modeli yaklaşık 2 saatte LoRA ince ayar yapabilirsiniz.</p>
+<p>Bu erişilebilirlik uzmanlaşmış model patlaması yarattı. <strong>Nous-Hermes</strong>, <strong>OpenHermes</strong>, <strong>WizardLM</strong>, <strong>Orca</strong> — bazen çok daha büyük tescilli sistemlerle yarışan açık temel modellerin ince ayarları.</p>
+<hr />
+<p><em>Yarın, denetimli ince ayardan oyunu daha da dramatik biçimde değiştiren bölgeye geçiyoruz. SFT bir modele iyi yanıtın neye benzediğini öğretiyorsa, <strong>RLHF — İnsan Geri Bildiriminden Pekiştirmeli Öğrenme</strong> — ona iyi yanıtları kötü olanlara tercih etmeyi öğretir. GPT-3.5'ı ChatGPT'ye dönüştüren teknik, Claude'un kişiliğinin arkasındaki gizli sos ve modern yapay zekânın en tartışmalı eğitim yöntemlerinden biri.</em></p>
+<hr />
+<div style="text-align: center; margin: 2em 0;">
+<h2 id="-gün-10-quiz"><a class="header" href="#-gün-10-quiz">📝 Gün 10 Quiz</a></h2>
+<p><a href="quizzes/day-10.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Gün 10 Quizini Çöz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-09.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-11.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-09.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-11.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

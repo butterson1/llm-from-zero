@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What happened when Wei et al. applied chain-of-thought prompting to PaLM 540B on the GSM8K math benchmark?"
+prompt.distractors = [
+    "Accuracy improved modestly from 17.9% to 28.3%, showing incremental gains from structured prompting at large scale",
+    "Accuracy improved from 17.9% to 42.1%, roughly doubling performance but still below the fine-tuned baseline",
+    "Accuracy decreased from 17.9% to 12.4%, as the longer prompts confused the model's attention distribution"
+]
+answer.answer = "Accuracy improved from 17.9% to 56.9%, a 3× improvement from changing nothing but the prompt format"
+context = "PaLM 540B went from 17.9% to 56.9% on GSM8K with chain-of-thought prompting — a dramatic improvement achieved solely by including step-by-step reasoning examples in the prompt, without any weight changes."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key finding about chain-of-thought prompting when applied to smaller models like PaLM 8B?"
+prompt.distractors = [
+    "Smaller models showed modest but consistent improvement, gaining roughly 5-10% accuracy across reasoning benchmarks",
+    "Smaller models performed identically with and without chain-of-thought, since the technique is prompt-format-neutral at lower scales",
+    "Smaller models showed variable results, improving on arithmetic tasks but declining on commonsense reasoning benchmarks"
+]
+answer.answer = "Smaller models actually performed worse with chain-of-thought, producing incoherent reasoning chains that introduced errors"
+context = "Chain-of-thought prompting hurt performance on small models. Rather than helping, the technique caused them to generate garbled reasoning chains that led to worse answers than direct prompting."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Kojima et al.'s zero-shot chain-of-thought technique work, and what results did it achieve on MultiArith?"
+prompt.distractors = [
+    "They appended 'Show your work carefully' to prompts, achieving a boost from 17.7% to 52.3% accuracy on MultiArith",
+    "They prefixed questions with a detailed reasoning template, improving MultiArith accuracy from 17.7% to 61.9%",
+    "They appended 'Let's think step by step' to prompts, achieving a modest boost from 17.7% to 34.2% on MultiArith"
+]
+answer.answer = "They appended 'Let's think step by step' to prompts, boosting MultiArith accuracy from 17.7% to 78.7%"
+context = "Kojima et al. showed that simply adding 'Let's think step by step' — five words with no examples — boosted MultiArith accuracy from 17.7% to 78.7%, a 4.4× improvement."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does chain-of-thought prompting effectively extend a transformer's computational capacity?"
+prompt.distractors = [
+    "Each reasoning token activates dormant attention heads that are inactive during standard prompting, increasing effective model width",
+    "The reasoning tokens trigger a secondary inference pass through the feed-forward layers, effectively doubling the layer count",
+    "Each reasoning token compresses the problem representation in the residual stream, allowing deeper layers to operate more efficiently"
+]
+answer.answer = "Each generated token requires a full forward pass, so a 20-token reasoning chain gives the model 20× more sequential computation than a direct answer"
+context = "A transformer has a fixed number of layers per forward pass. Chain-of-thought prompting turns each generated reasoning token into an additional forward pass, effectively multiplying the model's computational depth by the length of the reasoning chain."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the central argument of Schaeffer et al.'s NeurIPS 2023 paper 'Are Emergent Abilities a Mirage?'"
+prompt.distractors = [
+    "Emergence is real but occurs at different scale thresholds for different model architectures, making it appear inconsistent across studies",
+    "Emergent abilities only appear in models trained on curated data, and disappear when evaluated on web-crawled training distributions",
+    "The appearance of emergence is caused by benchmark contamination, where larger models have seen more test examples during training"
+]
+answer.answer = "Apparent emergence is an artifact of nonlinear metrics like exact-match accuracy applied to smoothly improving underlying capabilities"
+context = "Schaeffer et al. showed mathematically that nonlinear metrics (like exact-match) applied to gradually improving capabilities produce apparent 'sudden jumps.' When replaced with linear metrics like token-level edit distance, emergence vanishes."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What framework, introduced by Yao et al. at Princeton in 2022, alternates between 'Thought' and 'Action' steps to enable language models to use external tools?"
+answer.answer = "ReAct"
+answer.alternatives = ["REACT", "react"]
+context = "ReAct (Reasoning + Acting) formalized a loop where models alternate between reasoning about what to do and taking actions like calling external tools, incorporating observations before continuing."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What did the self-consistency technique introduced by Wang, Wei et al. demonstrate about language model reasoning?"
+prompt.distractors = [
+    "Models achieve higher accuracy when reasoning chains are constrained to a fixed template, reducing variance in logical structure",
+    "Models produce more reliable answers when prompted with the single highest-confidence reasoning chain from a preliminary sampling pass",
+    "Models improve when reasoning chains are filtered by a separate verifier model that scores logical coherence before answer extraction"
+]
+answer.answer = "Models encode correct reasoning as a probability distribution across many paths, and majority-voting over sampled chains filters random errors"
+context = "Self-consistency samples multiple reasoning chains and takes a majority vote. On GSM8K, this boosted PaLM 540B from 56.9% to 74.4%, showing that correct reasoning exists as a distribution across many valid paths."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How did Meta AI's Toolformer teach a language model to use external tools like calculators and search engines?"
+prompt.distractors = [
+    "They fine-tuned the model on human demonstrations of tool use, where annotators manually inserted API calls into 50,000 training examples",
+    "They used reinforcement learning with tool-use rewards, training the model to maximize accuracy on tasks requiring external computation",
+    "They froze the model and trained a separate routing module that decided when to intercept generation and dispatch tool calls"
+]
+answer.answer = "They annotated training data with API calls, then filtered to keep only examples where the API call improved the model's own predictions"
+context = "Toolformer's self-supervised approach annotated training examples with API calls, then retained only annotations that actually improved the model's next-token predictions — letting the model teach itself when tools were helpful."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What did Kenneth Li et al. at Harvard discover that language models trained on Othello move sequences internally develop?"
+answer.answer = "a world model"
+answer.alternatives = ["world model", "board state", "internal board state", "representation of the board state", "an internal representation of the board state"]
+context = "Li et al. showed that a language model trained only on sequences of Othello moves — with no visual input — develops an internal representation of the actual board state, a genuine world model, even though it was never explicitly trained to track piece positions."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What limitation of the 'emergence is a mirage' argument do critics highlight regarding tasks with inherently discrete success criteria?"
+prompt.distractors = [
+    "Discrete tasks violate the statistical assumptions of Schaeffer's mathematical proof, making the mirage theory inapplicable to binary outcomes",
+    "Discrete tasks require specialized tokenization schemes that alter the metric's linearity properties, confounding the mirage analysis",
+    "Discrete tasks tend to have higher variance in model outputs, making the smooth improvement curve harder to detect statistically"
+]
+answer.answer = "Some tasks like joke explanation or code generation have genuinely binary success criteria where partial-credit linear metrics are ill-defined"
+context = "Critics note that for tasks like explaining why a joke is funny or generating a valid program, there's no natural way to assign partial credit — the output either works or it doesn't, making it hard to apply the linear metrics that dissolve emergence."

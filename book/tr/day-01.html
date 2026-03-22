@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 1: Dil Modeli Nedir? - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-1-dil-modeli-nedir"><a class="header" href="#gün-1-dil-modeli-nedir">Gün 1: Dil Modeli Nedir?</a></h1>
+<p><em>1948'de kelime çiftlerini saymaktan insan dilinin geleceğini tahmin etmeye — konuşmayı öğrenen makinelerin beklenmedik yolculuğu.</em></p>
+<hr />
+<h2 id="hiç-duymadığınız-en-Önemli-denklem"><a class="header" href="#hiç-duymadığınız-en-Önemli-denklem">Hiç Duymadığınız En Önemli Denklem</a></h2>
+<p>İşte üzerinde gerçekten düşününce hiç de basit olmayan bir soru: "Kedi ___ üzerinde oturdu" cümlesinde boşluğa ne gelir?</p>
+<p>Muhtemelen "minder" dediniz. Belki "koltuk" ya da "halı." Beyniniz ezberlenmiş bir cevabı çekip almadı — olası tüm Türkçe kelimeler üzerinde bir <em>olasılık dağılımı</em> hesapladı, bunları dil deneyiminizle tartarak en muhtemel adayları öne çıkardı. Bunu milisaniyeler içinde, bilinçli bir çaba harcamadan yaptınız.</p>
+<p>Bir <strong>dil modeli</strong>, aynı şeyi matematiksel olarak yapan bir sistemdir. Kelime dizilerine olasılıklar atar — daha doğrusu, önceki tüm token'lar verildiğinde bir sonraki token'a olasılık atar. Bu kadar. Fikrin tamamı bu. Konuştuğunuz her sohbet botu, kod ya da şiir ya da hukuki belge yazan her yapay zekâ, özünde çok sofistike bir sonraki-token tahmin edicisidir.</p>
+<p>Ama o "bu kadar" ifadesi çok iş yapıyor. Naif bir kelime sayma yaklaşımıyla GPT-4 arasındaki fark, kâğıt uçakla Boeing 787 Dreamliner arasındaki fark gibidir. İkisi de uçar. Mühendislikleri bu kadar farklı olamaz.</p>
+<blockquote>
+<p>💡 <strong>Token nedir?</strong> Bu kitap boyunca sürekli karşınıza çıkacak: <em>token</em>, modelin işlediği en küçük metin birimidir. Bazen bir kelimeye, bazen bir kelime parçasına, bazen tek bir karaktere karşılık gelir. "Tokenizasyon" konusunu Gün 5'te derinlemesine işleyeceğiz.</p>
+</blockquote>
+<h2 id="perde-i-kelimeleri-saymak-19482000"><a class="header" href="#perde-i-kelimeleri-saymak-19482000">Perde I: Kelimeleri Saymak (1948–2000)</a></h2>
+<p>Hikâye Claude Shannon ile başlıyor — evet, <em>o</em> Claude Shannon, bilgi teorisinin babası. 1948 tarihli çığır açıcı makalesi "İletişimin Matematiksel Teorisi"nde Shannon radikal bir şey önerdi: İngilizceyi istatistiksel bir süreç olarak modelleyebilirsiniz. Dil bilgisini ya da anlamı anlamaya gerek yok; sadece harflerin ve kelimelerin birbirini nasıl takip ettiğindeki örüntüleri gözlemleyerek.</p>
+<p>Shannon bugün <strong>n-gram modeli</strong> diyeceğimiz şeyi inşa etti. Fikir zarif bir şekilde basittir. Devasa bir metin yığını alın. Her kelimenin diğer her kelimeden sonra ne sıklıkla geldiğini sayın. Bu size bir <em>bigram</em> modeli (n=2) verir. Her kelimenin her kelime <em>çiftinden</em> sonra ne sıklıkla geldiğini sayarsanız, bir <em>trigram</em> modeliniz (n=3) olur. Sonraki kelimenin olasılığı basitçe şudur:</p>
+<blockquote>
+<p>P(kelime | önceki n-1 kelime) = sayı(n-gram) / sayı((n-1)-gram)</p>
+</blockquote>
+<p>Eğer "New York" korpusunuzda 10.000 kez, "New York City" ise 3.000 kez geçiyorsa, P(City | New York) = 0,3. Kolay.</p>
+<p>N-gram modelleri doğal dil işleme alanına onlarca yıl hükmetti. Google'ın 2006'da yayınladığı Web 1T 5-gram korpusu, web sayfalarından elde edilen bir trilyondan fazla token içeriyordu — en az 40 kez geçen 1 ile 5 kelimelik her dizi. Bu modeller 2000'ler boyunca yazım denetleyicileri, makine çeviri sistemleri ve konuşma tanımayı güçlendirdi. IBM'in trigram dil modelleri kullanan istatistiksel makine çeviri sistemi, 2000'lerin başında kural tabanlı sistemleri ikna edici biçimde geçmişti.</p>
+<p>Ama n-gram modellerinin acımasız bir sınırı vardı: <strong>boyutluluk laneti</strong>. Aktif kullanımda yaklaşık 170.000 İngilizce kelime var. Bir bigram modeli 170.000² ≈ 29 milyar kelime çifti için olasılık depolamak zorundadır. Trigram modeli: 170.000³ ≈ 4,9 × 10¹⁵ kayıt. 5-gram modeli mi? Unutun — Google'ın trilyon token'lık korpusu bile olası 5-gramların çoğunu tam olarak sıfır sayısıyla bırakıyordu.</p>
+<p>Buna <strong>seyreklik problemi</strong> denir. Makul cümlelerin çoğu, eğitim korpusu ne kadar büyük olursa olsun, hiçbirinde daha önce görülmemiş kelime dizileri içerir. "Kuantum fizikçisi burritosunu silip süpürdü" gayet geçerli bir Türkçe cümledir, ama herhangi bir korpusta bunu bulmaya çalışın bakalım. N-gram modelleri buna sıfır olasılık atar ki bu açıkça yanlıştır.</p>
+<p>Araştırmacılar bunu <strong>düzleştirme teknikleriyle</strong> yamaladılar — Kneser-Ney düzleştirmesi, Good-Turing tahmini, "aptal geri dönüş" (evet, gerçek adı bu, Google'ın 2007'deki icadı). Bu hileler olasılık kütlesini yaygın n-gramlardan nadir ya da hiç görülmemiş olanlara yeniden dağıtıyordu. Şaşırtıcı derecede iyi çalıştılar. Ama temeldeki bir sorun için yama niteliğindelerdi: n-gram modelleri kelimeleri birbirleriyle hiçbir ilişkisi olmayan keyfi semboller olarak ele alıyordu. Model, "yuttu" ile "yedi"nin ilişkili olduğundan ya da "fizikçi" ile "bilim insanı"nın anlam paylaştığından habersizdi.</p>
+<h2 id="perde-ii-makinelere-kelimelerin-anlam-taşıdığını-Öğretmek-20032017"><a class="header" href="#perde-ii-makinelere-kelimelerin-anlam-taşıdığını-Öğretmek-20032017">Perde II: Makinelere Kelimelerin Anlam Taşıdığını Öğretmek (2003–2017)</a></h2>
+<p>2003 yılında Montreal Üniversitesi'nden Yoshua Bengio ve meslektaşları, alanı sessizce yeniden şekillendirecek bir makale yayınladı: "Sinirsel Olasılıksal Dil Modeli." Temel kavrayış yanıltıcı biçimde basitti: ya her kelimeyi izole bir sembol olarak ele almak yerine, kelimeleri <em>vektörler</em> — sürekli bir matematiksel uzaydaki noktalar — olarak temsil etsek?</p>
+<p>Bengio'nun modeli üç bileşenden oluşuyordu: her kelimeyi (diyelim ki) 60 boyutlu bir vektöre eşleyen bir gömme katmanı, bağlam kelime vektörlerini birleştiren bir gizli katman ve sonraki kelimeyi tahmin eden bir çıktı katmanı. Gömme vektörleri elle tasarlanmamıştı — eğitim sırasında <em>öğrenilmişlerdi</em>. Benzer bağlamlarda geçen kelimeler, vektör uzayında yavaş yavaş birbirine yakın konumlara sürüklendi.</p>
+<p>Bu, seyreklik problemini tek hamlede çözdü. Model "Kuantum fizikçisi burritosunu silip süpürdü" cümlesini hiç görmemiş olsa bile, "Nükleer fizikçi sandviçini yedi" cümlesinden genelleme yapabilirdi, çünkü "kuantum" ve "nükleer" benzer gömmelere sahip olacaktı — tıpkı "silip süpürdü"/"yedi" ve "burrito"/"sandviç" gibi.</p>
+<p>Model, modern standartlara göre minnacıktı — belki 17.000 kelimelik bir sözlük, 14 milyon token metin üzerinde eğitilmişti. Eğitim tek bir makinede günler sürdü. Ama düzleştirmeli en iyi n-gram modellerini şaşkınlık (perplexity) ölçütlerinde geçti, hem de büyüklük sıraları daha az veri kullanarak.</p>
+<p>Bengio'nun modeli bir <em>ileri beslemeli</em> sinir ağıydı — sabit bir penceredeki önceki kelimelere (tipik olarak 5-10) bakıyordu. Bu, uzun menzilli bağımlılıkları yakalayamayacağı anlamına geliyordu. Cümlenin öznesi 20 kelime öncesindeyse, şansınız yok.</p>
+<p>Sahneye <strong>yinelemeli sinir ağları (RNN'ler)</strong>, ve özellikle Sepp Hochreiter ile Jürgen Schmidhuber'in 1997'de icat ettiği <strong>Uzun Kısa Süreli Bellek (LSTM)</strong> ağları giriyor. LSTM'ler metni kelime kelime işleyerek bir gizli durum — bir tür süregelen özet — tutarlar ve bu teorik olarak bilginin süresiz kalmasını sağlar. Pratikte LSTM'ler sinyal bozulmadan önce belki 200-300 token'lık bağımlılıkları idare edebiliyordu.</p>
+<p>2015-2016 itibariyle LSTM dil modelleri en ileri düzeyi temsil ediyordu. Google Brain'den Rafal Jozefowicz ve meslektaşları, katman başına 8.192 gizli birime sahip iki katmanlı bir LSTM eğitti — yaklaşık 1,04 milyar parametre — One Billion Word Benchmark üzerinde. 30,0'lık bir şaşkınlık (perplexity) değeri elde etti; bu, modelin ortalamada 30 eşit olasılıklı sonraki kelime arasından seçim yapıyormuş kadar belirsiz olduğu anlamına geliyor. Karşılaştırma için: 800.000 kelimelik bir sözlük üzerinde rastgele tahmin yapan bir modelin şaşkınlık değeri 800.000 olurdu. LSTM alanı dört büyüklük sırası daraltıyordu.</p>
+<p>Ama LSTM'lerin de kendi Aşil topuğu vardı: <strong>sıralıydılar</strong>. Kelime 500'ü işlemek için önce kelime 1'den 499'a kadar hepsini işlemeniz gerekiyordu. Dizi boyunca paralelleştirme yapamazdınız. Bu, büyük veri kümeleri üzerinde eğitimi acı verici derecede yavaşlatıyordu. Google'ın milyar parametreli LSTM'si bir GPU kümesinde eğitilmesi haftalar aldı. Daha iyi bir yol olmalıydı.</p>
+<h2 id="perde-iii-devrim-2017günümüz"><a class="header" href="#perde-iii-devrim-2017günümüz">Perde III: Devrim (2017–Günümüz)</a></h2>
+<p>Vardı. Haziran 2017'de Google'da sekiz araştırmacıdan oluşan bir ekip "Attention Is All You Need" (İhtiyacınız Olan Tek Şey Dikkat) makalesini yayınladı. Makale <strong>Transformer</strong> mimarisini tanıttı ve iki yıl içinde dil modelleme için LSTM'leri esasen geçersiz kıldı.</p>
+<p>Transformer'ları Gün 3 ve 4'te derinlemesine inceleyeceğiz. Şimdilik kilit kavrayış şu: Transformer, kelimeleri sırayla işlemek yerine dizideki tüm kelimeleri <em>aynı anda</em> işler; <strong>öz-dikkat</strong> (self-attention) adlı bir mekanizma kullanarak her kelimenin diğer her kelimeye "bakmasına" ve ona ne kadar önem vereceğine karar vermesine olanak tanır. Bu, muazzam ölçüde paralelleştirilebilir — yüzlerce GPU atabilirsiniz ve hepsi meşgul kalır. Hız avantajı dönüştürücüdür (kelime oyunu kaçınılmaz).</p>
+<p>Transformer basit ama güçlü bir reçetenin kilidini açtı: <em>çok büyük</em> bir sinir ağı al, <em>çok büyük</em> miktarda metin üzerinde eğit, tek hedef olarak sonraki-token tahmini kullan. GPT-1 (2018) 117 milyon parametreye sahipti ve BookCorpus (yaklaşık 800 milyon token) üzerinde eğitilmişti. GPT-2 (2019) 1,5 milyar parametreye ve 40 GB web metnine ölçeklendi. GPT-3 (2020) 175 milyar parametreye sıçradı ve 300 milyar token üzerinde, tahmini 4,6 milyon dolarlık hesaplama maliyetiyle eğitildi.</p>
+<p>Ölçekleme merdiveninde her basamak, kimsenin açıkça programlamadığı niteliksel yetenek değişiklikleri getirdi. GPT-3 makale yazabilir, diller arasında çeviri yapabilir, aritmetik yapabilir, kod yazabilir ve bilgi sorularını yanıtlayabilirdi — hepsi <em>yalnızca</em> sonraki token'ı tahmin etmek için eğitilmiş bir modelden. OpenAI'daki araştırmacılar bir çeviri modülü ya da matematik modülü inşa etmediler. Daha iyi bir dil modeli inşa ettiler ve bu yetenekler <em>kendiliğinden ortaya çıktı</em>.</p>
+<p>İşte hâlâ insanları şaşırtan sezgiye aykırı kısım: <strong>sonraki-token tahmini sığ bir görev değildir</strong>. Organik kimya hakkındaki bir metinde sonraki token'ı tahmin etmek için modelin dolaylı olarak organik kimya öğrenmesi gerekir. Cebirsel notasyonla yazılmış bir satranç oyunundaki sonraki hamleyi tahmin etmek için dolaylı olarak satranç stratejisi öğrenmesi gerekir. Kodun sonraki satırını tahmin etmek için dolaylı olarak programlama öğrenmesi gerekir. Tahmin hedefi sığdır; bunu iyi yapmak için gereken bilgi değildir.</p>
+<p>Buna bazen <strong>sıkıştırma hipotezi</strong> denir: metnin yeterince iyi bir sıkıştırıcısı, o metni üreten süreçlerin bir modelini öğrenmek zorundadır. Eğitim veriniz milyonlarca fizik ders kitabı içeriyorsa, fizik tartışmalarında sonraki kelimeyi tahmin etmek fizik öğrenmeyi gerektirir. Dil modeli bir bakıma insan bilgisinin <em>sıkıştırılmış bir temsili</em> haline gelir — bu bilgiyi nasıl ifade ettiğimizin istatistiksel düzenlilikleri aracılığıyla süzülmüş olarak.</p>
+<h2 id="olasılık-aslında-neye-benzer"><a class="header" href="#olasılık-aslında-neye-benzer">"Olasılık" Aslında Neye Benzer</a></h2>
+<p>Somutlaştıralım. Claude ya da GPT-4 gibi modern bir dil modeli "Fransa'nın başkenti" girdisini işlediğinde, son katmanı yaklaşık 100.000-200.000 sayıdan oluşan bir vektör üretir (sözlükteki her token için bir tane). Bu sayılar, softmax fonksiyonu uygulandıktan sonra olasılıklara dönüşür. Çıktı yaklaşık şöyle görünebilir:</p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Olasılık</th></tr></thead><tbody>
+<tr><td>Paris</td><td>0,92</td></tr>
+<tr><td>olan</td><td>0,03</td></tr>
+<tr><td>bilinen</td><td>0,01</td></tr>
+<tr><td>bulunan</td><td>0,008</td></tr>
+<tr><td>bir</td><td>0,005</td></tr>
+<tr><td>...</td><td>...</td></tr>
+</tbody></table>
+</div>
+<p>Model, Paris'in Fransa'nın başkenti olduğunu sizin bildiğiniz şekilde "bilmez." Eğitim metninin engin okyanusunda "Paris"in "Fransa'nın başkenti"nden sonra ezici çoğunlukla geldiğini öğrenmiştir. Ama bu istatistiksel öğrenme o kadar derindir ki "bilmek" ile "tahmin etmek" arasındaki ayrım bulanıklaşmaya başlar.</p>
+<p><strong>Sıcaklık</strong> (temperature), bu dağılımdan örneklemenin rastgeleliğini kontrol etme yöntemimizdir. Sıcaklık 0'da model her zaman en yüksek olasılıklı token'ı seçer (açgözlü kod çözme). Sıcaklık 1'de olasılıklarla orantılı örnekleme yapar. Sıcaklık 2'de dağılım düzleşir — "Paris" 0,6'ya düşebilirken düşük olasılıklı token'lar güçlenir. Bu yüzden yaratıcı yazım görevlerinde genellikle yüksek sıcaklık (daha şaşırtıcı kelime seçimleri), olgusal görevlerde ise düşük sıcaklık (en muhtemel olana sadık kal) kullanılır.</p>
+<h2 id="bir-dil-modelini-Ölçmek-Şaşkınlık-perplexity"><a class="header" href="#bir-dil-modelini-Ölçmek-Şaşkınlık-perplexity">Bir Dil Modelini Ölçmek: Şaşkınlık (Perplexity)</a></h2>
+<p>Bir dil modelinin diğerinden daha iyi olup olmadığını nasıl ölçersiniz? Standart metrik <strong>şaşkınlık</strong> (perplexity) değeridir ve güzel bir sezgiselliği vardır.</p>
+<p>Şaşkınlık, çapraz entropi kaybının 2'nin üssü olarak ifadesidir. Günlük dilde: şaşkınlık, modelin her adımda ortalama kaç eşit olasılıklı token arasından seçim yaptığını söyler. 10'luk şaşkınlık, modelin her token'da 10 yüzlü bir zar atıyormuş kadar belirsiz olduğu anlamına gelir. Düşük olan daha iyidir.</p>
+<p>Bağlam için: standart ölçütlerde en iyi n-gram modelleri yaklaşık 50-70 şaşkınlık değerine ulaşıyordu. LSTM modelleri bunu 25-35'e indirdi. Modern Transformer tabanlı modeller birçok ölçütte 10'un altında şaşkınlık değerine ulaşıyor. GPT-4 sınıfı modellerin web metni üzerinde 4-6 civarında şaşkınlık değerine sahip olduğu tahmin ediliyor — yani tipik olarak sadece 4-6 makul sonraki token arasından seçim yapıyorlar. Bu şaşırtıcı derecede doğru.</p>
+<p>Ama kritik bir nüans var: <strong>şaşkınlık zekâyı ölçmez</strong>. Wikipedia'nın tamamını ezberlemiş bir model, Wikipedia test setinde mükemmel şaşkınlık değerine sahip olabilir ama yeni bir soruyu yanıtlayamaz. Şaşkınlık, bir modelin metin dağılımlarını ne kadar iyi tahmin ettiğini ölçer; ne kadar iyi muhakeme yaptığını, talimatları takip ettiğini ya da zararlı çıktılardan kaçındığını değil. Tahmin kalitesi ile kullanışlı davranış arasındaki bu uçurum, ince ayar ve hizalamanın (2. Haftada işleyeceğimiz konular) neden bu kadar önemli olduğunun sebebidir.</p>
+<h2 id="Ölçeğin-Şaşırtıcı-gücü"><a class="header" href="#Ölçeğin-Şaşırtıcı-gücü">Ölçeğin Şaşırtıcı Gücü</a></h2>
+<p>Dil modelleri hakkındaki belki de en çarpıcı gerçek şudur: <strong>ölçek her şeyi değiştirir</strong>. 2020'de OpenAI'daki Jared Kaplan ve meslektaşları, model performansı ile üç değişken arasında olağanüstü temiz matematiksel ilişkiler keşfetti: parametre sayısı, veri kümesi boyutu ve hesaplama bütçesi. Bu <strong>ölçekleme yasaları</strong> (Gün 7'de derinlemesine inceleyeceğiz), dil modeli kaybının her değişkenle birçok büyüklük sırası boyunca düzgün bir kuvvet yasası olarak azaldığını gösterdi.</p>
+<p>Bu, performansın <em>öngörülebilir</em> olduğu anlamına geliyor. 1 milyar parametreli bir modelin nasıl performans gösterdiğini biliyorsanız, 100 milyar parametreye şaşırtıcı doğrulukla ekstrapolasyon yapabilirsiniz. Ölçekleme eğrileri o kadar temiz ki OpenAI'ın GPT-4'ün performansını eğitim başlamadan önce tahmin etmek için bunları kullandığı bildirildi — hesaplama maliyeti 100 milyon doların üzerinde bir bahis.</p>
+<p>2026 başı itibariyle, öncü modellerin (GPT-4.5, Claude 3.5, Gemini Ultra) 200 milyar ile 1,8 trilyon parametre arasında olduğu tahmin ediliyor ve 10-15 trilyon token metin üzerinde eğitildiler. Bu modellerin eğitim süreçleri yalnızca hesaplama maliyeti olarak 50-200 milyon dolara mal oluyor, 10.000-30.000 GPU'luk kümelerde 3-6 ay sürüyor ve küçük bir kasabayı bir yıl boyunca aydınlatmaya yetecek kadar elektrik tüketiyor.</p>
+<p>Ve yine de, matematiksel özlerinde, hâlâ Claude Shannon'ın 1948'de tarif ettiği şeyin aynısını yapıyorlar: sırada ne geleceğini tahmin etmek.</p>
+<hr />
+<h2 id="temel-Çıkarımlar"><a class="header" href="#temel-Çıkarımlar">Temel Çıkarımlar</a></h2>
+<ol>
+<li><strong>Bir dil modeli, token dizilerine olasılıklar atar</strong> — temel görev sonraki-token tahminidir</li>
+<li><strong>N-gram modelleri</strong> kelime dizilerini sayıyordu ama dilin kombinatorik patlamasını kaldıramadı</li>
+<li><strong>Sinirsel dil modelleri</strong> sürekli vektör uzaylarında kelime gömmeleri öğrenerek seyrekliği çözdü</li>
+<li><strong>Transformer</strong> (2017) muazzam paralelleştirmeyi mümkün kılarak RNN'lerle imkânsız olan ölçeği serbest bıraktı</li>
+<li><strong>Sonraki token'ı iyi tahmin etmek derin dünya bilgisi gerektirir</strong> — hedefin sadeliği öğrenmenin karmaşıklığını gizler</li>
+<li><strong>Şaşkınlık</strong> tahmin kalitesini ölçer ama kullanışlılığı ya da zekâyı değil</li>
+<li><strong>Ölçekleme yasaları</strong> büyük modellerin temiz kuvvet yasalarını takip ederek öngörülebilir biçimde daha iyi hale geldiğini gösterir</li>
+</ol>
+<hr />
+<h2 id="yarın-anlamın-geometrisi"><a class="header" href="#yarın-anlamın-geometrisi">Yarın: Anlamın Geometrisi</a></h2>
+<p>Dil modelleri kelimeleri vektörler olarak temsil ediyorsa, bu vektörler neye benzer? Gün 2, <strong>kelime gömmelerini</strong> — kelime vektörleri üzerindeki matematiksel işlemlerin gerçek anlamsal ilişkileri yakaladığı keşfini — derinlemesine inceliyor. <code>kral - erkek + kadın = kraliçe</code> denkleminin neden sadece şirin bir numara değil, anlamın geometride nasıl kodlanabileceğine dair derin bir kavrayış olduğunu ve Word2Vec ile GloVe'un modern LLM'lerin hâlâ üzerine inşa ettiği matematiksel temeli nasıl attığını keşfedeceğiz.</p>
+<hr />
+<div id="quiz-day-01"></div>
+<script src="../quiz/quiz-embed.iife.js"></script>
+<link rel="stylesheet" href="../quiz/style.css">
+<script>
+QuizEmbed.createQuiz("quiz-day-01", "/quizzes/day-01.toml");
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-02.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-02.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,103 @@
+# Day 18 Quiz: Context Windows — From 512 to 1M+ Tokens
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why does self-attention have O(N²) complexity with respect to sequence length N?"
+prompt.distractors = [
+    "Each attention head must compute N separate softmax normalizations over N-dimensional vectors",
+    "The feedforward network after each attention layer processes N tokens with N-dimensional hidden states",
+    "The positional encoding computation requires pairwise distance calculations between all token positions"
+]
+answer.answer = "Every token computes a dot-product similarity score with every other token in the sequence"
+context = "Self-attention computes query-key dot products for all token pairs, creating an N×N attention matrix. This quadratic scaling is the fundamental bottleneck that limits context length."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What key property makes RoPE (Rotary Position Embeddings) fundamentally different from absolute positional encodings?"
+prompt.distractors = [
+    "RoPE uses learned parameters instead of fixed mathematical functions to represent each position",
+    "RoPE applies position information after the attention computation rather than before the QK dot product",
+    "RoPE encodes absolute position through frequency modulation of the embedding vector magnitudes"
+]
+answer.answer = "RoPE makes attention scores depend on relative distance (m-n) by rotating query and key vectors by position-dependent angles"
+context = "RoPE rotates query and key vectors so that their dot product depends only on the difference between positions, not absolute positions. This relative encoding is key to its generalization properties."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does NTK-aware interpolation extend a RoPE model's context length beyond its training window?"
+prompt.distractors = [
+    "It uniformly scales all rotational frequencies by the same factor to cover the extended position range",
+    "It adds learned correction vectors at each position to compensate for the frequency mismatch at new positions",
+    "It replaces the sine-cosine rotation with a learned piecewise-linear function that extrapolates more smoothly"
+]
+answer.answer = "It scales low-frequency rotation components more than high-frequency ones, preserving local structure while extending range"
+context = "NTK-aware scaling recognizes that high-frequency components handle local structure (which doesn't change) while low-frequency components need more stretching for long-range positions. This non-uniform approach preserves short-range performance."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What is the core mechanism behind Ring Attention for processing sequences across multiple GPUs?"
+prompt.distractors = [
+    "Each GPU processes a different attention head independently, then results are gathered and concatenated",
+    "The attention matrix is sharded in blocks across GPUs, with each GPU computing its assigned matrix partition",
+    "Each GPU computes full attention on a downsampled version of the sequence, then results are interpolated"
+]
+answer.answer = "GPUs pass key-value pairs around a ring topology, computing attention on each received chunk while simultaneously sending to the next device"
+context = "Ring attention distributes the sequence across devices and uses a ring communication pattern where KV transfer overlaps with attention computation, enabling near-zero communication overhead and linear scaling of context length with device count."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What makes FlashAttention faster than standard attention, despite computing the same mathematical result?"
+prompt.distractors = [
+    "It approximates the softmax function with a simpler linear operation that produces nearly identical output",
+    "It uses sparse attention patterns to skip computing dot products for token pairs below a relevance threshold",
+    "It reduces the dimensionality of query and key vectors before computing attention, then projects results back"
+]
+answer.answer = "It tiles the computation to fit in fast on-chip SRAM, avoiding expensive reads and writes of the full N×N matrix to slower HBM"
+context = "FlashAttention exploits the GPU memory hierarchy by computing attention in blocks that fit in SRAM, never materializing the full attention matrix in HBM. The bottleneck was memory bandwidth, not compute."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the 'Needle in a Haystack' evaluation, what recall pattern did early long-context models typically exhibit?"
+prompt.distractors = [
+    "Recall decreased monotonically from the beginning to the end of the context window",
+    "Recall was uniformly random regardless of needle position, suggesting no positional understanding",
+    "Recall was highest in the middle of the context and degraded toward both the beginning and end"
+]
+answer.answer = "A U-shaped curve with strong recall at the beginning and end of context but poor recall in the middle"
+context = "The 'lost in the middle' phenomenon showed primacy bias (beginning) and recency bias (end) with degraded recall for information in the middle of long contexts. This was documented across multiple model families."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What technique does Grouped-Query Attention (GQA) use to reduce KV cache memory — sharing KV heads across multiple what?"
+answer.answer = "query heads"
+answer.alternatives = ["query heads", "attention heads", "queries"]
+context = "GQA shares key-value heads across multiple query heads. For example, LLaMA 2 70B uses 64 query heads but only 8 KV heads, reducing KV cache by 8×."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "How does ALiBi encode positional information in the attention mechanism?"
+prompt.distractors = [
+    "It multiplies token embeddings by position-dependent scaling factors derived from a geometric series",
+    "It adds learned position-specific bias vectors to the key representations before computing dot products",
+    "It applies rotational transformations to attention logits based on absolute position indices in the sequence"
+]
+answer.answer = "It subtracts a linear penalty proportional to token distance from attention scores, with different slopes per head"
+context = "ALiBi adds a linear distance-based bias to attention scores, with head-specific slopes forming a geometric sequence. This creates heads with different 'ranges' — some nearsighted, some farsighted — without any learned positional parameters."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "What was the maximum context length in tokens of the original 2017 'Attention Is All You Need' transformer?"
+answer.answer = "512"
+answer.alternatives = ["512 tokens", "512"]
+context = "The original transformer trained on sequences of 512 tokens. This grew to 1,024 (GPT-2), 2,048 (GPT-3), and eventually to 1M+ tokens (Gemini 1.5) over seven years."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What approach does DeepSeek-V2's Multi-head Latent Attention (MLA) use to dramatically reduce KV cache size?"
+prompt.distractors = [
+    "It evicts the least-recently-accessed KV entries from cache using an LRU replacement policy",
+    "It quantizes key and value vectors to 4-bit precision, reducing memory per entry by 4× versus FP16",
+    "It shares a single KV head across all query heads like Multi-Query Attention but with residual corrections"
+]
+answer.answer = "It projects keys and values into a low-rank compressed latent space with far fewer dimensions than standard KV representations"
+context = "MLA compresses key-value representations into a 512-dimensional latent space regardless of head count, achieving ~93% KV cache reduction compared to standard multi-head attention. This enables competitive serving at much lower infrastructure cost."

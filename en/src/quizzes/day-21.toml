@@ -1,0 +1,101 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What was the key insight behind OpenAI's CLIP model, released in January 2021?"
+prompt.distractors = [
+    "Training a convolutional neural network on ImageNet labels with contrastive regularization to improve generalization across visual domains",
+    "Using a generative adversarial network to create synthetic image-text pairs that augmented supervised classification datasets",
+    "Fine-tuning a pre-trained GPT-2 language model on image captioning tasks using reinforcement learning from human feedback"
+]
+answer.answer = "Learning to match images with text descriptions by training on 400 million image-text pairs using a contrastive learning objective"
+context = "CLIP trained a vision encoder and text encoder jointly to maximize similarity between matching image-text pairs and minimize similarity for non-matching pairs, using 400M internet-scraped pairs with no manual labels."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In the vision encoder bridge approach used by models like LLaVA-1.5, what connects the vision encoder to the language model?"
+prompt.distractors = [
+    "A cross-attention layer with 256 million parameters that learns bidirectional mappings between visual and textual feature spaces",
+    "A vector quantization codebook that discretizes continuous visual features into a vocabulary of 8,192 visual tokens for autoregressive modeling",
+    "A contrastive learning head with 150 million parameters that aligns vision and language representations in a shared latent space"
+]
+answer.answer = "A small two-layer MLP with approximately 20 million parameters that projects vision token embeddings into the language model's hidden dimension"
+context = "LLaVA-1.5 used a remarkably simple two-layer MLP (~20M parameters) with GELU activation to map SigLIP vision tokens into Vicuna's embedding space, costing only ~$200 to train."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "Why do current multimodal models struggle with tasks like counting objects and understanding spatial relationships, despite high benchmark scores?"
+prompt.distractors = [
+    "The language model backbone was pre-trained exclusively on text data, creating an inherent bias toward generating plausible captions rather than accurate spatial descriptions",
+    "The training datasets contain very few examples of counting and spatial reasoning tasks, leading to poor few-shot generalization on these specific capabilities",
+    "The attention mechanism in transformers has a fixed receptive field that prevents information flow between distant image patches during visual processing"
+]
+answer.answer = "Patchification breaks images into independent patches before attention connects them, losing fine spatial relationships that require continuous tracing across patch boundaries"
+context = "When a ViT chops images into 14×14 patches, each patch is initially processed independently. Fine spatial relationships — like a line connecting two corners — get lost. The model learns to associate patterns with text, not to trace visual structure."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "How many hours of multilingual audio-text pairs was OpenAI's Whisper model trained on?"
+answer.answer = "680,000"
+answer.alternatives = ["680000", "680,000 hours", "680k"]
+context = "Whisper was trained on 680,000 hours of weakly supervised multilingual audio-text pairs scraped from the internet, achieving human-level speech recognition across 99 languages."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What makes Google's Gemini approach to multimodal AI fundamentally different from the vision encoder bridge approach?"
+prompt.distractors = [
+    "Gemini uses a specialized visual tokenizer that converts images into discrete tokens before feeding them through a standard autoregressive language model decoder",
+    "Gemini processes each modality through separate expert networks and combines their outputs using a mixture-of-experts gating mechanism at inference time",
+    "Gemini uses a dual-encoder architecture where vision and language models are trained independently and connected through a frozen contrastive embedding space"
+]
+answer.answer = "Gemini is trained on text, images, video, and audio interleaved together from the first gradient update, with visual understanding woven into its weights natively"
+context = "Unlike the bridge approach (which bolts a pre-trained vision encoder onto a pre-trained LLM), Gemini trains on all modalities simultaneously from scratch, producing deeper cross-modal integration at the cost of much higher training expense."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "In Alibaba's Qwen2.5-VL-72B, what percentage of the model's total parameters are dedicated to vision components?"
+prompt.distractors = [
+    "Approximately 12%, reflecting the significant computational investment needed for high-resolution multi-scale visual feature extraction",
+    "Approximately 30%, mirroring the proportion of human cortex devoted to visual processing to achieve comparable perceptual capabilities",
+    "Approximately 5%, split evenly between the vision encoder's convolutional layers and the cross-modal attention projection matrices"
+]
+answer.answer = "Less than 1%, with the 675M-parameter vision encoder being a rounding error compared to the 72B-parameter language backbone"
+context = "The vision encoder (675M params) is less than 1% of the total ~73B parameters. This reflects a deep truth: current multimodal AI is profoundly language-centric, with perception treated as a peripheral rather than a core capability."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "What surprising finding did Google report about multimodal training's effect on language-only performance?"
+prompt.distractors = [
+    "Models trained on multimodal data showed 15% slower inference speed on text tasks but compensated with more accurate factual recall from grounded visual knowledge",
+    "Multimodal training degraded language benchmark scores by 2-3% due to capacity dilution but improved real-world task completion rates in user studies",
+    "Models trained with visual data generated longer and more descriptive text responses but showed no measurable change in reasoning or factual accuracy"
+]
+answer.answer = "Gemini models trained on multimodal data scored higher on text-only benchmarks than equivalent models trained on text alone, suggesting visual grounding improves language understanding"
+context = "Visual data provides a grounding signal connecting language to the physical world, helping models build better representations of spatial, physical, and perceptual concepts. Multimodal training may correct a fundamental limitation of text-only training."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "[Review — Day 19] In speculative decoding, what happens when the verification model rejects a token drafted by the smaller model?"
+prompt.distractors = [
+    "The system discards the entire drafted sequence and restarts generation from the last verified token using only the large model for one step",
+    "The verification model fine-tunes the draft model's parameters online using the rejected position as a negative training signal before retrying",
+    "The draft model generates three alternative tokens for the rejected position and the verification model selects the best one via beam search"
+]
+answer.answer = "The system discards the rejected token and all subsequent drafted tokens, then samples a corrected token from a modified distribution based on the large model's probabilities"
+context = "Speculative decoding verifies all draft tokens in parallel. When a token is rejected, all tokens after it are also discarded. The corrected token is sampled from an adjusted distribution that accounts for the difference between the draft and target model distributions."
+
+[[questions]]
+type = "ShortAnswer"
+prompt.prompt = "[Review — Day 18] What technique does FlashAttention use to avoid materializing the full N×N attention matrix in GPU HBM?"
+answer.answer = "tiling"
+answer.alternatives = ["kernel tiling", "block tiling", "tiling with SRAM", "tiling in SRAM"]
+context = "FlashAttention computes attention in tiles (blocks) that fit in the GPU's fast SRAM, accumulating results without ever materializing the full O(N²) attention matrix in slower HBM. This reduces memory usage from O(N²) to O(N)."
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = "[Review — Day 10] What did the LIMA paper demonstrate about fine-tuning large language models?"
+prompt.distractors = [
+    "That reinforcement learning from human feedback could be entirely replaced by constitutional AI methods using only 500 preference pairs for alignment",
+    "That training a 7B parameter model on 100,000 curated examples could match GPT-4 performance on all standard natural language benchmarks",
+    "That parameter-efficient methods like LoRA could achieve 99% of full fine-tuning quality while training only 0.01% of the model's total parameters"
+]
+answer.answer = "That fine-tuning a 65B LLaMA model on just 1,000 carefully curated examples produced remarkably strong performance, suggesting data quality matters far more than quantity"
+context = "LIMA (Less Is More for Alignment) showed that 1,000 high-quality examples were sufficient to align a pre-trained model, supporting the hypothesis that alignment is mainly about learning style/format while knowledge comes from pre-training."

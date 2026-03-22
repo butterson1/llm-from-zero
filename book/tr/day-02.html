@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 2: Kelime Gömmeleri — Anlamın Geometrisi - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-2-kelime-gömmeleri--anlamın-geometrisi"><a class="header" href="#gün-2-kelime-gömmeleri--anlamın-geometrisi">Gün 2: Kelime Gömmeleri — Anlamın Geometrisi</a></h1>
+<p><em>Basit bir numara — kelimeleri sayı listelerine dönüştürmek — dilin gizli bir geometrik yapısı olduğunu ortaya çıkardı ve "kral eksi erkek artı kadın eşittir kraliçe" her şeyi değiştirdi.</em></p>
+<hr />
+<h2 id="nlpyi-neredeyse-Öldüren-problem"><a class="header" href="#nlpyi-neredeyse-Öldüren-problem">NLP'yi Neredeyse Öldüren Problem</a></h2>
+<p>Dün bir merak noktasında bırakmıştık: n-gram modelleri genelleme yapamıyordu. "Kedi minder üzerinde oturdu"yu bin kez görmüş ama "tekir kilim üzerinde dinlendi"yi hiç görmemişlerse, ikinci cümleyi özünde yepyeni bir şey olarak ele alıyorlardı. Model, "tekir"in bir kedi türü olduğunu ya da "dinlendi"nin "oturdu"ya benzediğini <em>bilmiyordu</em>. Her kelime opak bir sembol, diğer tüm kelimelerden bir seri numaranın sahibinden ilişkisiz olduğu kadar bağımsızdı.</p>
+<p>Makine öğrenmesi dilinde, kelimeler <strong>tek-sıcak (one-hot) vektörler</strong> olarak temsil ediliyordu: sözlüğünüz 50.000 kelimeyse, "kedi" kelimesi 7.291. konumunda tek bir 1 ve geri kalan 50.000 sıfırdan oluşan bir vektör olabilir. "Köpek" ise 12.408. konumunda 1 bulunan bir sıfır dizisi olurdu. Matematiksel olarak, "kedi" ile "köpek" arasındaki mesafe, "kedi" ile "termonükleer" arasındaki mesafeyle birebir aynıdır. Her kelime diğer her kelimeden eşit uzaklıktadır. Bu sadece yararsız değil — aktif olarak yanlış.</p>
+<p>Bu temsil pratik bir lanet de taşıyor: devasa ve seyrek. 100.000 kelimelik bir sözlük, her kelimenin %99,999'u sıfır olan 100.000 boyutlu bir vektör olması demek. Bununla bir sinir ağı eğitmeyi deneyin. Parametreler patlar, gradyanlar söner ve modelin kapasitesinin çoğu neredeyse hiç aktif olmayan boyutlara harcanır.</p>
+<p>Her şeyi değiştiren kavrayış yanıltıcı biçimde basitti: <strong>ya her kelimeyi kısa, yoğun bir vektör — diyelim 300 sayı — olarak temsil etsek ve benzer kelimelerin benzer vektörleri olsa?</strong> 100.000 boyutlu bir sıfır çölü yerine, her kelime 300 boyutlu bir uzayda kompakt bir nokta olur. Ve kritik olarak, bu uzaydaki konumlar elle atanmak yerine <em>veriden öğrenilir</em>.</p>
+<p>İşte <strong>kelime gömmelerinin</strong> ardındaki temel fikir bu — ve abartısız söylemek gerekirse, doğal dil işleme tarihindeki en önemli temsilsel yeniliktir.</p>
+<h2 id="dağılımsal-hipotez-Çevrendekilerle-tanınırsın"><a class="header" href="#dağılımsal-hipotez-Çevrendekilerle-tanınırsın">Dağılımsal Hipotez: Çevrendekilerle Tanınırsın</a></h2>
+<p>Kelime gömmelerinin teorik omurgası <strong>dağılımsal hipotez</strong>tir. En özlü haliyle 1957'de İngiliz dilbilimci J.R. Firth şöyle ifade etmiştir: <em>"Bir kelimeyi, yanında bulunduğu kelimelerden tanırsın."</em></p>
+<p>Fikir şu: benzer bağlamlarda geçen kelimeler benzer anlamlara sahip olma eğilimindedir. "Köpek" ve "kedi" yanlarında "evcil hayvan," "beslemek," "veteriner" ve "tatlı" gibi kelimelerle birlikte geçer. "Plütonyum" ve "uranyum" ise "reaktör," "zenginleştirme" ve "izotop" yakınında bulunur. "Köpek" ve "kedi"nin ilişkili olduğunu anlamak için sözlüğe ihtiyacınız yok — milyonlarca cümle boyunca etraflarındaki kelimelere bakmanız yeterli.</p>
+<p>Bu sadece dilbilimsel bir folklor değil. Deneysel olarak test edilebilir ve şaşırtıcı derecede sağlam. 1990'larda Bell Labs ve başka yerlerdeki araştırmacılar, tamamen dağılımsal yöntemlerin kelimeleri anlamlı gruplar halinde kümeleyebildiğini gösterdi — isimleri isimlerle, fiilleri fiillerle, ülkeleri ülkelerle — hiç etiketli veri kullanmadan. Dilin istatistiksel yapısı, gözler önünde gizlenerek, muazzam miktarda anlamsal bilgi kodluyor.</p>
+<p>Ama bu kavrayışı pratik, eğitilebilir bir sisteme dönüştürmek? Bu birkaç on yıl daha ve Google'daki bir ekibin kritik katkısını gerektirdi.</p>
+<h2 id="word2vec-bin-startup-doğuran-makale"><a class="header" href="#word2vec-bin-startup-doğuran-makale">Word2Vec: Bin Startup Doğuran Makale</a></h2>
+<p>2013'te Google'daki Tomáš Mikolov ve meslektaşları, NLP topluluğunda şok dalgaları yaratan bir çift makale yayınladı. Sistem <strong>Word2Vec</strong> adını taşıyordu ve dehası fikirde değildi — Bengio 2003'te sinirsel dil modellerinin kelime temsilleri öğrenebildiğini zaten göstermişti — <em>mühendisliğindeydi</em>. Word2Vec, kelime gömmelerini tek bir makinede <em>saatler</em> içinde <em>milyarlarca</em> kelime üzerinde eğitmeyi mümkün kıldı.</p>
+<p>Word2Vec iki çeşit gelir:</p>
+<h3 id="sürekli-kelime-Çantası-cbow"><a class="header" href="#sürekli-kelime-Çantası-cbow">Sürekli Kelime Çantası (CBOW)</a></h3>
+<p>Bir bağlam kelime penceresi verildiğinde (diyelim her iki yanda 5 kelime), ortadaki kelimeyi tahmin et. Bağlam "kedi ___ üzerinde oturdu" ise model "minder"i tahmin etmeli. Milyarlarca kez oynanan bir boşluk doldurma oyunu gibi.</p>
+<h3 id="skip-gram"><a class="header" href="#skip-gram">Skip-gram</a></h3>
+<p>Tersi: ortadaki kelime verildiğinde, bağlam kelimelerini tahmin et. "Kedi" verildiğinde, "minder," "üzerinde," "oturdu"nun yakınlarda geçmesinin muhtemel olduğunu tahmin et. Daha zor gibi görünüyor ve öyle de — ama skip-gram nadir kelimeler için daha iyi gömmeler üretiyor, çünkü her eğitim örneği birden fazla tahmin üretiyor.</p>
+<p>Her iki mimari de çarpıcı biçimde basit. "Sinir ağı" ancak sinir ağı sayılır — girdi ve çıktı arasına sıkıştırılmış tek bir gizli katman. Aktivasyon fonksiyonu yok, derin yığınlama yok, konvolüsyon yok. Sadece bir arama tablosu (gömme matrisi) ve doğrusal bir izdüşüm. Modelin tamamı iki matristen oluşur: <strong>W</strong> (sözlük boyutu × gömme boyutu) ve <strong>W'</strong> (gömme boyutu × sözlük boyutu). 300 boyutlu gömmelerle 100.000 kelimelik bir sözlük için bu 60 milyon parametre yapar. GPT-4'ün tahminen 1,8 <em>trilyonu</em> var. Word2Vec, tek bir transformer katmanından üç büyüklük sırası daha küçük.</p>
+<p>Asıl numara, matematiği çözülebilir kılan bir eğitim kısayolu olan <strong>negatif örnekleme</strong>ydi. Tüm 100.000 sözlük kelimesi üzerinde bir olasılık dağılımı hesaplamak (felaket derecede pahalı bir softmax gerektirir) yerine, negatif örnekleme problemi yeniden formüle eder: her gerçek (kelime, bağlam) çifti için 5-15 rastgele "negatif" kelime örnekle ve modeli gerçek birlikte geçişleri sahte olanlardan ayırt etmek üzere eğit. Bu, 100.000 yollu bir sınıflandırmayı bir avuç ikili karara dönüştürerek eğitim süresini büyüklük sıraları kadar kısaltır.</p>
+<p>Mikolov, Word2Vec'i Google News'tan 6 milyar token üzerinde tek bir makinede bir günden kısa sürede eğitti. Ortaya çıkan gömmeler NLP tarihinin en çok indirilen üretimi oldu — ve kimsenin beklemediği bir şey ortaya çıkardı.</p>
+<h2 id="kral--erkek--kadın--kraliçe-anlam-uzayında-aritmetik"><a class="header" href="#kral--erkek--kadın--kraliçe-anlam-uzayında-aritmetik">Kral − Erkek + Kadın = Kraliçe: Anlam Uzayında Aritmetik</a></h2>
+<p>İşte kelime gömmelerini meşhur eden an. "Kral"ın 300 boyutlu vektörünü alın. "Erkek"in vektörünü çıkarın. "Kadın"ın vektörünü ekleyin. Ortaya çıkan vektöre en yakın kelime? <strong>"Kraliçe."</strong></p>
+<p>Bu programlanmamıştı. Kimse modele cinsiyet ya da kraliyet ailesi hakkında bir şey söylememişti. Tamamen kelime birlikte geçiş istatistiklerinden ortaya çıktı. Ve onlarca ilişki için işe yaradı:</p>
+<ul>
+<li><strong>Paris − Fransa + İtalya ≈ Roma</strong> (başkentler)</li>
+<li><strong>daha büyük − büyük + küçük ≈ daha küçük</strong> (karşılaştırma formları)</li>
+<li><strong>yürüyor − yürüdü + yüzdü ≈ yüzüyor</strong> (zaman değişimleri)</li>
+<li><strong>Einstein − bilim insanı + ressam ≈ Picasso</strong> (meslek transferi)</li>
+</ul>
+<p>Burada ne oluyor? Gömme uzayı kendini, kelime çiftleri arasındaki tutarlı ilişkilerin tutarlı <em>yönler</em> olarak kodlandığı şekilde organize etmiş. "Cinsiyet" yönü (erkek → kadın, kral → kraliçe, amca → teyze) uzayın her yerinde kabaca aynı vektör. "Başkent" yönü (Fransa → Paris, İtalya → Roma, Japonya → Tokyo) başka bir tutarlı vektör. Model, kelime birlikte geçiş istatistiklerinden başka hiçbir şey kullanmadan, dilin gizli bir <strong>doğrusal yapısı</strong> olduğunu keşfetmiş.</p>
+<p>Bu, dilbilimcileri ve yapay zekâ araştırmacılarını gerçekten şok etti. Dilin karmaşık, belirsiz, bağlama bağımlı olması gerekiyor. Ama işte burada, kristal kafes gibi düzgün geometrik ilişkilerle sergileniyordu. Stanford NLP grubundan Christopher Manning'in dediği gibi: "En şaşırtıcı olan, bu temsillerin bu kadar doğrusal olmasıydı."</p>
+<h3 id="analoji-görevinin-kirli-sırrı"><a class="header" href="#analoji-görevinin-kirli-sırrı">Analoji Görevinin Kirli Sırrı</a></h3>
+<p>Sezgiye aykırı kısım şu: bu analojiler, çoğu popüler anlatımın ileri sürdüğünden <em>daha az iyi</em> çalışır. Mikolov'un 19.544 analoji sorusu üzerindeki orijinal değerlendirmesinde, Word2Vec sözdizimsel analojilerde (fiil zamanları, çoğullar) yaklaşık %74, anlamsal analojilerde (başkentler, para birimleri) ise yalnızca yaklaşık %64 doğru cevap verdi. Sonraki çalışmalar, analoji yönteminin yanlı olduğunu gösterdi — paralelkenar ilişkisini gerçekten karşılayan kelimeler yerine, üç girdi kelimesinin hepsine ayrı ayrı yakın kelimeleri döndürme eğiliminde. Ve bazı "analojiler" eğitim verisine gömülmüş rahatsız edici toplumsal önyargıları yansıtıyordu: <strong>erkek : bilgisayar programcısı :: kadın : ev kadını</strong> Google News üzerinde eğitilmiş gömmelerden elde edilen gerçek bir sonuçtu.</p>
+<p>Bu önyargılar algoritmadaki hatalar değil — metindeki istatistiksel örüntülerin sadık yansımaları. Bu da hâlâ tam olarak çözülmemiş bir soruyu gündeme getiriyor: gömmeleriniz doktorların erkek, hemşirelerin kadın olduğunu kodluyorsa (çünkü eğitim korpusunuzdaki istatistiksel dağılım bu), ve siz bu gömmeleri bir işe alım sisteminde kullanıyorsanız, ayrımcılığı otomatikleştirmiş olursunuz. Tolga Bolukbasi ve meslektaşları 2016'da çığır açıcı bir makale yayınladı — "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings" — bu önyargıları kapsamlı biçimde belgeledi ve geometrik önyargı giderme yöntemleri önerdi — ama dilin <em>kendisinin</em> önyargılı olduğuna dair daha derin problem hâlâ duruyor.</p>
+<blockquote>
+<p>💡 <strong>Önyargı neden önemli?</strong> Kelime gömmeleri sadece akademik bir merak değil — arama motorlarından işe alım sistemlerine, kredi puanlamasından hukuki karar destek araçlarına kadar pek çok yerde kullanılıyor. Gömmelerdeki önyargı, gerçek insanların hayatını etkileyen kararlara sızabilir.</p>
+</blockquote>
+<h2 id="glove-sayımlar-gradyanlarla-buluşuyor"><a class="header" href="#glove-sayımlar-gradyanlarla-buluşuyor">GloVe: Sayımlar Gradyanlarla Buluşuyor</a></h2>
+<p>2014'e ileri sarın. Stanford'dan Jeffrey Pennington, Richard Socher ve Christopher Manning, aynı hedefe felsefi açıdan farklı bir yaklaşımla gelen <strong>GloVe</strong>'u (Kelime Temsili için Global Vektörler) yayınladı.</p>
+<p>Word2Vec <em>tahminsel</em> bir modeldir: bağlamdan kelimeleri tahmin etmeye çalışarak gömmeleri öğrenir. GloVe ise global kelime-kelime birlikte geçiş matrisiyle — tüm korpus boyunca i kelimesinin j kelimesinin yanında ne sıklıkla göründüğünü kaydeden devasa bir tablo — başlayan ve bunu çarpanlara ayıran <em>sayım tabanlı</em> bir modeldir.</p>
+<p>GloVe'un ardındaki kilit kavrayış, birlikte geçiş olasılıklarının <em>oranlarının</em> anlamı, ham olasılıklardan daha güvenilir biçimde kodladığıdır. Üç kelimeyi düşünün: "buz," "buhar" ve "katı." "Katı"nın "buz" yanında geçme olasılığı yüksektir (P ≈ 1,9 × 10⁻⁴), "buhar" yanında geçme olasılığı ise düşüktür (P ≈ 2,2 × 10⁻⁵). P(katı|buz)/P(katı|buhar) ≈ 8,9 oranı — büyük bir sayı, "katı"nın "buhar"dan çok daha fazla "buz"la ilişkili olduğunu söylüyor. "Gaz" kelimesi için oran tersine döner: P(gaz|buz)/P(gaz|buhar) ≈ 0,085. "Su" gibi tarafsız bir kelime için oran 1'e yakındır.</p>
+<p>GloVe, iki kelime vektörünün iç çarpımının birlikte geçiş sayılarının logaritmasına yaklaşması için gömmeler eğitir:</p>
+<blockquote>
+<p><strong>wᵢ · wⱼ + bᵢ + bⱼ ≈ log(Xᵢⱼ)</strong></p>
+</blockquote>
+<p>Bu zarif ve temiz bir hedeftir. Model sadece ağırlıklı en küçük kareler regresyonu — sinir ağı yok, diziler üzerinde geri yayılım yok, negatif örnekleme yok. GloVe'u 6 milyar token (Wikipedia + Gigaword) üzerinde 300 boyutlu vektörlerle eğitmek 8 CPU'da yaklaşık 4 saat sürdü.</p>
+<p>Pratikte GloVe ve Word2Vec karşılaştırılabilir kalitede gömmeler üretir. WordSim-353 ve SimLex-999 gibi kelime benzerliği ölçütlerinde ikisi tipik olarak birkaç yüzdelik puan farkıyla puan alır. GloVe analoji görevlerinde hafif üstünlük sağlar; Word2Vec alt görev NLP görevlerinde daha iyi olma eğilimindedir. GloVe'un asıl katkısı teorikti: tahminsel (Word2Vec) ve sayım tabanlı (klasik dağılımsal anlambilim) yaklaşımların temelden farklı olmadığını gösterdi. Aynı dağın iki yolu.</p>
+<h2 id="boyutluluk-sorusu-neden-300"><a class="header" href="#boyutluluk-sorusu-neden-300">Boyutluluk Sorusu: Neden 300?</a></h2>
+<p>Kelime gömmeleri neden tipik olarak 200-300 boyuta sahip? Neden 50 değil, 10.000 değil?</p>
+<p>Pratik bir cevap ve derin bir cevap var. Pratik cevap deneyseldir: Mikolov 50'den 1.000'e boyutları test etti ve analoji görevlerindeki performansın yaklaşık 300 boyuta kadar dik biçimde arttığını, sonra plato yaptığını buldu. Daha fazla boyut daha fazla parametre, daha uzun eğitim ve azalan getiri demek.</p>
+<p>Derin cevap dilin <strong>iç boyutsallığıyla</strong> ilgili. Anlamın gerçekten kaç bağımsız varyasyon ekseni var? Cinsiyet, canlılık, boyut, resmiyyet, duygu, somutluk, alan (tıbbi vs. hukuki vs. günlük), zaman dilimi ve yüzlerce daha ince ayrım için boyutlara ihtiyacınız var. Araştırmacılar, İngilizce kelime anlamının iç boyutsallığını yönteme bağlı olarak 200 ile 500 arasında tahmin etti. Bunun altında çok fazla sıkıştırıyorsunuz ve ayrımları kaybediyorsunuz. Üstünde ise gürültüye uyum sağlıyorsunuz.</p>
+<p>Burada <strong>rastgele matris teorisiyle</strong> şaşırtıcı derecede temiz bir ilişki var. Birlikte geçiş matrisini alıp özdeğerlerini hesaplarsanız, rank 200-400 civarında keskin bir dirsek görürsünüz — bunun altında özdeğerler gerçek anlamsal yapıyı temsil eder; üstünde gürültüden ayırt edilemezler. Ampirik olarak en iyi çalışan 300 boyutun, doğal dilde sinyalin gürültüyle buluştuğu rank olduğu ortaya çıkıyor.</p>
+<h2 id="fasttext-tam-kelimelerin-Ötesinde"><a class="header" href="#fasttext-tam-kelimelerin-Ötesinde">FastText: Tam Kelimelerin Ötesinde</a></h2>
+<p>Word2Vec ve GloVe'un göze batan bir sınırı: her kelimeyi atomik bir birim olarak ele alırlar. "Mutsuzluk" kelimesi kendi vektörünü alır, "mutsuz," "mutluluk" ya da "mutlu"dan tamamen bağımsız. Türkçe, Fince ya da Arapça gibi morfolojik açıdan zengin diller için — tek bir kökten binlerce çekimli form üretilebilir — bu felaket niteliğindedir. Çoğu kelime formu iyi gömmeler öğrenmeye yetecek kadar nadir görülür, eğer görülürse.</p>
+<blockquote>
+<p>💡 <strong>Türkçe neden özel?</strong> Türkçe sondan eklemeli (aglütinatif) bir dildir. "Evlerinizden" kelimesi tek başına "from your houses" anlamına gelir. Bir kök, yüzlerce farklı ek kombinasyonuyla binlerce forma dönüşebilir. Bu, sabit sözlüklü modeller için ciddi bir zorluktur.</p>
+</blockquote>
+<p>2017'de Facebook AI Research'ten (şimdi Meta AI) Piotr Bojanowski ve meslektaşları, skip-gram modelini <strong>karakter n-gramları</strong> üzerinde çalışacak şekilde genişleten <strong>FastText</strong>'i yayınladı. "Mutsuzluk"u tek bir vektör olarak temsil etmek yerine, FastText onu karakter dizilerine ayırır: "&lt;mu", "mut", "uts", "tsu", "suz", "uzl", "zlu", "luk", "uk&gt;" (n=3 için). Kelimenin gömmesi, karakter n-gram gömmelerinin toplamıdır.</p>
+<p>Bu üç nedenle zariftir. Birincisi, morfolojik olarak ilişkili kelimeler otomatik olarak temsil paylaşır: "mutlu," "mutsuz," "mutluluk" ve "mutluca"nın hepsi "mut" n-gramını içerir. İkincisi, FastText hiç görmediği kelimeler için vektör üretebilir — karakter n-gram vektörlerini toplayarak herhangi bir dize için, yazım hatası ya da yeni kelime bile olsa, makul bir gömme elde edersiniz. Üçüncüsü, morfolojik açıdan karmaşık dillerde olağanüstü iyi çalışır. Türkçe kelime benzerliği görevlerinde FastText, Word2Vec'i %15-20 oranında geçmiştir.</p>
+<p>Facebook, 157 dil için önceden eğitilmiş FastText vektörleri yayınladı — hâlâ var olan en yaygın kullanılan çok dilli NLP kaynaklarından biri.</p>
+<h2 id="gömmelerin-yapamadığı-Çokanlamlılık-problemi"><a class="header" href="#gömmelerin-yapamadığı-Çokanlamlılık-problemi">Gömmelerin Yapamadığı: Çokanlamlılık Problemi</a></h2>
+<p>İşte bu kursun geri kalanında inceleyeceğimiz her şeyi motive eden, sezgiye aykırı sınırlama: <strong>statik kelime gömmeleri bağlamdan bağımsız olarak her kelimeye tam olarak bir vektör verir</strong>. "Yüz" kelimesi, insan yüzü anlamı ile sayı yüz anlamının bir tür ortalaması olan tek bir vektör alır. "Kol" hem vücut uzvu hem de koltuk kolu anlamını bulandırır.</p>
+<p>Bu küçük bir sıkıntı gibi görünüyor ama aslında temel bir sorun. 2019'da Camacho-Collados ve Pilehvar tarafından yapılan bir analiz, yaygın İngilizce kelimelerin yaklaşık %7,8'inin belirgin biçimde çokanlamlı olduğunu buldu — ve bu kelimeler <em>en sık kullanılan</em> kelimeler olma eğiliminde. İngilizce "set" kelimesinin Oxford Sözlüğü'nde 430 anlamı var. "Run" kelimesinin 645 tanımı. Bunlar en sık karşılaştığınız kelimeler ve tam olarak statik gömmelerin en kötü idare ettiği kelimeler.</p>
+<p>Çeşitli araştırmacılar bunu kelime başına <em>birden fazla</em> vektör öğrenerek düzeltmeye çalıştı (Huang ve ark., 2012, "anlam" başına bir vektör öğrendi), ama bu yaklaşımlar hantal kaldı ve hiçbir zaman yaygınlaşmadı. Gerçek çözüm tamamen farklı bir yönden geldi: bir kelimenin temsilinin içinde bulunduğu cümleye göre değiştiği <strong>bağlamsallaştırılmış gömmeler</strong>. ELMo (2018) ilk başarılı versiyondu, ardından BERT ve GPT geldi — önümüzdeki günlerde bunlara değineceğiz.</p>
+<h2 id="miras-gömmeler-neden-hâlâ-Önemli"><a class="header" href="#miras-gömmeler-neden-hâlâ-Önemli">Miras: Gömmeler Neden Hâlâ Önemli</a></h2>
+<p>Kelime gömmelerinin eskidiğini — transformer öncesi çağdan şirin kalıntılar olduğunu — düşünebilirsiniz. Yanılırsınız. GPT-4'ten Claude'a, Gemini'ye kadar her modern dil modeli, token'ları bir <strong>gömme katmanı</strong> aracılığıyla yoğun vektörlere dönüştürerek başlar. Bir transformer'ın yaptığı ilk şey, herhangi bir dikkat ya da ileri beslemeli hesaplamadan önce, her girdi token'ı için öğrenilmiş bir vektör aramaktır. GPT-3'ün gömme katmanı 50.257 token kimliğini 12.288 boyutlu vektörlere eşler — bu sadece gömmeler için 618 milyon parametre, kabaca BERT-Large'ın toplam parametre sayısına eşit.</p>
+<p>Fark şu ki bir transformer'da gömme sadece başlangıç noktası. Bu ilk vektörler, düzinelerce ya da yüzlerce dikkat ve hesaplama katmanı tarafından dönüştürülerek her cümleyle değişen <strong>bağlamsallaştırılmış</strong> temsiller üretir. Ama temel kavrayış — ayrık sembollerin yoğun vektör temsillerini öğrenebileceğiniz ve ortaya çıkan uzayın geometrisinin anlamı kodladığı — doğrudan Word2Vec'ten gelir.</p>
+<p>Çok gerçek bir anlamda, Mikolov'un 2013 makaleleri tüm modern LLM ekosisteminin filizlendiği tohumu ekti. Anlamın geometrisi olduğu, kavramlar arasındaki ilişkilerin vektör uzayında yönler olduğu, fikirlerle aritmetik yapılabileceği fikri — geri kalan her şeyin üzerine inşa edildiği temel budur.</p>
+<hr />
+<p><em>Yarın, transformer'ları mümkün kılan mekanizmayı keşfedeceğiz: <strong>dikkat</strong>. Bir model, bir cümledeki hangi kelimelerin diğer her kelimeyi anlamak için en önemli olduğuna nasıl karar verir? Cevap, şaşırtıcı derecede basit bir işlem olan — sorgular, anahtarlar ve değerler — on yılın en önemli mimari yeniliği olduğu ortaya çıkan bu mekanizmayı içerir. "Attention Is All You Need"in neden sadece akılda kalıcı bir makale başlığı olmadığını görmeye hazır olun.</em></p>
+<hr />
+<h2 id="anlayışınızı-test-edin"><a class="header" href="#anlayışınızı-test-edin">Anlayışınızı Test Edin</a></h2>
+<p>Öğrendiklerinizi kontrol etmeye hazır mısınız? Gün 2 quizini çözün:</p>
+<div id="quiz-day-02"></div>
+<script src="../quiz/quiz-embed.iife.js"></script>
+<link rel="stylesheet" href="../quiz/style.css">
+<script>
+QuizEmbed.createQuiz("quiz-day-02", "/quizzes/day-02.toml");
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-03.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-03.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

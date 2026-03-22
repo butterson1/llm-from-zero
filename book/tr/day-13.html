@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 13: Prompt Mühendisliği ve Bağlam İçi Öğrenme — Neden Örnekler İşe Yarar - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-13-prompt-mühendisliği-ve-bağlam-İçi-Öğrenme--neden-Örnekler-İşe-yarar"><a class="header" href="#gün-13-prompt-mühendisliği-ve-bağlam-İçi-Öğrenme--neden-Örnekler-İşe-yarar">Gün 13: Prompt Mühendisliği ve Bağlam İçi Öğrenme — Neden Örnekler İşe Yarar</a></h1>
+<p><em>Kimsenin tasarlamadığı, kimsenin tam olarak anlamadığı ve kimsenin öngöremediği bir numara nasıl modern yapay zekânın en önemli pratik becerisi haline geldi — ve bir transformer'ın içinde gerçekte ne olduğu hakkında ne ortaya koyuyor.</em></p>
+<hr />
+<h2 id="spektrum-sıfır-Örnekli-az-Örnekli-Çok-Örnekli"><a class="header" href="#spektrum-sıfır-Örnekli-az-Örnekli-Çok-Örnekli">Spektrum: Sıfır-Örnekli, Az-Örnekli, Çok-Örnekli</a></h2>
+<p>GPT-3 piyasaya çıktığında en şaşırtıcı keşif kod ya da şiir yazabilmesi değildi — birkaç örnek gösterildiğinde tamamen yeni görevleri <em>ağırlıkları değişmeden</em> yapabilmesiydi. Bu <strong>bağlam içi öğrenme</strong> (in-context learning, ICL).</p>
+<p><strong>Sıfır-örnekli (zero-shot):</strong> Modele sadece talimat verin. "Bu cümlenin duygusunu sınıfla: 'Yemek harikaydı!'" → "Olumlu"</p>
+<p><strong>Az-örnekli (few-shot):</strong> Birkaç gösteri örneği verin. "Yemek harikaydı! → Olumlu. Servis korkunçtu. → Olumsuz. Fiyatlar makuldü. → ?" Model kalıbı tanır ve "Tarafsız" üretir.</p>
+<p><strong>Çok-örnekli (many-shot):</strong> Uzun bağlam pencerelerinin gelişiyle yüzlerce, binlerce örnek sığdırılabilir. Google'ın Gemini 1.5 Pro çalışması, bağlam penceresindeki örnek sayısını artırmanın ince ayar performansına yaklaştığını gösterdi.</p>
+<h2 id="İçeride-gerçekte-ne-oluyor"><a class="header" href="#İçeride-gerçekte-ne-oluyor">İçeride Gerçekte Ne Oluyor?</a></h2>
+<p>Bağlam içi öğrenme neden çalışıyor? Bu, alanın en tartışmalı sorularından biri. Birkaç teori var:</p>
+<p><strong>Bayes çıkarımı hipotezi:</strong> Model ön eğitim sırasında birçok görevi gördü. Örnekler verildiğinde model doğru "görevi" tanır ve uygun davranışı çağırır. Görev öğrenmez — görev <em>tanır</em>.</p>
+<p><strong>Örtük gradyan inişi hipotezi:</strong> Bazı araştırmacılar (Akyürek ve ark., 2022; Von Oswald ve ark., 2023) transformer dikkat katmanlarının ileri geçiş sırasında gradyan inişinin bir biçimini <em>örtük olarak</em> gerçekleştirdiğini gösterdi. Örnekler "eğitim verisi" gibi işlev görür ve dikkat mekanizması "ağırlık güncellemesi" gibi davranır — ama modelin gerçek ağırlıkları değişmez.</p>
+<p><strong>Sıkıştırma hipotezi:</strong> Model ön eğitim sırasında dilin istatistiksel yapısını o kadar derinlemesine öğrendi ki örneklerden genelleme yapabilme zaten parametrelerine kodlanmış.</p>
+<h2 id="prompt-mühendisliğinin-yükselişi"><a class="header" href="#prompt-mühendisliğinin-yükselişi">Prompt Mühendisliğinin Yükselişi</a></h2>
+<p>Prompt mühendisliği — modele ne söylediğinizi optimize etme sanatı — milyar dolarlık bir beceri haline geldi. Temel teknikler:</p>
+<p><strong>Düşünce zinciri (Chain-of-Thought, CoT):</strong> "Adım adım düşünelim" demek modelin ara muhakeme adımları üretmesini sağlar ve doğruluğu dramatik biçimde artırır. Wei ve ark.'nın (2022) gösterdiği gibi, GSM8K matematik ölçütünde standart istemle %18 olan doğruluk CoT ile %57'ye çıktı.</p>
+<p><strong>Rol atama:</strong> "Sen deneyimli bir avukatsın" gibi roller vermek modelin yanıt dağılımını o alanın metinlerine doğru kaydırır.</p>
+<p><strong>Yapılandırılmış çıktı:</strong> "JSON formatında yanıt ver" ya da belirli bir şema talep etmek çıktının tutarlılığını artırır.</p>
+<p><strong>Sıfır-örnekli CoT:</strong> "Adım adım düşünelim" kelimelerini eklemek — Kojima ve ark.'nın (2022) gösterdiği beş kelimelik devrim — ek örnek gerekmeden muhakemeyi iyileştirir.</p>
+<blockquote>
+<p>💡 <strong>Prompt mühendisliği neden "mühendislik" değil "programlama"?</strong> Çünkü istem ile model davranışı arasındaki ilişki tam olarak anlaşılmıyor. Aynı istem farklı modellerde farklı sonuçlar verebilir. Bu, bilimden çok zanaate, programlamadan çok deneysel biyolojiye benzer.</p>
+</blockquote>
+<h2 id="Şaşırtıcı-kırılganlık"><a class="header" href="#Şaşırtıcı-kırılganlık">Şaşırtıcı Kırılganlık</a></h2>
+<p>İşte rahatsız edici gerçek: istemler inanılmaz derecede kırılgandır. Küçük değişiklikler büyük etkilere sahip olabilir:</p>
+<ul>
+<li>Örneklerin sırası sonuçları %20'ye kadar değiştirebilir</li>
+<li>"Bu cümlenin duygusu nedir?" vs "Bu cümle olumlu mu olumsuz mu?" farklı doğruluklar verir</li>
+<li>Gereksiz bilgi eklemek ("Bir profesör olarak düşünün") bazen iyileştirir, bazen kötüleştirir</li>
+<li>Sondaki boşluk ya da noktalama bile fark yaratabilir</li>
+</ul>
+<h2 id="sistem-mesajları-ve-talimat-hiyerarşisi"><a class="header" href="#sistem-mesajları-ve-talimat-hiyerarşisi">Sistem Mesajları ve Talimat Hiyerarşisi</a></h2>
+<p>Modern sohbet modelleri üç katmanlı bir talimat hiyerarşisi kullanır:</p>
+<ol>
+<li><strong>Sistem mesajı:</strong> En yüksek öncelik — modelin kişiliğini ve kurallarını belirler</li>
+<li><strong>Kullanıcı mesajları:</strong> Gerçek sorgular</li>
+<li><strong>Asistan yanıtları:</strong> Önceki dönüş geçmişi</li>
+</ol>
+<p>Bu hiyerarşi "jailbreak" saldırılarına karşı savunma sağlar — kullanıcı "önceki tüm talimatları unut" dese bile sistem mesajı baskın kalmalı. Pratikte bu savunma kusursuz değil; "istem enjeksiyonu" araştırması aktif bir güvenlik alanı.</p>
+<h2 id="Çok-Örnekli-bağlam-İçi-Öğrenme-uzun-bağlam-devrimi"><a class="header" href="#Çok-Örnekli-bağlam-İçi-Öğrenme-uzun-bağlam-devrimi">Çok-Örnekli Bağlam İçi Öğrenme: Uzun Bağlam Devrimi</a></h2>
+<p>Bağlam pencereleri büyüdükçe (512'den 1M+ token'a, Gün 18) bağlam içi öğrenme dramatik biçimde güçlendi. Gemini 1.5 Pro'nun 1M token penceresiyle yüzlerce örnek sığdırabilirsiniz — ince ayar yapmadan.</p>
+<p>Agarwal ve ark.'nın (2024) "Many-Shot In-Context Learning" çalışması gösterdi ki yüzlerce örnekle bağlam içi öğrenme bazı görevlerde ince ayarlı modellere yaklaşıyor. Bu derin bir çıkarımı var: uzun bağlam pencereleri "çıkarım zamanı ince ayarı" gibi davranır.</p>
+<h2 id="pratik-Çıkarımlar"><a class="header" href="#pratik-Çıkarımlar">Pratik Çıkarımlar</a></h2>
+<p><strong>Önemli talimatları istemin başına ve sonuna koyun.</strong> Modelin dikkati ölçülebilir birincillik ve yenilik önyargılarına sahip — uzun bağlamların ortasındaki bilgi daha az dikkat çeker ("ortada kaybolma" olgusu).</p>
+<p><strong>Muhakeme görevleri için düşünce zinciri kullanın.</strong> Bu bir hile değil; modele çalışacağı daha fazla hesaplama adımı vermek. Otoregresif modeller çıktı token'ı başına O(1) hesaplama yapabilir; düşünce zinciri etkin biçimde hesaplama derinliği için çıktı token'ları takaslamanızı sağlar.</p>
+<p><strong>Deneysel olarak yineleyin.</strong> İstem metni ile model davranışı arasındaki ilişki tam anlaşılmadığından prompt mühendisliği kısmen ampirik bir disiplin olmaya devam eder.</p>
+<hr />
+<p><em>Yarın gerçekten tuhaf bölgeye adım atıyoruz: <strong>ortaya çıkan yetenekler</strong>. Düşünce zinciri istemlemesi kendisi ortaya çıkışın en ünlü örneklerinden biri — belirli bir model ölçeğinin üzerinde görünüşte hiçbir yerden aniden beliren bir yetenek.</em></p>
+<hr />
+<h2 id="-quiz-zamanı"><a class="header" href="#-quiz-zamanı">📝 Quiz Zamanı</a></h2>
+<p><a href="quizzes/day-13.toml" class="quiz-embed" style="display: inline-block; margin-top: 1em; padding: 0.75em 1.5em; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Gün 13 Quizini Çöz →</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-12.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-14.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-12.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-14.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

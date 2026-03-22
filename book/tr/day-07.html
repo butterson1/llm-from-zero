@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="tr" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gün 7: Ölçekleme Yasaları — Neden Büyük Modeller Daha Akıllıdır - Büyük Dil Modelleri: Sıfırdan Zirveye</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Büyük Dil Modelleri: Sıfırdan Zirveye</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gün-7-Ölçekleme-yasaları--neden-büyük-modeller-daha-akıllıdır"><a class="header" href="#gün-7-Ölçekleme-yasaları--neden-büyük-modeller-daha-akıllıdır">Gün 7: Ölçekleme Yasaları — Neden Büyük Modeller Daha Akıllıdır</a></h1>
+<p><em>Bir hafta boyunca mekanizmayı öğrendiniz: tokenizer'lar, dikkat, Transformer'lar, ön eğitim hedefleri. Şimdi modern yapay zekânın en derin ampirik keşfiyle yüzleşiyoruz — dil modellerinin performansının onları büyüttükçe kesin, öngörülebilir matematiksel yasaları takip ettiği. Belirsiz eğilimler değil. Bilinen üslere sahip gerçek kuvvet yasaları. Bu tek kavrayış yüz milyarlarca dolarlık yatırım kararını şekillendirdi, süper bilgisayar ölçeğinde GPU kümelerinin inşasını yönlendirdi ve sorunun büyük modellerin daha iyi çalışıp çalışmadığı değil, dolar başına en fazla zekâyı elde etmek için hesaplama, veri ve parametreleri tam olarak nasıl ayırmanız gerektiği olduğu bir yarışı tetikledi.</em></p>
+<hr />
+<h2 id="her-Şeyi-değiştiren-keşif"><a class="header" href="#her-Şeyi-değiştiren-keşif">Her Şeyi Değiştiren Keşif</a></h2>
+<p>Ocak 2020'de Johns Hopkins ve OpenAI'daki bir araştırmacı ekibi — Jared Kaplan, Sam McCandlish, Tom Henighan, Tom Brown, Benjamin Chess, Rewon Child ve diğerleri — tüm alanı yeniden şekillendirecek "Scaling Laws for Neural Language Models" makalesini yayınladı. Bulguları basitliğiyle çarpıcıydı: bir dil modelinin çapraz entropi kaybını parametre sayısına, eğitim verisi miktarına ya da kullanılan hesaplama miktarına karşı çizdiğinizde, log-log grafiğinde olağanüstü temiz düz çizgiler elde edersiniz.</p>
+<p>Log-log grafiğinde düz çizgiler <strong>kuvvet yasaları</strong> demektir. L kaybı şöyle denklemleri takip eder:</p>
+<p><strong>L(N) ∝ N^(−0,076)</strong> parametreler için<br />
+<strong>L(D) ∝ D^(−0,095)</strong> veri kümesi boyutu için<br />
+<strong>L(C) ∝ C^(−0,050)</strong> hesaplama bütçesi için</p>
+<p>Bu üsler küçüktür, yani fark edilir iyileştirmeler için büyüklük sırası artışlara ihtiyacınız var. Ama çizgiler dikkat çekici derecede düzgün — <strong>yedi büyüklük sırası</strong> hesaplama boyunca uzanıyor. Uçurum yok, plato yok, sihirli eşik yok. Sadece sabit, öngörülebilir bir aşağı yürüyüş.</p>
+<p>Bunun ne kadar alışılmadık olduğunu düşünün. Çoğu mühendislik disiplininde azalan getirilere hızla ulaşırsınız. İki kat büyük bir motor iki kat hızlı gitmez. İki kat yüksek bir bina iki kat fazla insanı barındırmaz. Ama dil modelleri mi? Hesaplamayı ikiye katla ve kayıpta mükemmel öngörülebilir bir düşüş elde et. Her seferinde.</p>
+<h2 id="kayıp-pratikte-gerçekten-ne-anlama-gelir"><a class="header" href="#kayıp-pratikte-gerçekten-ne-anlama-gelir">"Kayıp" Pratikte Gerçekten Ne Anlama Gelir</a></h2>
+<p>Daha ileri gitmeden, neyin iyileştiğini netleştirelim. Çapraz entropi kaybı modelin sonraki token'ı ne kadar iyi tahmin ettiğini ölçer. 3,0'lık kayıp, modelin kabaca 20 eşit olasılıklı token arasından seçiyormuş kadar belirsiz olduğu anlamına gelir (e^3 ≈ 20). 2,0'lık kayıp bunu yaklaşık 7 seçeneğe daraltır. 1,5'lik kayıp kabaca 4,5 seçenek demek.</p>
+<p>Bunlar küçük sayısal değişimler gibi görünüyor ama niteliksel olarak farklı davranışlara karşılık geliyor. 3,0 kayıpta bir model bozuk, zar zor tutarlı metin üretir. 2,5'te dilbilgisi doğru ama olgusal olarak güvenilmez. 2,0'da "bilgi" diyeceğimiz şeyi sergilemeye başlar — olgusal ifadeleri tamamlayabilir, talimatları takip edebilir ve idare eder düzyazı yazabilir. 1,5'te hukuki dava dilekçeleri yazabilen, kod hatası ayıklayabilen ve kuantum mekaniğini açıklayabilen modellerin alanındasınız.</p>
+<p>Kaplan ölçekleme yasaları bu yetenek eşiklerinin rastgele olmadığını gösterdi — eğitim başlamadan bile tahmin edebileceğiniz düzgün bir eğri üzerindeki kilometretaşlarıdır. Hesaplama bütçenizi biliyorsanız, nihai kaybı tahmin edebilirsiniz. Ve kayıptan, modelin neyi yapıp neyi yapamayacağını kabaca öngörebilirsiniz.</p>
+<h2 id="kaplan-reçetesi-veriye-karşı-parametreler"><a class="header" href="#kaplan-reçetesi-veriye-karşı-parametreler">Kaplan Reçetesi: Veriye Karşı Parametreler</a></h2>
+<p>Orijinal Kaplan ve ark. makalesi, yıllarca OpenAI'ın stratejisine rehberlik edecek spesifik bir pratik sonuç çıkardı: <strong>sabit bir hesaplama bütçeniz olduğunda, modeli daha fazla veri üzerinde eğitmek yerine daha büyük yapmaya öncelik vermelisiniz</strong>.</p>
+<p>Analizleri, hesaplamayı 10 kat artırdığınızda parametreleri kabaca 5,5 kat ama veriyi sadece 1,8 kat artırmanız gerektiğini önerdi. Optimal model yetersiz eğitilmiştir — tamamen yakınsamak için yeterli veri görmemiştir — ama büyüktür. Bu, "modeli mümkün olduğunca büyük yap ve yakınsamaya ulaşmak konusunda çok endişelenme" felsefesine yol açtı.</p>
+<p>OpenAI'ın GPT-3 ile yaptığı tam olarak buydu. Haziran 2020'de — Kaplan'ın makalesinden sadece aylar sonra — yayınlanan GPT-3, <strong>175 milyar parametre</strong> ile yaklaşık <strong>300 milyar token</strong> üzerinde eğitildi. Modern standartlara göre ciddi biçimde yetersiz eğitilmiş bir model (parametre başına 2'den az token oranı). Ama zamanı için devasa ve olağanüstü çalıştı. GPT-3, hiç kimsenin daha önce görmediği düzeyde az-örnekli öğrenme, kod üretimi ve yaratıcı yazım sergiledi.</p>
+<p>Kaplan reçetesi doğrulanmış gibiydi. Parametreleri ölçekle. Hızlı ölçekle. Geriye bakma.</p>
+<h2 id="chinchilla-sürpriz-dönüş"><a class="header" href="#chinchilla-sürpriz-dönüş">Chinchilla: Sürpriz Dönüş</a></h2>
+<p>İki yıl sonra DeepMind'daki bir ekip bomba düşürdü. Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch ve meslektaşları Mart 2022'de evrensel olarak <strong>Chinchilla</strong> diye bilinen "Training Compute-Optimal Language Models" makalesini yayınladı.</p>
+<p>400'den fazla eğitim deneyi yürüterek model boyutlarını sistematik olarak 70 milyondan 16 milyar parametreye, veri kümesi boyutlarını da 5 milyardan 500 milyar token'a kadar değiştirdiler. Sonuçları Kaplan'la doğrudan çelişiyordu: <strong>parametreler ve veri eşit biçimde ölçeklenmelidir</strong>. Hesaplamayı 10 kat artırırsanız, hem parametreleri hem de eğitim verinizi 3,16 kat artırmalısınız (3,16 × 3,16 ≈ 10 olduğundan).</p>
+<p>Chinchilla-optimal oran yaklaşık <strong>parametre başına 20 token</strong> çıkıyor. 70 milyar parametreli bir model yaklaşık 1,4 trilyon token görmeli. 7 milyar parametreli bir model yaklaşık 140 milyar.</p>
+<p>Noktalarını kanıtlamak için Chinchilla'yı eğittiler: 1,4 trilyon token üzerinde 70 milyar parametreli bir model. 280 milyar parametreli Gopher'dan (DeepMind'ın önceki amiral gemisi) 4 kat küçük olmasına rağmen, Chinchilla hemen hemen her ölçütte Gopher'la eşleşti ya da geçti. Aynı hesaplama bütçesi, radikal biçimde farklı dağılım — ve daha küçük, daha iyi eğitilmiş model kazandı.</p>
+<p>Bu bir uyandırma çağrısıydı. GPT-3'ün Chinchilla terimleriyle <strong>verisi için kabaca 5-7 kat çok büyük</strong> olduğu anlamına geliyordu. Daha fazla token üzerinde eğitilmiş ~30 milyar parametreli bir model olmalıydı. Sektör genelinde milyarlarca dolarlık hesaplama optimal altı biçimde ayrılmıştı.</p>
+<h2 id="kaplan-neden-yanlış-Çıktı"><a class="header" href="#kaplan-neden-yanlış-Çıktı">Kaplan Neden Yanlış Çıktı?</a></h2>
+<p>Kaplan ve Chinchilla arasındaki uyuşmazlık ölçekleme yasalarının temel varlığıyla ilgili değil — ikisi de performansın kuvvet yasalarını takip ettiği konusunda hemfikir. Farklılık metodolojiye dayanıyor.</p>
+<p>Kaplan ve ark. optimal dağılımı her modeli eğitim süresine göre ayarlamayan <strong>sabit bir öğrenme hızı takvimi</strong> ile eğiterek tahmin etti. Daha küçük modelleri orantılı olarak daha fazla adım için eğitildi, ama öğrenme hızı soğutmasını ayarlamadan bu modeller tam yakınsamamıştı. Bu, veriyi olduğundan daha az değerli gösterdi — modeller daha fazla veri üzerinde "eğitilmişti" ama öğrenme hızı hâlâ çok yüksek olduğu için verimli öğrenmiyordu.</p>
+<p>Chinchilla her çalışma süresi için düzgün ayarlanmış bir kosinüs öğrenme hızı takvimi kullandı. Bu düzeltmeyle veri çok daha değerli hale geldi ve optimal denge dramatik biçimde daha fazla veri ve daha az parametreye doğru kaydı.</p>
+<p>Görünüşte küçük bir deneysel tasarım seçiminin — öğrenme hızı zamanlamasının — tüm bir sektörün sermaye dağılımını yeniden şekillendiren sonuçlara nasıl yol açabileceğine dair uyarıcı bir hikâye. Tarihin en pahalı hiperparametre hatası olduğu savunulabilir.</p>
+<h2 id="chinchilla-vergisi-ve-Çıkarım-devrimi"><a class="header" href="#chinchilla-vergisi-ve-Çıkarım-devrimi">Chinchilla Vergisi ve Çıkarım Devrimi</a></h2>
+<p>Ama sektörün Chinchilla-optimal eğitimi hemen benimsememesinin daha derin bir nedeni var ve bu, dağıtım ekonomisiyle ilgili.</p>
+<p>Bir modeli eğitmek bir kerelik maliyet. Çıkarım — modeli kullanıcı sorgularına hizmet vermek için gerçekten çalıştırmak — her API çağrısıyla büyüyen süregelen bir gider. Ve çıkarım maliyetine eğitim verisi değil <strong>parametre sayısı</strong> hâkimdir. 70 milyar parametreli bir model, ne kadar iyi eğitilmiş olursa olsun, sorgu başına 7 milyar parametreli modelden kabaca 10 kat daha pahalıdır.</p>
+<p>Bu, uygulayıcıların <strong>Chinchilla vergisi</strong> dediği ya da daha doğrusu "çıkarım için fazla eğit" stratejisini yaratır. Milyarlarca sorguya hizmet verecekseniz, toplam olarak Chinchilla'nın önerdiğinden çok daha uzun süre daha küçük bir model eğitmek — biraz daha yüksek kaybı kabul edip dramatik biçimde daha ucuz çıkarım karşılığında — daha ucuz olabilir.</p>
+<p>Meta'nın <strong>LLaMA</strong> (Şubat 2023) ile yaptığı tam olarak bu. LLaMA-7B <strong>1 trilyon token</strong> üzerinde eğitildi — Chinchilla-optimal miktarın yaklaşık 7 katı. LLaMA-13B aynı 1T token'ı gördü, parametre başına ~77 token oranı vererek, Chinchilla önerisinin neredeyse 4 katı. Sonuç? LLaMA-13B, 13 kat daha küçük olmasına rağmen çoğu ölçütte GPT-3 (175B) ile eşleşti.</p>
+<p>Meta pratik bir boşluk bulmuştu: ekstra eğitim hesaplamasını (bir kerelik maliyet) dağıtması kalıcı olarak daha ucuz bir modelle takas edebilirsiniz. Aynı kavrayış Mistral-7B, Phi-2 ve 2023-2024'e hâkim olan "devasa veri üzerinde eğitilmiş küçük modeller" sınıfının tamamını yönlendirdi.</p>
+<h2 id="chinchillanın-Ötesi-2025-2026da-sınır"><a class="header" href="#chinchillanın-Ötesi-2025-2026da-sınır">Chinchilla'nın Ötesi: 2025-2026'da Sınır</a></h2>
+<p>Orijinal ölçekleme yasaları hesaplama-optimal eğitim dünyasını tarif ediyordu. Ama sınır bu basit resmin çok ötesine taşındı.</p>
+<p><strong>DeepSeek'in ölçekleme çalışması</strong>, Uzmanlar Karışımı gibi mimari seçimleri hesaba kattığınızda yasaların aşırı ölçekte beklenenden bile daha temiz geçerli olduğunu gösterdi. DeepSeek-V2 (2024), MoE modellerinin <em>aktif</em> parametreleri ve toplam parametreleri bağımsız olarak ölçeklediğiniz kendi ölçekleme eğrilerini takip ettiğini gösterdi — ve MoE daha verimli ölçekleniyor çünkü token başına parametrelerin sadece bir kısmı kullanılır.</p>
+<p><strong>Llama 3</strong> (Nisan 2024) fazla eğitim rejimini daha da ileri taşıdı. 8B model <strong>15 trilyon token</strong> üzerinde eğitildi — parametre başına neredeyse 2.000 token, Chinchilla oranının kabaca 100 katı. Meta, eğitimi durdurduklarında kaybın <em>hâlâ azalmakta olduğunu</em> bildirdi; bu da 15T token'ın bile 8B modelin öğrenebileceğini doyurmamış olduğunu düşündürüyor. Küçük modellerin daha fazla verinin aşamayacağı sabit bir "kapasitesi" olduğu nosyonunu yıktı.</p>
+<p><strong>Epoch AI'ın analizi</strong> (2025), öncü laboratuvarların farklı türde bir duvara çarptığını tahmin etti: ölçekleme yasası platosu değil, <strong>veri duvarı</strong>. İnternetteki yüksek kaliteli metnin toplam miktarı kabaca 10-15 trilyon token. GPT-4 ve Claude 3 gibi modeller, kamuya açık tüm metnin önemli bir bölümünde eğitildi. Veri yoksa veriyi 10 kat ölçekleyemezsiniz.</p>
+<p>Bu çoklu tepkilere yol açtı: sentetik veri üretimi (diğer modeller için eğitim verisi yaratmak üzere modeller kullanma), çok dönemli eğitim (aynı veriyi birden fazla kez görme, işe yarıyor ama azalan getiriyle — tipik olarak 4 dönem sonra ~0,1 nat kayıp) ve çok modlu eğitim (veri diyetine görüntü, video, ses ve kod ekleme).</p>
+<h2 id="ortaya-Çıkışın-Şaşırtıcı-matematiği"><a class="header" href="#ortaya-Çıkışın-Şaşırtıcı-matematiği">Ortaya Çıkışın Şaşırtıcı Matematiği</a></h2>
+<p>Ölçekleme yasalarının belki de en sezgiye aykırı çıkarımı şu: <strong>düzgün kayıp eğrileri süreksiz yetenekler üretir</strong>.</p>
+<p>Kayıp kademeli olarak azalır — belirli bir ölçekte ani sıçrama yok. Ama belirli yetenekler belirli ölçeklerde "ortaya çıkıyor" gibi görünür. 10B parametreli bir model çok adımlı aritmetik yapamaz. 100B'de birdenbire yapabilir. 50B'lik bir model karmaşık talimatları güvenilir biçimde takip edemez. 200B'de tutarlı biçimde yapar.</p>
+<p>Bu nasıl çalışır? Cevap, kaybın görev performansıyla nasıl bağlandığında yatıyor. 10 ardışık token tahminini doğru yapmayı gerektiren bir görev hayal edin. Her token'ın doğru olma olasılığı %90 ise, 10'unun hepsini doğru yapma olasılığı 0,9^10 ≈ %35. Token başına %95'te, 0,95^10 ≈ %60. %99'da, 0,99^10 ≈ %90.</p>
+<p>Token başına doğruluktaki o düzgün iyileşme (%90 → %95 → %99) sadece 0,15 nat'lık kayıp azalmasına karşılık gelir. Ama görev başarı oranı %35'ten %90'a sıçrar. Ölçekleme yasası düzgün; ölçüt değil. Ortaya çıkış büyü değil — token başına doğruluk ile çok adımlı görev tamamlama arasındaki doğrusal olmayan ilişki tarafından yönlendirilen bir <strong>faz geçişidir</strong>.</p>
+<p>Stanford ve başka yerlerdeki araştırmacılar tarafından resmileştirilen bu kavrayış, alandaki en büyük tartışmalardan birini çözdü. Ortaya çıkış, yeteneklerin ölçekte gerçekten belirdiği anlamında gerçektir. Ama gizemli değildir — göreve özgü eşiklere ulaşan düzgün temel iyileşmenin öngörülebilir bir sonucudur.</p>
+<h2 id="100-milyon-dolar-size-ne-alır-ve-neden-Önemlidir"><a class="header" href="#100-milyon-dolar-size-ne-alır-ve-neden-Önemlidir">100 Milyon Dolar Size Ne Alır (ve Neden Önemlidir)</a></h2>
+<p>Ölçekleme yasaları yapay zekâyı bir sermaye dağılımı egzersizine dönüştürür. 2026 başı itibariyle kabaca hesap:</p>
+<ul>
+<li><strong>1T token üzerinde 8B model eğitimi:</strong> ~2-3 milyon dolar (H100 kümelerinde)</li>
+<li><strong>2T token üzerinde 70B model eğitimi:</strong> ~20-30 milyon dolar</li>
+<li><strong>10T+ token üzerinde 400B+ öncü model eğitimi:</strong> ~100-300 milyon dolar</li>
+<li><strong>GPT-4 eğitim maliyeti (tahmini):</strong> ~100 milyon dolar (2023 dolarıyla)</li>
+<li><strong>Llama 3 405B:</strong> Meta aylarca ~30.000 H100 GPU kullandı, tahmini 50-100M+ dolar</li>
+</ul>
+<p>Ölçekleme yasaları o paraya tam olarak ne aldığınızı söyler. Hesaplama bütçenizi ikiye katlamak kaybı yaklaşık %3,4 azaltır (C^(−0,050) üssünü kullanarak). Pek çok şey gibi görünmüyor, ama o %3,4 güvenilir biçimde çalışan kod yazabilen ve yazamayan model arasındaki fark, ya da zamanın %30'u yerine %20'si halüsinasyon gören model arasındaki fark olabilir.</p>
+<p>GPU silahlanma yarışının bu kadar yoğun olmasının nedeni bu. NVIDIA'nın H100'leri tanesi 25.000-40.000 dolar. Öncü bir eğitim kümesi 10.000-50.000 taneye ihtiyaç duyar. Ağ donanımı, güç, soğutma ve mühendislik personeli dahil toplam maliyet, tek bir eğitim sürecinin dokuz haneli bir bahis olduğu anlamına gelir. Ve ölçekleme yasaları laboratuvarlara bu bahsi yapmak için yeterli güveni verir — çünkü getiriler öngörülebilir.</p>
+<h2 id="Ölçeklemenin-sınırları"><a class="header" href="#Ölçeklemenin-sınırları">Ölçeklemenin Sınırları</a></h2>
+<p>Ölçekleme yasaları ebedi mi? Neredeyse kesinlikle hayır.</p>
+<p>Birkaç potansiyel tavan beliriyor:</p>
+<ol>
+<li>
+<p><strong>Veri tükenmesi</strong>: Bahsedildiği gibi, yüksek kaliteli eğitim metninden tükeniyoruz. Sentetik veri yardımcı oluyor ama dağılımsal önyargılar getiriyor.</p>
+</li>
+<li>
+<p><strong>Donanım limitleri</strong>: NVIDIA'nın B200 ve GB300 çipleriyle bile, sonunda güç şebekesi kısıtlamalarına çarparsınız. 100.000 GPU'luk bir küme 50-150 megawatt çeker — küçük bir şehri aydınlatmaya yeter.</p>
+</li>
+<li>
+<p><strong>Azalan ekonomik getiri</strong>: Kaybı yarıya indirmek 100 kat hesaplama gerektirebilir. Bir noktada harcanan dolar başına marjinal iyileştirme ticari uygulamalar için değmez.</p>
+</li>
+<li>
+<p><strong>İndirgenemez entropi</strong>: Dilin kendisinin bir öngörülemezlik tabanı var. Shannon İngilizce metnin karakter başına yaklaşık 1,0-1,5 bit entropiye sahip olduğunu tahmin etti. Hiçbir model dildeki doğal rastgelelikten daha iyi tahmin yapamaz. Mevcut öncü modeller temiz metin üzerinde bu teorik tabana yaklaşıyor.</p>
+</li>
+<li>
+<p><strong>Ölçüt doygunluğu</strong>: Birçok standart ölçütte (MMLU, HellaSwag, ARC) öncü modeller zaten %90+ puan alıyor. Kalan hatalar genellikle model başarısızlıkları değil belirsiz sorular.</p>
+</li>
+</ol>
+<p>Ama işin aslı şu: birisi ölçeklemenin sonunu her tahmin ettiğinde yanılmıştır. Alan yeni ölçekleme boyutları bulmaya devam ediyor — daha fazla veri türü, daha iyi veri kalitesi, ölçekleme eğrilerini kaydıran mimari iyileştirmeler ve şimdi de <strong>test zamanı hesaplama ölçeklemesi</strong> (eğitim yerine çıkarım sırasında daha fazla hesaplama harcama).</p>
+<h2 id="felsefi-ağırlık"><a class="header" href="#felsefi-ağırlık">Felsefi Ağırlık</a></h2>
+<p>Ölçekleme yasaları neredeyse tedirgin edici bir çıkarıma sahip: zekâ, ya da en azından dil ölçütleriyle ölçtüğümüz türde zekâ, bir <strong>emtia</strong> olabilir. Çığır açıcı algoritmik kavrayış gerektiren mistik bir özellik değil, yeterli GPU ve veriyle satın alabileceğiniz bir şey.</p>
+<p>Bu felsefi açıdan ağır. Zar zor dilbilgisel cümleler kurabilen bir modelle baro sınavını geçebilen bir model arasındaki farkın "sadece" birkaç büyüklük sırası hesaplama olduğunu düşündürüyor. Farklı bir mimari değil. Farklı bir eğitim prosedürü değil. Sadece... daha fazla.</p>
+<p>Bunun gerçek anlama, muhakeme ya da bilince genellenip genellenemeyeceği tamamen farklı bir soru — bu kursta ileride boğuşacağımız bir soru. Ama ampirik gerçek duruyor: düzgün ölçekleme niteliksel olarak farklı yetenekler üretiyor. Ve bu, ölçekleme yasalarını modern yapay zekânın en önemli ampirik bulgusu yapmaya yetiyor.</p>
+<hr />
+<h2 id="yarın-ne-geliyor"><a class="header" href="#yarın-ne-geliyor">Yarın Ne Geliyor</a></h2>
+<p>Artık büyük modellerin daha akıllı olduğunu ve dolar başına maksimum zekâ için hesaplamayı kabaca nasıl dağıtmanız gerektiğini biliyorsunuz. Ama ölçeklemeden soyut olarak bahsediyorduk — parametreler, token'lar, FLOP'lar. Yarın <strong>gerçek eğitim altyapısının</strong> perdesi açılıyor: GPU'lar, kümeler, ağ donanımı, veri hatları ve binlerce hızlandırıcıyı uyum içinde çalıştırmak için gereken şaşırtıcı mühendislik. 100 milyon dolarlık eğitim altyapısı gerçekte neye benzer? 50.000 GPU'yu nasıl senkronize edersiniz? Ve eğitimin ortasında biri arızalanırsa ne olur? 2. Haftaya hoş geldiniz.</p>
+<hr />
+<div style="margin-top: 2rem; padding: 1.5rem; background: #1a1a2e; border-radius: 8px; border: 1px solid #16213e;">
+<h3 id="-anlayışınızı-test-edin"><a class="header" href="#-anlayışınızı-test-edin">📝 Anlayışınızı Test Edin</a></h3>
+<p>Öğrendiklerinizi kontrol etmeye hazır mısınız? İnteraktif quizi çözün:</p>
+<p><a href="quizzes/day-07.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: #e94560; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 0.5rem;">Gün 7 Quizini Çöz →</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day-06.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day-08.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day-06.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day-08.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
