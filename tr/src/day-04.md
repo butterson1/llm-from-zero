@@ -24,6 +24,10 @@ Orijinal Transformer, makine çevirisi için standart olan kodlayıcı-kod çöz
 
 Bu ayrım önemli. Kodlayıcı tüm girdiyi aynı anda görebilir — anlama için mükemmel. Kod çözücü sıralı üretmek zorunda — tutarlı çıktı üretmek için gerekli. Bunlar temelden farklı hesaplama rejimleri ve Transformer her ikisini de aynı temel yapı taşıyla idare eder: **Transformer bloğu**.
 
+![Kodlayıcı ve kod çözücü bloklarının katman yapısını ve kod çözücüdeki ek çapraz-dikkat adımını gösteren karşılaştırmalı şema](./assets/transformer-blocks.svg)
+
+*Ezberlenecek fark: kodlayıcıda öz-dikkat + FFN var; kod çözücüde bunlara ek olarak kodlayıcı çıktısına bakan çapraz-dikkat bulunur.*
+
 ## Bir Transformer Bloğunun İçi
 
 Hem kodlayıcı hem de kod çözücü yığılmış bloklardan inşa edilir (orijinal makalede 6'şar). Her blok aynı temel kalıba sahiptir: dikkat, sonra ileri besleme, her alt katmanı artık bağlantılar ve normalizasyon sarar.

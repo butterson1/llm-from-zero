@@ -165,6 +165,8 @@
 <p><strong>Kodlayıcı</strong> kaynak cümlenin tamamını okuyarak her token'ın zengin, bağlamsallaştırılmış bir temsilini oluşturur. Tüm konumları paralel olarak işler. 6 katmanlık öz-dikkat ve ileri beslemeli işlemden sonra, her token'ın temsili sadece o token'ın ne olduğunu değil, cümlenin tam bağlamındaki rolünü de kodlar.</p>
 <p><strong>Kod Çözücü</strong> hedef cümleyi her seferinde bir token üretir; hem kendi daha önce ürettiği token'lara hem de kodlayıcının çıktısına dikkat eder. Otoregresiftir: token 5, token 1-4'e bağlıdır, vb.</p>
 <p>Bu ayrım önemli. Kodlayıcı tüm girdiyi aynı anda görebilir — anlama için mükemmel. Kod çözücü sıralı üretmek zorunda — tutarlı çıktı üretmek için gerekli. Bunlar temelden farklı hesaplama rejimleri ve Transformer her ikisini de aynı temel yapı taşıyla idare eder: <strong>Transformer bloğu</strong>.</p>
+<p><img src="./assets/transformer-blocks.svg" alt="Kodlayıcı ve kod çözücü bloklarının katman yapısını ve kod çözücüdeki ek çapraz-dikkat adımını gösteren karşılaştırmalı şema" /></p>
+<p><em>Ezberlenecek fark: kodlayıcıda öz-dikkat + FFN var; kod çözücüde bunlara ek olarak kodlayıcı çıktısına bakan çapraz-dikkat bulunur.</em></p>
 <h2 id="bir-transformer-bloğunun-İçi"><a class="header" href="#bir-transformer-bloğunun-İçi">Bir Transformer Bloğunun İçi</a></h2>
 <p>Hem kodlayıcı hem de kod çözücü yığılmış bloklardan inşa edilir (orijinal makalede 6'şar). Her blok aynı temel kalıba sahiptir: dikkat, sonra ileri besleme, her alt katmanı artık bağlantılar ve normalizasyon sarar.</p>
 <p>Bir token'ı tek bir kodlayıcı bloğundan takip edelim:</p>

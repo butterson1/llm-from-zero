@@ -90,7 +90,9 @@ Bu kadar. GPT-4'ü, Claude'u, Gemini'yi ve 2026'daki hemen hemen her öncü yapa
 
 √d_k ölçekleme faktörü ince ama kritik bir ayrıntı. Bu olmadan, d_k büyük olduğunda iç çarpımlar büyük değerlere sahip olma eğiliminde, softmax'ı son derece küçük gradyan bölgelerine iterek dikkati "fazla keskinleştirip" eğitim sırasında gradyan akışını öldürür. √d_k'ye bölmek iç çarpımların varyansını yönetilebilir düzeyde tutar. Bu, insanların gözden kaçırdığı ama eğitilen bir modelle eğitilemeyen model arasındaki farkı yaratan küçük mühendislik seçimlerinden biri.
 
-> 📐 **Diyagram notu:** Burada Q, K, V matrislerinin nasıl oluşturulduğunu ve dikkat puanlarının nasıl hesaplandığını gösteren bir akış diyagramı çok faydalı olurdu. Her kelimenin üç role nasıl büründüğünü görsel olarak takip etmek, formülü somutlaştırır.
+![Q, K ve V'nin aynı token temsillerinden üretilip dikkat puanları üzerinden yeni bağlamsal temsil oluşturmasını gösteren akış diyagramı](./assets/attention-qkv-flow.svg)
+
+*Buradaki ana fikir şu: aynı token gömmesi üç farklı öğrenilmiş mercekten geçer. Sorgu ne aradığını, anahtar ne sunduğunu, değer ise gerçekten taşınacak bilgiyi temsil eder.*
 
 ## Çok Başlı Dikkat: Sekiz Göz Birden İyidir
 

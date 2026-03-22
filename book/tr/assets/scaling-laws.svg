@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="560" viewBox="0 0 1080 560" role="img" aria-labelledby="title desc">
+  <title id="title">Ölçekleme yasaları ve ortaya çıkış</title>
+  <desc id="desc">Hesaplama arttıkça kaybın log-log eksende düzgün azaldığını ve görev başarısının eşik civarında hızla sıçrayabildiğini gösteren iki panelli diyagram.</desc>
+  <defs>
+    <style>
+      .bg { fill:#0f172a; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:2; rx:18; }
+      .axis { stroke:#94a3b8; stroke-width:2; }
+      .curve { fill:none; stroke-width:4; }
+      .text { fill:#e5e7eb; font: 22px 'Inter', 'Segoe UI', sans-serif; }
+      .small { fill:#cbd5e1; font: 18px 'Inter', 'Segoe UI', sans-serif; }
+      .tiny { fill:#94a3b8; font: 16px 'Inter', 'Segoe UI', sans-serif; }
+      .label { fill:#93c5fd; font: 22px 'Inter', 'Segoe UI', sans-serif; font-weight:700; }
+      .note { fill:#f8fafc; font: 18px 'JetBrains Mono', monospace; }
+      .dash { stroke:#f59e0b; stroke-width:2; stroke-dasharray:8 6; }
+    </style>
+  </defs>
+  <rect class="bg" width="1080" height="560"/>
+  <text x="36" y="46" class="text" style="font-size:30px;font-weight:700">Ölçekleme yasalarının sezgisi</text>
+  <text x="36" y="76" class="small">Temel sinyal düzgündür: daha çok hesaplama = daha düşük kayıp. Ama görev başarısı bu düzgün sinyali eşik etkisiyle sıçrama gibi gösterebilir.</text>
+
+  <rect x="40" y="116" width="470" height="390" class="panel"/>
+  <text x="153" y="154" class="label">1) Kayıp düzgün azalır</text>
+  <line x1="96" y1="440" x2="450" y2="440" class="axis"/>
+  <line x1="96" y1="440" x2="96" y2="196" class="axis"/>
+  <text x="230" y="474" class="tiny">hesaplama / parametre / veri (log)</text>
+  <text x="50" y="242" class="tiny" transform="rotate(-90 50 242)">kayıp (log)</text>
+  <path d="M 118 238 C 190 270, 255 314, 430 404" class="curve" stroke="#60a5fa"/>
+  <text x="138" y="224" class="note">L(C) ∝ C^-0.05</text>
+  <text x="120" y="418" class="tiny">küçük model</text>
+  <text x="366" y="418" class="tiny">büyük model</text>
+  <text x="118" y="286" class="small">Log-log eksende yaklaşık düz çizgi:</text>
+  <text x="118" y="314" class="small">iyileşme sürekli ve öngörülebilir.</text>
+
+  <rect x="568" y="116" width="470" height="390" class="panel"/>
+  <text x="660" y="154" class="label">2) Görev başarısı sıçrayabilir</text>
+  <line x1="624" y1="440" x2="978" y2="440" class="axis"/>
+  <line x1="624" y1="440" x2="624" y2="196" class="axis"/>
+  <text x="755" y="474" class="tiny">temel model kalitesi</text>
+  <text x="580" y="252" class="tiny" transform="rotate(-90 580 252)">görev başarısı</text>
+  <path d="M 646 422 C 726 422, 742 420, 782 360 C 818 304, 846 235, 958 214" class="curve" stroke="#a3e635"/>
+  <line x1="782" y1="198" x2="782" y2="440" class="dash"/>
+  <text x="744" y="188" class="tiny">eşik</text>
+  <text x="650" y="286" class="small">Token başına doğruluk azıcık artarken,</text>
+  <text x="650" y="314" class="small">10 adımlı görevlerin tam doğru çıkma</text>
+  <text x="650" y="342" class="small">olasılığı bir anda yükselir.</text>
+  <text x="650" y="388" class="note">0.90^10 = 35%   →   0.99^10 = 90%</text>
+</svg>

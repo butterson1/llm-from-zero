@@ -44,6 +44,10 @@ BPE tokenizasyon için şöyle çalışır:
 
 **Adım 4: Tekrarla.** Çiftleri tekrar sayın (artık `'th'`'ı bir birim olarak dahil ederek), en sığını birleştirin, sözlüğe ekleyin. Hedef sözlük boyutuna ulaşana kadar devam edin.
 
+![Karakterlerden başlayıp sık görülen çiftlerin aşamalı olarak daha büyük alt kelime token'larına dönüşmesini gösteren BPE şeması](./assets/bpe-merges.svg)
+
+*BPE'nin sezgisi budur: sık örüntüler daha büyük, daha verimli token'lara “yükselir”; nadir kelimeler ise yine de daha küçük parçalara bölünerek temsil edilebilir kalır.*
+
 50.000 birleştirmeden sonra 50.256 token'lık bir sözlüğünüz var (256 temel bayt + 50.000 birleştirme). "The" gibi yaygın kelimeler tek token. "ing", "tion", "pre" gibi yaygın alt kelimeler tek token. "Cryogenics" gibi nadir kelimeler `['cry', 'ogen', 'ics']` gibi parçalara bölünür — tek bir token kadar verimli değil ama bireysel karakterlerden çok daha iyi ve her parça anlamsal sinyal taşır.
 
 BPE'nin güzelliği, eğittiğiniz her korpus için sıkıştırma-optimal bir sözlüğü otomatik olarak keşfetmesidir. Kod besleyin ve `def`, `return`, `function`, `import`ın tek token olması gerektiğini öğrenir. Tıbbi metin besleyin ve `cardio`, `pulmon`, `ectomy`'i öğrenir. Çok dilli veri besleyin ve diller arası ortak alt kelimeleri keşfeder.

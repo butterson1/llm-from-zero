@@ -18,6 +18,10 @@ Bu üsler küçüktür, yani fark edilir iyileştirmeler için büyüklük sıra
 
 Bunun ne kadar alışılmadık olduğunu düşünün. Çoğu mühendislik disiplininde azalan getirilere hızla ulaşırsınız. İki kat büyük bir motor iki kat hızlı gitmez. İki kat yüksek bir bina iki kat fazla insanı barındırmaz. Ama dil modelleri mi? Hesaplamayı ikiye katla ve kayıpta mükemmel öngörülebilir bir düşüş elde et. Her seferinde.
 
+![Ölçekleme yasalarında kaybın düzgün azalmasını ve bunun görev başarısında eşik etkileriyle sıçrama gibi görünebilmesini gösteren iki panelli diyagram](./assets/scaling-laws.svg)
+
+*Soldaki grafik araştırmacıların “ölçekleme yasası” dediği düzgün temel sinyali gösterir. Sağdaki grafik ise neden aynı düzgün sinyalin pratik görevlerde aniden beliren yetenekler gibi hissedildiğini açıklar.*
+
 ## "Kayıp" Pratikte Gerçekten Ne Anlama Gelir
 
 Daha ileri gitmeden, neyin iyileştiğini netleştirelim. Çapraz entropi kaybı modelin sonraki token'ı ne kadar iyi tahmin ettiğini ölçer. 3,0'lık kayıp, modelin kabaca 20 eşit olasılıklı token arasından seçiyormuş kadar belirsiz olduğu anlamına gelir (e^3 ≈ 20). 2,0'lık kayıp bunu yaklaşık 7 seçeneğe daraltır. 1,5'lik kayıp kabaca 4,5 seçenek demek.

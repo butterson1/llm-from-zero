@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640" role="img" aria-labelledby="title desc">
+  <title id="title">Transformer kodlayıcı ve kod çözücü blokları</title>
+  <desc id="desc">Kodlayıcı bloğu ile kod çözücü bloğunu karşılaştıran ve kod çözücüde maskeli öz-dikkat ile çapraz-dikkatin bulunduğunu gösteren diyagram.</desc>
+  <defs>
+    <style>
+      .bg { fill:#0f172a; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:2; rx:18; }
+      .block { stroke-width:2; rx:14; }
+      .attn { fill:#1d4ed8; stroke:#93c5fd; }
+      .cross { fill:#7c3aed; stroke:#d8b4fe; }
+      .ffn { fill:#166534; stroke:#86efac; }
+      .norm { fill:#334155; stroke:#94a3b8; }
+      .text { fill:#e5e7eb; font: 22px 'Inter', 'Segoe UI', sans-serif; }
+      .small { fill:#cbd5e1; font: 18px 'Inter', 'Segoe UI', sans-serif; }
+      .tiny { fill:#94a3b8; font: 16px 'Inter', 'Segoe UI', sans-serif; }
+      .label { fill:#93c5fd; font: 24px 'Inter', 'Segoe UI', sans-serif; font-weight:700; }
+      .arrow { stroke:#94a3b8; stroke-width:3; fill:none; marker-end:url(#m); }
+      .skip { stroke:#f59e0b; stroke-width:3; fill:none; stroke-dasharray:8 6; }
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1100" height="640"/>
+  <text x="40" y="50" class="text" style="font-size:30px;font-weight:700">Transformer'ın iki ana bloğu</text>
+  <text x="40" y="80" class="small">Kodlayıcı anlamak için tüm girdiyi görür; kod çözücü üretmek için yalnızca geçmiş çıktıları ve kodlayıcı bilgisini kullanır.</text>
+
+  <rect x="42" y="118" width="460" height="470" class="panel"/>
+  <text x="178" y="156" class="label">Kodlayıcı bloğu</text>
+  <rect x="150" y="196" width="240" height="64" class="block attn"/>
+  <text x="182" y="235" class="text">Çok başlı öz-dikkat</text>
+  <rect x="150" y="282" width="240" height="54" class="block norm"/>
+  <text x="199" y="316" class="text">Topla + norm</text>
+  <rect x="150" y="360" width="240" height="64" class="block ffn"/>
+  <text x="183" y="397" class="text">İleri beslemeli ağ</text>
+  <rect x="150" y="446" width="240" height="54" class="block norm"/>
+  <text x="199" y="480" class="text">Topla + norm</text>
+  <path class="arrow" d="M 270 172 L 270 196"/>
+  <path class="arrow" d="M 270 260 L 270 282"/>
+  <path class="arrow" d="M 270 336 L 270 360"/>
+  <path class="arrow" d="M 270 424 L 270 446"/>
+  <path class="arrow" d="M 270 500 L 270 535"/>
+  <path class="skip" d="M 110 172 L 110 309 L 150 309"/>
+  <path class="skip" d="M 430 336 L 450 336 L 450 473 L 390 473"/>
+  <text x="82" y="166" class="tiny">girdi</text>
+  <text x="446" y="533" class="tiny">çıktı</text>
+  <text x="73" y="556" class="tiny">Artık bağlantılar kesik çizgiyle gösteriliyor.</text>
+
+  <rect x="562" y="118" width="496" height="470" class="panel"/>
+  <text x="725" y="156" class="label">Kod çözücü bloğu</text>
+  <rect x="690" y="186" width="240" height="64" class="block attn"/>
+  <text x="706" y="223" class="text">Maskeli öz-dikkat</text>
+  <text x="725" y="244" class="tiny">Geleceğe bakamaz</text>
+  <rect x="690" y="270" width="240" height="54" class="block norm"/>
+  <text x="739" y="304" class="text">Topla + norm</text>
+  <rect x="690" y="346" width="240" height="64" class="block cross"/>
+  <text x="729" y="382" class="text">Çapraz-dikkat</text>
+  <text x="720" y="404" class="tiny">Kodlayıcı çıktısına bakar</text>
+  <rect x="690" y="430" width="240" height="54" class="block norm"/>
+  <text x="739" y="464" class="text">Topla + norm</text>
+  <rect x="690" y="506" width="240" height="54" class="block ffn"/>
+  <text x="723" y="543" class="text">İleri beslemeli ağ</text>
+  <path class="arrow" d="M 810 168 L 810 186"/>
+  <path class="arrow" d="M 810 250 L 810 270"/>
+  <path class="arrow" d="M 810 324 L 810 346"/>
+  <path class="arrow" d="M 810 410 L 810 430"/>
+  <path class="arrow" d="M 810 484 L 810 506"/>
+  <path class="skip" d="M 642 168 L 642 297 L 690 297"/>
+  <path class="skip" d="M 955 324 L 985 324 L 985 457 L 930 457"/>
+  <text x="600" y="164" class="tiny">önceki token'lar</text>
+  <path class="arrow" d="M 562 378 L 662 378"/>
+  <text x="577" y="360" class="tiny">kodlayıcı çıktısı</text>
+</svg>

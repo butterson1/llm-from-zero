@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="520" viewBox="0 0 1040 520" role="img" aria-labelledby="title desc">
+  <title id="title">BPE birleştirme süreci</title>
+  <desc id="desc">Byte Pair Encoding'de sık görülen karakter çiftlerinin zamanla alt kelime tokenlarına birleşmesini gösteren diyagram.</desc>
+  <defs>
+    <style>
+      .bg { fill:#0f172a; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:2; rx:18; }
+      .chip { fill:#1e293b; stroke:#60a5fa; stroke-width:2; rx:10; }
+      .merge { fill:#3f6212; stroke:#a3e635; stroke-width:2; rx:10; }
+      .final { fill:#7c2d12; stroke:#fdba74; stroke-width:2; rx:10; }
+      .arrow { stroke:#94a3b8; stroke-width:3; fill:none; marker-end:url(#m); }
+      .text { fill:#e5e7eb; font: 22px 'Inter', 'Segoe UI', sans-serif; }
+      .small { fill:#cbd5e1; font: 18px 'Inter', 'Segoe UI', sans-serif; }
+      .tiny { fill:#94a3b8; font: 16px 'Inter', 'Segoe UI', sans-serif; }
+      .label { fill:#93c5fd; font: 21px 'Inter', 'Segoe UI', sans-serif; font-weight:700; }
+      .mono { fill:#f8fafc; font: 20px 'JetBrains Mono', monospace; }
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1040" height="520"/>
+  <text x="38" y="48" class="text" style="font-size:30px;font-weight:700">BPE nasıl alt kelime token'ları öğrenir?</text>
+  <text x="38" y="78" class="small">Başlangıçta sadece küçük birimler vardır; sık görülen komşu çiftler tekrar tekrar birleşir.</text>
+
+  <rect x="40" y="116" width="960" height="348" class="panel"/>
+
+  <text x="75" y="158" class="label">Başlangıç</text>
+  <rect x="72" y="184" width="52" height="44" class="chip"/><text x="92" y="212" class="mono">t</text>
+  <rect x="132" y="184" width="52" height="44" class="chip"/><text x="152" y="212" class="mono">r</text>
+  <rect x="192" y="184" width="52" height="44" class="chip"/><text x="212" y="212" class="mono">a</text>
+  <rect x="252" y="184" width="52" height="44" class="chip"/><text x="272" y="212" class="mono">n</text>
+  <rect x="312" y="184" width="52" height="44" class="chip"/><text x="332" y="212" class="mono">s</text>
+  <text x="73" y="252" class="tiny">Her karakter (ya da bayt) ayrı semboldür.</text>
+
+  <path class="arrow" d="M 365 205 C 420 205, 438 205, 490 205"/>
+
+  <text x="500" y="158" class="label">Sık çiftleri say</text>
+  <text x="500" y="194" class="small">Örnek korpusta sık görülenler:</text>
+  <text x="500" y="228" class="mono">('t','r')   1.2M kez</text>
+  <text x="500" y="258" class="mono">('tr','an') 0.9M kez</text>
+  <text x="500" y="288" class="mono">('form','er') 0.5M kez</text>
+
+  <path class="arrow" d="M 740 205 C 790 205, 805 205, 852 205"/>
+
+  <text x="854" y="158" class="label">Birleştir</text>
+  <rect x="850" y="184" width="70" height="44" class="merge"/><text x="872" y="212" class="mono">tr</text>
+  <rect x="928" y="184" width="70" height="44" class="merge"/><text x="945" y="212" class="mono">ans</text>
+  <text x="850" y="252" class="tiny">Yeni token'lar sözlüğe eklenir.</text>
+
+  <path class="arrow" d="M 520 330 C 590 330, 620 330, 690 330"/>
+
+  <text x="75" y="350" class="label">Tekrarla</text>
+  <rect x="72" y="374" width="84" height="44" class="merge"/><text x="97" y="402" class="mono">trans</text>
+  <rect x="164" y="374" width="84" height="44" class="merge"/><text x="189" y="402" class="mono">form</text>
+  <rect x="256" y="374" width="84" height="44" class="merge"/><text x="287" y="402" class="mono">er</text>
+  <text x="72" y="442" class="tiny">Yaygın parçalardan daha büyük alt kelimeler çıkar.</text>
+
+  <text x="700" y="350" class="label">Sonuç</text>
+  <rect x="694" y="374" width="160" height="48" class="final"/>
+  <text x="725" y="404" class="mono">transformer</text>
+  <rect x="864" y="374" width="94" height="48" class="final"/>
+  <text x="889" y="404" class="mono">lar</text>
+  <text x="694" y="442" class="tiny">Sık görülen kelime/ek kombinasyonları daha az token'a iner.</text>
+</svg>

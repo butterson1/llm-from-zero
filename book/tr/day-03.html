@@ -203,9 +203,8 @@
 <p><strong>Dikkat(Q, K, V) = softmax(QK^T / √d_k) · V</strong></p>
 <p>Bu kadar. GPT-4'ü, Claude'u, Gemini'yi ve 2026'daki hemen hemen her öncü yapay zekâ sistemini güçlendiren denklem bu. Tek bir satıra sığıyor.</p>
 <p>√d_k ölçekleme faktörü ince ama kritik bir ayrıntı. Bu olmadan, d_k büyük olduğunda iç çarpımlar büyük değerlere sahip olma eğiliminde, softmax'ı son derece küçük gradyan bölgelerine iterek dikkati "fazla keskinleştirip" eğitim sırasında gradyan akışını öldürür. √d_k'ye bölmek iç çarpımların varyansını yönetilebilir düzeyde tutar. Bu, insanların gözden kaçırdığı ama eğitilen bir modelle eğitilemeyen model arasındaki farkı yaratan küçük mühendislik seçimlerinden biri.</p>
-<blockquote>
-<p>📐 <strong>Diyagram notu:</strong> Burada Q, K, V matrislerinin nasıl oluşturulduğunu ve dikkat puanlarının nasıl hesaplandığını gösteren bir akış diyagramı çok faydalı olurdu. Her kelimenin üç role nasıl büründüğünü görsel olarak takip etmek, formülü somutlaştırır.</p>
-</blockquote>
+<p><img src="./assets/attention-qkv-flow.svg" alt="Q, K ve V&#39;nin aynı token temsillerinden üretilip dikkat puanları üzerinden yeni bağlamsal temsil oluşturmasını gösteren akış diyagramı" /></p>
+<p><em>Buradaki ana fikir şu: aynı token gömmesi üç farklı öğrenilmiş mercekten geçer. Sorgu ne aradığını, anahtar ne sunduğunu, değer ise gerçekten taşınacak bilgiyi temsil eder.</em></p>
 <h2 id="Çok-başlı-dikkat-sekiz-göz-birden-İyidir"><a class="header" href="#Çok-başlı-dikkat-sekiz-göz-birden-İyidir">Çok Başlı Dikkat: Sekiz Göz Birden İyidir</a></h2>
 <p>Vaswani makalesinden sezgiye aykırı bir kavrayış: tek bir dikkat işlemi yetmez. Bir Q, K, V matrisi seti aynı anda yalnızca bir tür ilişkiyi yakalayabilir — belki sözdizimsel yapı ya da belki anlamsal benzerlik, ama ikisini aynı anda değil.</p>
 <p>Çözüm <strong>çok başlı dikkat</strong>: d_model boyutlu anahtarlarla tek bir dikkat işlemi yapmak yerine, bunları her biri d_model/h boyutunda çalışan <em>h</em> paralel "başa" bölün. Temel Transformer'da d_model = 512 ve h = 8 olup her başa 64 boyut düşer.</p>

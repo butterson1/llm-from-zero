@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">QKV dikkat akışı</title>
+  <desc id="desc">Token gömmelerinden sorgu, anahtar ve değerlerin üretilmesini; dikkat puanlarının hesaplanmasını ve ağırlıklı toplamla yeni temsil oluşmasını gösteren diyagram.</desc>
+  <defs>
+    <style>
+      .bg { fill:#0f172a; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:2; rx:18; }
+      .token { fill:#1f2937; stroke:#38bdf8; stroke-width:2; rx:10; }
+      .q { fill:#172554; stroke:#60a5fa; stroke-width:2; rx:12; }
+      .k { fill:#3f6212; stroke:#a3e635; stroke-width:2; rx:12; }
+      .v { fill:#581c87; stroke:#d8b4fe; stroke-width:2; rx:12; }
+      .calc { fill:#1e293b; stroke:#f59e0b; stroke-width:2; rx:14; }
+      .out { fill:#082f49; stroke:#67e8f9; stroke-width:2; rx:12; }
+      .arrow { stroke:#94a3b8; stroke-width:3; fill:none; marker-end:url(#m); }
+      .text { fill:#e5e7eb; font: 22px 'Inter', 'Segoe UI', sans-serif; }
+      .small { fill:#cbd5e1; font: 18px 'Inter', 'Segoe UI', sans-serif; }
+      .tiny { fill:#94a3b8; font: 16px 'Inter', 'Segoe UI', sans-serif; }
+      .mono { fill:#fde68a; font: 19px 'JetBrains Mono', monospace; }
+      .label { fill:#93c5fd; font: 21px 'Inter', 'Segoe UI', sans-serif; font-weight:700; }
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1100" height="620"/>
+  <text x="36" y="48" class="text" style="font-size:30px;font-weight:700">Öz-dikkat: bir token diğerlerine nasıl bakar?</text>
+  <text x="36" y="79" class="small">Aynı gömme, üç farklı doğrusal dönüşümle üç role ayrılır: sorgu, anahtar, değer.</text>
+
+  <rect x="36" y="112" width="240" height="430" class="panel"/>
+  <text x="58" y="146" class="label">1) Girdi token'ları</text>
+  <rect x="60" y="182" width="168" height="48" class="token"/>
+  <rect x="60" y="246" width="168" height="48" class="token"/>
+  <rect x="60" y="310" width="168" height="48" class="token"/>
+  <text x="93" y="212" class="text">Hayvan</text>
+  <text x="109" y="276" class="text">çok</text>
+  <text x="100" y="340" class="text">yorgundu</text>
+  <text x="60" y="398" class="tiny">Her token bağlamsal bir gömme vektörü taşır.</text>
+
+  <path class="arrow" d="M 276 220 C 320 220, 320 185, 360 185"/>
+  <path class="arrow" d="M 276 270 C 320 270, 320 300, 360 300"/>
+  <path class="arrow" d="M 276 320 C 320 320, 320 415, 360 415"/>
+
+  <rect x="360" y="112" width="210" height="430" class="panel"/>
+  <text x="386" y="146" class="label">2) Üç izdüşüm</text>
+  <rect x="388" y="164" width="154" height="76" class="q"/>
+  <rect x="388" y="277" width="154" height="76" class="k"/>
+  <rect x="388" y="390" width="154" height="76" class="v"/>
+  <text x="423" y="196" class="text">Q = xW<tspan baseline-shift="sub" font-size="16">Q</tspan></text>
+  <text x="405" y="222" class="small">Ne arıyorum?</text>
+  <text x="423" y="309" class="text">K = xW<tspan baseline-shift="sub" font-size="16">K</tspan></text>
+  <text x="401" y="335" class="small">Ne içeriyorum?</text>
+  <text x="423" y="422" class="text">V = xW<tspan baseline-shift="sub" font-size="16">V</tspan></text>
+  <text x="399" y="448" class="small">Hangi bilgiyi veriyorum?</text>
+
+  <path class="arrow" d="M 570 205 C 615 205, 635 205, 676 205"/>
+  <path class="arrow" d="M 570 315 C 615 315, 635 315, 676 315"/>
+  <path class="arrow" d="M 570 430 C 615 430, 635 430, 676 430"/>
+
+  <rect x="676" y="112" width="250" height="430" class="panel"/>
+  <text x="700" y="146" class="label">3) Dikkat hesabı</text>
+  <rect x="702" y="172" width="198" height="138" class="calc"/>
+  <text x="731" y="206" class="text">QKᵀ ile puanlar</text>
+  <text x="719" y="236" class="small">Hangi token hangi token'a</text>
+  <text x="743" y="262" class="small">ne kadar bakmalı?</text>
+  <text x="727" y="292" class="mono">softmax(QKᵀ / √d<tspan baseline-shift="sub" font-size="14">k</tspan>)</text>
+
+  <rect x="702" y="338" width="198" height="86" class="calc"/>
+  <text x="744" y="371" class="text">Ağırlıklar</text>
+  <text x="721" y="397" class="small">Önemli token'lar daha yüksek</text>
+
+  <rect x="702" y="446" width="198" height="70" class="calc"/>
+  <text x="755" y="476" class="text">· V</text>
+  <text x="717" y="500" class="small">Değerler ağırlıklı toplanır</text>
+
+  <path class="arrow" d="M 926 315 C 968 315, 982 315, 1022 315"/>
+
+  <rect x="922" y="220" width="146" height="190" class="panel"/>
+  <text x="943" y="254" class="label">4) Yeni temsil</text>
+  <rect x="945" y="286" width="100" height="56" class="out"/>
+  <text x="965" y="321" class="text">çıktı</text>
+  <text x="941" y="374" class="tiny">Token artık sadece</text>
+  <text x="939" y="395" class="tiny">kendini değil, ilgili</text>
+  <text x="938" y="416" class="tiny">bağlamı da taşır.</text>
+</svg>

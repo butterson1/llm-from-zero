@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">Sonraki token tahmini</title>
+  <desc id="desc">Bağlam tokenlarının bir dil modeline girip olasılık dağılımı üreterek sonraki tokenı tahmin etmesini gösteren diyagram.</desc>
+  <defs>
+    <style>
+      .bg { fill:#0f172a; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:2; rx:18; }
+      .token { fill:#1e293b; stroke:#38bdf8; stroke-width:2; rx:10; }
+      .out { fill:#172554; stroke:#60a5fa; stroke-width:2; rx:10; }
+      .hot { fill:#7c3aed; stroke:#c4b5fd; stroke-width:2; rx:10; }
+      .arrow { stroke:#94a3b8; stroke-width:3; fill:none; marker-end:url(#m); }
+      .text { fill:#e5e7eb; font: 22px 'Inter', 'Segoe UI', sans-serif; }
+      .small { fill:#cbd5e1; font: 18px 'Inter', 'Segoe UI', sans-serif; }
+      .tiny { fill:#94a3b8; font: 16px 'Inter', 'Segoe UI', sans-serif; }
+      .prob { fill:#f8fafc; font: 18px 'JetBrains Mono', monospace; }
+      .label { fill:#93c5fd; font: 20px 'Inter', 'Segoe UI', sans-serif; font-weight:600; }
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="420"/>
+  <text x="40" y="52" class="text" style="font-size:30px;font-weight:700">Dil modeli aslında ne yapar?</text>
+  <text x="40" y="82" class="small">Bağlamı alır, sözlükteki olası sonraki token'lar için bir olasılık dağılımı üretir.</text>
+
+  <rect x="40" y="120" width="290" height="220" class="panel"/>
+  <text x="58" y="154" class="label">1) Bağlam token'ları</text>
+  <rect x="60" y="180" width="92" height="44" class="token"/>
+  <rect x="164" y="180" width="70" height="44" class="token"/>
+  <rect x="246" y="180" width="56" height="44" class="token"/>
+  <text x="84" y="208" class="text">Kedi</text>
+  <text x="188" y="208" class="text">___</text>
+  <text x="263" y="208" class="text">üzerinde</text>
+  <rect x="60" y="238" width="94" height="44" class="token"/>
+  <rect x="166" y="238" width="76" height="44" class="token"/>
+  <text x="90" y="266" class="text">oturdu</text>
+  <text x="61" y="315" class="tiny">Model bunları tam sayı kimlikleri ve vektörlere çevirir.</text>
+
+  <path class="arrow" d="M 330 228 C 380 228, 400 228, 445 228"/>
+
+  <rect x="445" y="120" width="220" height="220" class="panel"/>
+  <text x="470" y="154" class="label">2) Dil modeli</text>
+  <rect x="490" y="182" width="130" height="96" class="hot"/>
+  <text x="519" y="220" class="text">Transformer</text>
+  <text x="505" y="250" class="small">bağlamı işler,</text>
+  <text x="503" y="276" class="small">örüntüleri tartar</text>
+  <text x="475" y="315" class="tiny">Çıktı: her olası sonraki token için skor</text>
+
+  <path class="arrow" d="M 666 228 C 715 228, 735 228, 780 228"/>
+
+  <rect x="780" y="120" width="140" height="220" class="panel"/>
+  <text x="799" y="154" class="label">3) Olasılıklar</text>
+  <rect x="800" y="180" width="98" height="34" class="out"/>
+  <rect x="800" y="224" width="72" height="34" class="out"/>
+  <rect x="800" y="268" width="58" height="34" class="out"/>
+  <text x="811" y="202" class="prob">minder 0.62</text>
+  <text x="811" y="246" class="prob">koltuk 0.21</text>
+  <text x="811" y="290" class="prob">halı   0.09</text>
+  <text x="800" y="324" class="tiny">En olası token seçilir</text>
+</svg>

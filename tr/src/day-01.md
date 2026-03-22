@@ -12,6 +12,10 @@ Muhtemelen "minder" dediniz. Belki "koltuk" ya da "halı." Beyniniz ezberlenmiş
 
 Bir **dil modeli**, aynı şeyi matematiksel olarak yapan bir sistemdir. Kelime dizilerine olasılıklar atar — daha doğrusu, önceki tüm token'lar verildiğinde bir sonraki token'a olasılık atar. Bu kadar. Fikrin tamamı bu. Konuştuğunuz her sohbet botu, kod ya da şiir ya da hukuki belge yazan her yapay zekâ, özünde çok sofistike bir sonraki-token tahmin edicisidir.
 
+![Bağlam token'larından sonraki token olasılıklarına giden temel dil modeli akışı](./assets/lm-next-token.svg)
+
+*Basit ama derin fikir: model “anlam” adlı ayrı bir modül çalıştırmaz; bağlamdan sonraki token olasılıklarını hesaplar.*
+
 Ama o "bu kadar" ifadesi çok iş yapıyor. Naif bir kelime sayma yaklaşımıyla GPT-4 arasındaki fark, kâğıt uçakla Boeing 787 Dreamliner arasındaki fark gibidir. İkisi de uçar. Mühendislikleri bu kadar farklı olamaz.
 
 > 💡 **Token nedir?** Bu kitap boyunca sürekli karşınıza çıkacak: *token*, modelin işlediği en küçük metin birimidir. Bazen bir kelimeye, bazen bir kelime parçasına, bazen tek bir karaktere karşılık gelir. "Tokenizasyon" konusunu Gün 5'te derinlemesine işleyeceğiz.
